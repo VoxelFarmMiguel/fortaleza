@@ -1,0 +1,14 @@
+# Python files
+*.py
+*.pyc
+__pycache__/
+
+# macOS files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Backup files
+*~
+*.bak
+*.swp
