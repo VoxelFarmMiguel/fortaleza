@@ -2018,17 +2018,7 @@
         }
 
         function updateInventory() {
-            const invList = document.getElementById('inventory-list');
-            const weight = document.getElementById('weight');
-
-            if (gameState.player.bag.empty()) {
-                invList.textContent = 'Vacío';
-                weight.textContent = '0';
-            } else {
-                const items = gameState.player.bag.items.map(i => i.name + ' (' + i.mass + ')').join(', ');
-                invList.textContent = items;
-                weight.textContent = gameState.player.bag.heaviness();
-            }
+            // No inventory UI - this function does nothing
         }
 
         // ==================== AUTOCOMPLETE SYSTEM ====================
