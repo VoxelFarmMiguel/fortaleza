@@ -6,26 +6,35 @@ Classic Spanish text adventure game with retro CRT aesthetic.
 
 ### Files
 - `index.dev.html` - Development version (human-readable source code)
-- `index.html` - Production version (minified and obfuscated)
-- `build.js` - Build script to generate production version
+- `index.html` - Production version (fully obfuscated)
+- `build.js` - Simple minification build (smaller file, less obfuscation)
+- `build-full-obfuscate.js` - Full obfuscation build (recommended)
 
 ### Making Changes
 
 1. Edit `index.dev.html` (the development version)
-2. Run the build script:
+2. Run the obfuscation build script:
    ```bash
-   node build.js
+   node build-full-obfuscate.js
    ```
-3. This will generate the minified `index.html` for production
-4. Commit and push both files
+3. This will generate the fully obfuscated `index.html` for production
+4. Commit and push
 
 ### Build Process
 
-The build script:
-- Minifies and obfuscates JavaScript code
-- Compresses HTML and CSS
-- Reduces file size by ~53%
-- Makes source code harder to read via "View Source"
+**Full Obfuscation (Recommended):**
+- Encodes all Spanish text strings in Base64
+- Stores strings in shuffled, rotated string array
+- Hexadecimal variable names
+- String array wrapped in functions
+- Game text completely unreadable in "View Source"
+- File size: ~261 KB
+
+**Simple Minification:**
+- Minifies JavaScript and CSS
+- Variable name mangling
+- Text strings still readable
+- File size: ~44 KB
 
 ## Deployment
 
