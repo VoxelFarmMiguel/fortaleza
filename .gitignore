@@ -17,7 +17,3 @@ __pycache__/
 index.dev.html
 node_modules/
 package-lock.json
-
-# Source images (PNG high-quality)
-# Keep JPG compressed versions for production
-images/*.png
