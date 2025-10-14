@@ -1,7 +1,9 @@
 {
   "devDependencies": {
+    "canvas": "^3.2.0",
     "html-minifier-terser": "^7.2.0",
     "javascript-obfuscator": "^4.1.1",
+    "sharp": "^0.34.4",
     "terser": "^5.44.0"
   }
 }
