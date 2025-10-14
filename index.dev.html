@@ -595,7 +595,7 @@
 
         <!-- NEW: only this part gets curved -->
         <div class="crt-screen">
-            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v1.3</span></div>
+            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v1.4</span></div>
             <div id="output"></div>
             <div id="input-container">
             <input type="text" id="input" placeholder="Escribe tu comando aquí..." autocomplete="off" autofocus>
@@ -1308,10 +1308,10 @@
             inventary() {
                 if (this.dead) return;
                 if (!this.bag.empty()) {
-                    printLine('Tu mochila contiene:');
+                    printLine('Sus pertenecias son:');
                     this.bag.describe();
                 } else {
-                    printLine('Tu mochila está vacía.');
+                    printLine('Usted no lleva nada consigo.');
                 }
             }
 
@@ -1330,7 +1330,7 @@
                     if (item) {
                         printLine(item.image());
                     } else {
-                        printLine('No hay "' + what + '" en esta habitación ni en tu mochila.');
+                        printLine('No existe "' + what + '" en este lugar. Entre sus pertenencias tampoco.');
                     }
                 }
             }
@@ -1340,16 +1340,16 @@
                 const item = this.curr.get(what);
                 if (item) {
                     if (item.mass > gameState.maxWeight) {
-                        printLine('No puedes tomar esto. Es demasiado pesado.');
+                        printLine('Usted no puede cargar con eso.');
                     } else if (this.bag.heaviness() + item.mass <= gameState.maxWeight) {
                         this.bag.insert(this.curr.take(what));
                         printLine('Ok.');
                         updateInventory();
                     } else {
-                        printLine('Tu mochila está muy pesada.');
+                        printLine('Sería demasiado peso.');
                     }
                 } else if (what) {
-                    printLine('No hay "' + what + '" en esta habitación.');
+                    printLine('No existe "' + what + '" en este lugar.');
                 } else {
                     printLine('Complete su frase.');
                 }
@@ -1363,7 +1363,7 @@
                     printLine('Ok.');
                     updateInventory();
                 } else if (what) {
-                    printLine('"' + what + '" no está en tu mochila.');
+                    printLine('"' + what + '" no está dentro de sus pertenencias.');
                 } else {
                     printLine('Complete su frase.');
                 }
@@ -1372,13 +1372,13 @@
             leaveAll() {
                 if (this.dead) return;
                 if (this.bag.empty()) {
-                    printLine('Tu mochila está vacía.');
+                    printLine('Usted no lleva nada consigo.');
                 } else {
                     while (!this.bag.empty()) {
                         const item = this.bag.items[0];
                         this.curr.insert(this.bag.take(item.name));
                     }
-                    printLine('Has vaciado tu mochila.');
+                    printLine('Usted deja todas sus pertencias en el suelo.');
                     updateInventory();
                 }
             }
@@ -1442,7 +1442,7 @@
                 const target = this.curr.get(who);
                 if (target && (target instanceof Troll || target instanceof Guard)) {
                     if (weapon && !this.bag.get(weapon)) {
-                        printLine('"' + weapon + '" no está en tu mochila.');
+                        printLine('"' + weapon + '" no está dentro de sus pertenencias.');
                         return;
                     }
                     if (target.die(weapon)) {
@@ -1470,7 +1470,7 @@
             give(what, who) {
                 if (this.dead) return;
                 if (this.bag.empty()) {
-                    printLine('Tu mochila está vacía.');
+                    printLine('Usted no lleva nada consigo.');
                     return;
                 }
 
@@ -1481,7 +1481,7 @@
                         target.accept(item);
                         updateInventory();
                     } else {
-                        printLine('"' + what + '" no está en tu mochila.');
+                        printLine('"' + what + '" no está dentro de sus pertenencias.');
                     }
                 } else if (who) {
                     printLine('Ese regalo no es aceptado.');
@@ -1493,7 +1493,7 @@
             breakItem(what, how) {
                 if (this.dead) return;
                 if (how && !this.bag.get(how)) {
-                    printLine('"' + how + '" no está en tu mochila.');
+                    printLine('"' + how + '" no está dentro de sus pertenencias.');
                     return;
                 }
                 this.curr.breakItem(what, how);
@@ -1502,7 +1502,7 @@
             weigh(what) {
                 if (this.dead) return;
                 if (!this.bag.get('Balanza')) {
-                    printLine('No tienes la balanza.');
+                    printLine('Usted no trae la balanza.');
                     return;
                 }
 
