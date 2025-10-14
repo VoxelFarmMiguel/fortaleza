@@ -12,3 +12,8 @@ __pycache__/
 *~
 *.bak
 *.swp
+
+# Development files
+index.dev.html
+node_modules/
+package-lock.json
