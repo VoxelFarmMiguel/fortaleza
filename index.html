@@ -882,9 +882,31 @@
 
             get(nm) {
                 const normalized = normalizeString(nm.toLowerCase().trim());
+
+                // First, try exact match
+                let exactMatch = this.items.find(item => {
+                    const itemName = normalizeString(item.name.toLowerCase());
+                    return itemName === normalized;
+                });
+                if (exactMatch) return exactMatch;
+
+                // Then find all partial matches where item name starts with the search term
+                let matches = this.items.filter(item => {
+                    const itemName = normalizeString(item.name.toLowerCase());
+                    return itemName.startsWith(normalized);
+                });
+
+                // If we have matches, return the shortest one (most specific)
+                if (matches.length > 0) {
+                    return matches.reduce((shortest, current) =>
+                        current.name.length < shortest.name.length ? current : shortest
+                    );
+                }
+
+                // Finally, try substring match (item name contains search term)
                 return this.items.find(item => {
                     const itemName = normalizeString(item.name.toLowerCase());
-                    return itemName.includes(normalized) || normalized.includes(itemName);
+                    return itemName.includes(normalized);
                 });
             }
 
