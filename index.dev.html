@@ -595,7 +595,7 @@
 
         <!-- NEW: only this part gets curved -->
         <div class="crt-screen">
-            <div id="title">LA FORTALEZA</div>
+            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v1.3</span></div>
             <div id="output"></div>
             <div id="input-container">
             <input type="text" id="input" placeholder="Escribe tu comando aquí..." autocomplete="off" autofocus>
@@ -1014,7 +1014,8 @@
                 const weaponName = weapon ? weapon.toLowerCase() : '';
                 const lethalName = this.lethalWeapon ? this.lethalWeapon.toLowerCase() : '';
 
-                if (weaponName.includes(lethalName) || lethalName.includes(weaponName)) {
+                // Weapon must match exactly (Pascal uses Equals function)
+                if (weaponName === lethalName) {
                     printLine(this.confession);
                     return super.die(weapon);
                 } else {
@@ -1774,7 +1775,7 @@
                 'Usted atraviesa la puerta sin dificultades.', rooms[3]));
             rooms[5].insert(new Linking('Libro', 'Es un libro normal.', '',
                 '¡Usted ha atravesado el libro!', rooms[12]));
-            rooms[5].insert(new Guard('Cíclope', 'Parece estar cuidando la puerta.', decodeLine(12) + decodeLine(13), decodeLine(4)));  // keys[12,13,4]: Puedes pasar..., Nombus Rostomelaris, Maza
+            rooms[5].insert(new Guard('Cíclope', 'Parece estar cuidando la puerta.', '¡Arrrggghhhh! ¡Me has matado!' + decodeLine(12), decodeLine(13)));  // keys[12,13]: Puedes pasar..., Maza
             rooms[5].insert(new Linking('Puerta', 'Es una puerta para gigantes.', decodeLine(14),  // key[14]: Nombus Rostomelaris
                 'Usted se encuentra del otro lado de la puerta.', rooms[6]));
 
@@ -1894,24 +1895,24 @@
             rooms[18].insert(new Linking('Tráquea', 'Luce igual que en los libros de biología que había en su escuela.', '',
                 'Usted atraviesa por la tráquea de la Bestia.', rooms[17]));
             rooms[18].insert(new Guard('Centro de los pulmones', 'De aquí surge la vida de los pulmones.',
-                decodeLine(36), decodeLine(46)));  // keys[36,46]: Usted ha destruido los pulmones..., Arco
+                decodeLine(35), decodeLine(32)));  // keys[35,32]: message, weapon
 
             // Room 19: Estómago
             rooms[19].insert(new Linking('Esófago', 'Parece un túnel.', '',
                 'Usted atraviesa por el esófago de la Bestia.', rooms[17]));
             rooms[19].insert(new Guard('Centro del estomago', 'De aquí surge la vida del estómago.',
-                '¡Usted ha matado al centro del estómago!', decodeLine(44)));  // key[44]: nada
+                '¡Usted ha matado al centro del estómago!', decodeLine(33)));  // key[33]: weapon
 
             // Room 20: Corazón
             rooms[20].insert(new Linking('Arteria principal', 'Conduce al corazón seguramente.', '',
                 'Usted atraviesa por la arteria principal de la Bestia.', rooms[17]));
             rooms[20].insert(new Guard('Centro del corazon', 'De aquí surge la vida del corazón.',
-                decodeLine(28), decodeLine(20)));  // keys[28,20]: Espada, Pocion para crecer
+                decodeLine(37), decodeLine(34)));  // keys[37,34]: message, weapon
 
             // Room 21: Cerebro
             rooms[21].insert(new Thing('Inscripción', decodeLine(40), 10));  // key[40]: ¿Mataste al Troll?
             rooms[21].insert(new Guard('Centro del cerebro', '¡Usa la antorcha!', 'XVBCZXV XBVCZX BVZXC!!!!! ',
-                decodeLine(47)));  // key[47]: Maquina del tiempo
+                decodeLine(38)));  // key[38]: weapon
 
             // Room 22: Almacén
             rooms[22].insert(new Thing('Hacha', 'Está muy afilada.', 10));
@@ -1929,7 +1930,7 @@
                 'Usted sale del páramo.', rooms[24]));
             rooms[23].insert(new OpenLink('Pozo', 'Es muy profundo.',
                 'Usted cae vertiginosamente por el pozo y, antes de que pueda darse cuenta, está en el exterior de la fortaleza.', rooms[0]));
-            rooms[23].insert(new Guard('Lobo', 'Es del tamaño de un ternero. La única forma de pasar por la puerta de cristal es matándolo.', decodeLine(28), 'Látigo'));  // key[28]: Espada
+            rooms[23].insert(new Guard('Lobo', 'Es del tamaño de un ternero. La única forma de pasar por la puerta de cristal es matándolo.', decodeLine(44), 'Latigo'));  // key[44]: confession
 
             // Room 24: Salón de cristal
             rooms[24].insert(new Linking('Puerta de cristal', 'Es muy delgada.', decodeLine(42),  // key[42]: Cuidado con el túnel y la puerta de tela...
