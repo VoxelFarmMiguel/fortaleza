@@ -8,7 +8,7 @@ async function build() {
     console.log('Building production version...');
 
     // Read the source HTML
-    const html = fs.readFileSync('index.html', 'utf8');
+    const html = fs.readFileSync('index.dev.html', 'utf8');
 
     // Extract JavaScript between <script> tags
     const scriptMatch = html.match(/<script>([\s\S]*?)<\/script>/);
