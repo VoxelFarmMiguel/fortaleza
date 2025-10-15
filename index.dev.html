@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza v1.6 - Aventura de Texto</title>
+    <title>La Fortaleza v1.7 - Aventura de Texto</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -595,7 +595,7 @@
 
         <!-- NEW: only this part gets curved -->
         <div class="crt-screen">
-            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v1.6</span></div>
+            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v1.7</span></div>
             <div id="output"></div>
             <div id="input-container">
             <input type="text" id="input" placeholder="Escribe tu comando aquí..." autocomplete="off" autofocus>
@@ -1120,6 +1120,17 @@
                 if (psKey.toLowerCase() === this.answer.toLowerCase()) {
                     printLine('¡Ha resuelto el acertijo!');
                     this.open = true;
+                    // Find and open the reverse link
+                    if (this.destination) {
+                        const reverseLink = this.destination.items.find(item =>
+                            item.destination === gameState.player.curr &&
+                            (item instanceof Linking || item instanceof DangerLink ||
+                             item instanceof DangerLink2 || item instanceof RiddleLink || item instanceof OpenLink)
+                        );
+                        if (reverseLink) {
+                            reverseLink.open = true;
+                        }
+                    }
                     return true;
                 } else {
                     if (psKey === '') {
