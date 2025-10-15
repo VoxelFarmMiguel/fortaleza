@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza v2.1 - Aventura de Texto</title>
+    <title>La Fortaleza v2.2 - Aventura de Texto</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -595,7 +595,7 @@
 
         <!-- NEW: only this part gets curved -->
         <div class="crt-screen">
-            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v2.1</span></div>
+            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v2.2</span></div>
             <div id="output"></div>
             <div id="input-container">
             <input type="text" id="input" placeholder="Escribe tu comando aquí..." autocomplete="off" autofocus>
@@ -1805,7 +1805,7 @@
             rooms[8].insert(new Thing('Grabado', 'En el grabado está usted, hablando con una muchacha.', 3));
             rooms[8].insert(new Linking('Puerta roja', 'Da al pasillo.', '', 'Usted está en el pasillo nuevamente.', rooms[6]));
             rooms[8].insert(new Hidden('Cama', 'Es tan fuerte que solo con un hacha podría romperla.',
-                decodeLine(19),  // key[19]: Hacha
+                decodeLine(18),  // key[18]: Hacha
                 new Linking('Puerta', 'Está en el suelo.', '', 'Usted entra a la armería.', rooms[10])));
 
             // Room 9: Laboratorio
