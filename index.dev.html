@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza v2.4 - Aventura de Texto</title>
+    <title>La Fortaleza v2.5 - Aventura de Texto</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -595,7 +595,7 @@
 
         <!-- NEW: only this part gets curved -->
         <div class="crt-screen">
-            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v2.4</span></div>
+            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v2.5</span></div>
             <div id="output"></div>
             <div id="input-container">
             <input type="text" id="input" placeholder="Escribe tu comando aquí..." autocomplete="off" autofocus>
@@ -734,7 +734,8 @@
                     items: room.items.map(item => ({
                         name: item.name,
                         dead: item.dead || false,
-                        open: item.open !== undefined ? item.open : undefined
+                        open: item.open !== undefined ? item.open : undefined,
+                        happy: item.happy !== undefined ? item.happy : undefined
                     })),
                     visited: room.visited
                 })),
@@ -779,7 +780,7 @@
                         currentItemNames.includes(item.name)
                     );
 
-                    // Update dead status for living things and open status for doors
+                    // Update dead status for living things, open status for doors, and happy status for trolls
                     roomState.items.forEach(savedItem => {
                         const item = gameState.rooms[idx].items.find(i => i.name === savedItem.name);
                         if (item) {
@@ -788,6 +789,9 @@
                             }
                             if (savedItem.open !== undefined) {
                                 item.open = savedItem.open;
+                            }
+                            if (savedItem.happy !== undefined) {
+                                item.happy = savedItem.happy;
                             }
                         }
                     });
