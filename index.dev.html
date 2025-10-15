@@ -1120,17 +1120,6 @@
                 if (psKey.toLowerCase() === this.answer.toLowerCase()) {
                     printLine('¡Ha resuelto el acertijo!');
                     this.open = true;
-                    // Find and open the reverse link
-                    if (this.destination) {
-                        const reverseLink = this.destination.items.find(item =>
-                            item.destination === gameState.player.curr &&
-                            (item instanceof Linking || item instanceof DangerLink ||
-                             item instanceof DangerLink2 || item instanceof RiddleLink || item instanceof OpenLink)
-                        );
-                        if (reverseLink) {
-                            reverseLink.open = true;
-                        }
-                    }
                     return true;
                 } else {
                     if (psKey === '') {
