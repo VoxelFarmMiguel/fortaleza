@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza v2.2 - Aventura de Texto</title>
+    <title>La Fortaleza v2.3 - Aventura de Texto</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -595,7 +595,7 @@
 
         <!-- NEW: only this part gets curved -->
         <div class="crt-screen">
-            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v2.2</span></div>
+            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v2.3</span></div>
             <div id="output"></div>
             <div id="input-container">
             <input type="text" id="input" placeholder="Escribe tu comando aquí..." autocomplete="off" autofocus>
@@ -1795,7 +1795,7 @@
             rooms[7].insert(new Thing('Poción para crecer', 'Tiene un olor muy repugnante.', 5));
             rooms[7].insert(new Linking('Puerta vieja', 'Da al pasillo.', '', 'Usted ha salido.', rooms[6]));
             rooms[7].insert(new DangerLink('Escaparate', 'Tiene las puertas llenas de arañazos.', '',
-                decodeLine(16) + decodeLine(17), 'Candelabro', rooms[13]));  // keys[16,17]: Usted cae durante..., gentil con la doncella...
+                decodeLine(16), 'Candelabro', rooms[13]));  // key[16]: Usted cae durante..., gentil con la doncella...
             rooms[7].insert(new Troll('Bruja', 'Parece tener mil años.', 'Escoba',
                 decodeLine(17),  // key[17]: Escucha bien, hijo...
                 'Tráeme mi escoba y te daré un consejo.'));
@@ -1883,9 +1883,9 @@
             rooms[17].insert(new Linking('Garganta', 'Es roja y carnosa.', '',
                 'Usted atraviesa por la garganta de la Bestia.', rooms[16]));
             rooms[17].insert(new DangerLink('Traquea', 'Luce igual que en los libros de biología que había en su escuela.', '',
-                'Usted atraviesa por la tráquea de la Bestia.', decodeLine(9), rooms[18]));  // key[9]: Paraguas
+                'Usted atraviesa por la tráquea de la Bestia.', decodeLine(30), rooms[18]));  // key[30]: Talisman de aire
             rooms[17].insert(new DangerLink('Esofago', 'Parece un túnel.', '',
-                'Usted atraviesa por el esófago de la Bestia.', decodeLine(34), rooms[19]));  // key[34]: Latigo
+                'Usted atraviesa por el esófago de la Bestia.', decodeLine(31), rooms[19]));  // key[31]: Pastel de cerezas
             rooms[17].insert(new DangerLink('Arteria principal', 'Conduce al corazón seguramente.', '',
                 'Usted atraviesa por la arteria principal de la Bestia.', 'Corazón de unicornio', rooms[20]));
 
@@ -1908,7 +1908,7 @@
                 decodeLine(37), decodeLine(34)));  // keys[37,34]: message, weapon
 
             // Room 21: Cerebro
-            rooms[21].insert(new Thing('Inscripción', decodeLine(40), 10));  // key[40]: ¿Mataste al Troll?
+            rooms[21].insert(new Thing('Inscripción', decodeLine(39), 10));  // key[39]: ¿Mataste al Troll?
             rooms[21].insert(new Guard('Centro del cerebro', '¡Usa la antorcha!', 'XVBCZXV XBVCZX BVZXC!!!!! ',
                 decodeLine(38)));  // key[38]: weapon
 
@@ -1918,7 +1918,7 @@
                 'Usted sale del almacén.', rooms[12]));
             rooms[22].insert(new Linking('Puerta verde', 'Usted presiente que hay algo muy grande detrás de ella.', '',
                 'Usted entra al páramo.', rooms[23]));
-            rooms[22].insert(new Troll('Ratón', 'Tiene puesto un delantal de alquimista.', decodeLine(41),  // key[41]: Piedra filosofal
+            rooms[22].insert(new Troll('Ratón', 'Tiene puesto un delantal de alquimista.', decodeLine(40),  // key[40]: Piedra filosofal
                 decodeLine(41), 'No tengo tiempo para atenderte. Llevo medio siglo buscando la quinta esencia.'));
 
             // Room 23: Páramo
@@ -1936,7 +1936,7 @@
             rooms[24].insert(new Linking('Puerta de tela', 'Es una puerta normal, pero de tela.', '',
                 'Usted está atrapado. No hay salida.', rooms[24])); // Trap room
             rooms[24].insert(new RiddleLink('Puerta triangular', 'Tiene forma de un triángulo de siete lados.',
-                '¿Cuál es el nombre del duende?', decodeLine(24),  // key[24]: Rumpelstinskin
+                '¿Cuál es el nombre del duende?', decodeLine(23),  // key[23]: Rumpelstinskin
                 'Usted entra a la boca de la Bestia.', rooms[16]));
             rooms[24].insert(new Troll('Bailarina', 'Es muy joven.', 'Máquina del tiempo',
                 decodeLine(47), 'Quiero ser joven para siempre.'));  // key[47]: Maquina del tiempo
