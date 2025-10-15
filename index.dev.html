@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza v2.7 - Aventura de Texto</title>
+    <title>La Fortaleza v3.0 - Aventura de Texto</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -595,7 +595,7 @@
 
         <!-- NEW: only this part gets curved -->
         <div class="crt-screen">
-            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v2.7</span></div>
+            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v3.0</span></div>
             <div id="output"></div>
             <div id="input-container">
             <input type="text" id="input" placeholder="Escribe tu comando aquí..." autocomplete="off" autofocus>
@@ -1733,6 +1733,81 @@
             rooms[24] = new Room('Salón de cristal',
                 'Es como un caleidoscopio gigante. Cada varios segundos las paredes cambian de color y usted siente como si lo hubieran trasladado a otro lugar.');
 
+            rooms[25] = new Room('celda pequeña',
+                'Es una celda muy pequeña y oscura.');
+
+            rooms[26] = new Room('un puente de mármol',
+                'El puente es de mármol negro y está suspendido sobre un abismo sin fondo.');
+
+            rooms[27] = new Room('la Antesala del Laberinto',
+                'Usted puede sentir el laberinto esperándolo. El aire huele a miedo y a polvo antiguo.');
+
+            rooms[28] = new Room('la cueva del Minotauro',
+                'Una cueva enorme con paredes cubiertas de sangre seca. Hay huesos por todas partes.');
+
+            rooms[29] = new Room('el Salón de los elegidos',
+                'Las paredes están cubiertas con los nombres de aquellos que llegaron hasta aquí.');
+
+            rooms[30] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[31] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[32] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[33] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[34] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[35] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[36] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[37] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[38] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[39] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[40] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[41] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[42] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[43] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[44] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[45] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[46] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[47] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[48] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[49] = new Room('el Jardín',
+                'Se podrían construir varias ciudades en su interior.');
+
             gameState.rooms = rooms;
 
             // Populate rooms with items and links
@@ -1751,8 +1826,17 @@
                 'Su sombra desaparece lentamente al cruzar la puerta. Siente cómo el miedo se le enreda en los zapatos.', rooms[1]));
             rooms[0].insert(new OpenLink('Túnel', 'Parece muy largo.',
                 'El olor de la carne descompuesta lo golpea. Usted siente ganas de vomitar.', rooms[3]));
+            rooms[0].insert(new Hidden('Pared solitaria', 'Usted no puede imaginar con qué motivo fue colocada ahí.',
+                decodeLine(3),  // key[3]: Ariete
+                new DangerLink('Puerta secreta', 'Usted se pregunta a dónde conducirá.', '',
+                    'Usted atraviesa la puerta.', 'Antorcha', rooms[26])));
 
             // Room 1: Salón de recepciones
+            rooms[1].insert(new Hidden('Monolito de mármol', 'Es muy oscuro, pero a usted le parece que hay algo vivo en su interior.',
+                decodeLine(4),  // key[4]: Maza
+                new Troll('Trebol', 'Tiene cinco hojas.', 'Vaso de agua',
+                    decodeLine(5),  // key[5]: Busca a la doncella al lado del espejo...
+                    'Dame agua, por favor...')));
             rooms[1].insert(new Thing('Retrato', 'Es de Hitchcock (un anacronismo). Usted recuerda instintivamente algunas películas que le erizaron la piel: Psicosis, Vértigo y Los treinta y nueve escalones.', 1));
             rooms[1].insert(new Linking('Puerta principal', 'Inmensa y oprimente.', decodeLine(2),  // key[2]: Abrete Sesamo
                 'Usted se siente de regreso a la vida. Ha salido de La Fortaleza.', rooms[0]));
@@ -1853,6 +1937,7 @@
             // Room 11: Baños de la Bestia
             rooms[11].insert(new Thing('Rosa', 'Es más hermosa que todas las doncellas que usted no ha visto.', 1));
             rooms[11].insert(new Thing('Espejo', 'Usted se ve a sí mismo entregándole unos polvos al Troll.', 20));
+            rooms[11].insert(new Thing('Inscripción', 'Dice: ¡Mate al Troll! Y no haga sus necesidades en el suelo.', 2));
             rooms[11].insert(new Linking('Puerta verde', 'Conduce al jardín.', '', 'Usted entra al jardín.', rooms[12]));
             rooms[11].insert(new Troll('Troll', 'Está mirándose en un espejo. Tiene una figura tan repulsiva que usted aparta la vista.', 'Polvo mágico',
                 decodeLine(22), 'No me mates, por favor. Haz que nadie pueda ver mi fealdad.'));  // key[22]: Polvo magico
@@ -1952,6 +2037,8 @@
                 'Usted sale del páramo.', rooms[22]));
             rooms[23].insert(new Linking('Puerta de cristal', 'Es muy delgada.', decodeLine(42),  // key[42]: Cuidado con el túnel y la puerta de tela...
                 'Usted sale del páramo.', rooms[24]));
+            rooms[23].insert(new DangerLink('Túnel', 'Parece más acogedor que el túnel del exterior de la fortaleza.', '',
+                'Usted atraviesa el túnel.', decodeLine(43), rooms[23]));  // key[43]: Agua - trap door loops back
             rooms[23].insert(new OpenLink('Pozo', 'Es muy profundo.',
                 'Usted cae vertiginosamente por el pozo y, antes de que pueda darse cuenta, está en el exterior de la fortaleza.', rooms[0]));
             rooms[23].insert(new Guard('Lobo', 'Es del tamaño de un ternero. La única forma de pasar por la puerta de cristal es matándolo.', decodeLine(44), 'Latigo'));  // key[44]: confession
@@ -1960,12 +2047,167 @@
             rooms[24].insert(new Linking('Puerta de cristal', 'Es muy delgada.', decodeLine(42),  // key[42]: Cuidado con el túnel y la puerta de tela...
                 'Usted sale al páramo.', rooms[23]));
             rooms[24].insert(new Linking('Puerta de tela', 'Es una puerta normal, pero de tela.', '',
-                'Usted está atrapado. No hay salida.', rooms[24])); // Trap room
+                'Usted sale del salón de cristal.', rooms[25])); // Leads to jail
             rooms[24].insert(new RiddleLink('Puerta triangular', 'Tiene forma de un triángulo de siete lados.',
                 '¿Cuál es el nombre del duende?', decodeLine(23),  // key[23]: Rumpelstinskin
                 'Usted entra a la boca de la Bestia.', rooms[16]));
             rooms[24].insert(new Troll('Bailarina', 'Es muy joven.', 'Máquina del tiempo',
                 decodeLine(47), 'Quiero ser joven para siempre.'));  // key[47]: Maquina del tiempo
+
+            // Room 25: Celda (Prison cell)
+            rooms[25].insert(new Thing('Inscripción', 'Dice que usted pasará en esta celda el resto de sus días.', 41));  // succ(LWeight) = 41
+
+            // Room 26: Puente de mármol (Marble bridge)
+            rooms[26].insert(new Troll('Araña', 'Es un poco mayor que usted.', 'Hilo de Ariadna',
+                'Busca al Minotauro y mátalo con la espada.', '¡Pssssssss!'));
+            rooms[26].insert(new Thing('Martillo', 'Tiene dos mangos y tres cabezas.', 2));
+            rooms[26].insert(new DangerLink('Puerta secreta', 'Conduce al exterior de la fortaleza.', '',
+                'Usted atraviesa la puerta.', 'Antorcha', rooms[0]));
+            rooms[26].insert(new Hidden('Estatua de Satanás', 'Es infinitamente negra.',
+                'Cuadro', new Linking('Puerta oculta', 'Conduce a la antesala del laberinto.', '',
+                    'Usted atraviesa la puerta.', rooms[27])));
+            rooms[26].insert(new DangerLink2('Puerta', 'Conduce a la antesala del Laberinto.', '',
+                'Usted atraviesa la puerta.', 'Espada', rooms[27]));
+
+            // Room 27: Antesala del Laberinto
+            rooms[27].insert(new Linking('Puerta', 'Conduce al puente.', '', 'Usted atraviesa la puerta.', rooms[26]));
+            rooms[27].insert(new Troll('Crunch', 'Es muy similar a una boca con patas.', 'Pastel de cerezas',
+                'El 12 te guiará en el Laberinto. Luego solo debes dar un paso.', '¡Qué hambre!'));
+            rooms[27].insert(new Hidden('Columna de Cristal', 'Es muy alta.',
+                'Antorcha 3',
+                new Hidden('Puerta de madera', 'Parece muy frágil.', 'Martillo',
+                    new Linking('Puerta negra', 'Conduce al Jardín', '',
+                        'Usted entra al Jardín.', rooms[49]))));
+            rooms[27].insert(new OpenLink('Puerta verde', 'Conduce al Laberinto.', 'Usted atraviesa la puerta.', rooms[30]));
+            rooms[27].insert(new Troll('Dédalo', 'Parece haber sido herido por el cuerno de un toro gigante.', 'Vendajes',
+                'Solo el hierro te protegerá contra las flores.', 'Me muero...'));
+
+            // Room 28: Minotauro
+            rooms[28].insert(new OpenLink('Puerta', 'Conduce al Laberinto.', 'Usted atraviesa la puerta.', rooms[46]));
+            rooms[28].insert(new Thing('Antorcha 1', 'Es muy brillante.', 2));
+            rooms[28].insert(new Thing('Antorcha 2', 'Es muy brillante.', 2));
+            rooms[28].insert(new Thing('Antorcha 3', 'Es muy brillante.', 2));
+            rooms[28].insert(new Thing('Antorcha 4', 'Es muy brillante.', 2));
+            rooms[28].insert(new Thing('Antorcha 5', 'Es muy brillante.', 2));
+            rooms[28].insert(new Thing('Antorcha 6', 'Está apagada.', 2));
+            rooms[28].insert(new Thing('Antorcha 7', 'Es muy brillante.', 2));
+            rooms[28].insert(new Guard('Minotauro', 'Está sentado en un enorme trono de rocas.',
+                '¡Me has matado! Coge la antorcha del número divino y rompe la columna de cristal.', 'Espada'));
+
+            // Room 29: Salón de los elegidos
+            rooms[29].insert(new RiddleLink('Puerta dorada', 'Es de oro macizo.',
+                'Invente un alfabeto (el mayor que pueda) con el que no pueda crearse a la Bestia.',
+                'cdfghjklmnopqruvwxyz',
+                '¡Usted ha entrado al Cerebro de la Bestia!', rooms[21]));
+
+            // Rooms 30-48: Labyrinth maze (all "un pasillo del Laberinto")
+            // Room 30 (Pascal room 31)
+            rooms[30].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[31]));
+            rooms[30].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[27]));
+            rooms[30].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[37]));
+
+            // Room 31 (Pascal room 32)
+            rooms[31].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[30]));
+            rooms[31].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[32]));
+            rooms[31].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[43]));
+
+            // Room 32 (Pascal room 33)
+            rooms[32].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[25]));
+            rooms[32].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[31]));
+            rooms[32].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[33]));
+
+            // Room 33 (Pascal room 34)
+            rooms[33].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[34]));
+            rooms[33].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[40]));
+            rooms[33].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[32]));
+
+            // Room 34 (Pascal room 35)
+            rooms[34].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[33]));
+            rooms[34].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[35]));
+            rooms[34].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[45]));
+
+            // Room 35 (Pascal room 36)
+            rooms[35].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[48]));
+            rooms[35].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[34]));
+            rooms[35].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[36]));
+
+            // Room 36 (Pascal room 37)
+            rooms[36].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[28]));
+            rooms[36].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[30]));
+            rooms[36].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[35]));
+
+            // Room 37 (Pascal room 38)
+            rooms[37].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[25]));
+            rooms[37].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[38]));
+            rooms[37].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[30]));
+
+            // Room 38 (Pascal room 39)
+            rooms[38].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[30]));
+            rooms[38].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[37]));
+            rooms[38].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[39]));
+
+            // Room 39 (Pascal room 40)
+            rooms[39].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[30]));
+            rooms[39].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[25]));
+            rooms[39].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[38]));
+
+            // Room 40 (Pascal room 41)
+            rooms[40].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[32]));
+            rooms[40].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[33]));
+            rooms[40].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[41]));
+
+            // Room 41 (Pascal room 42)
+            rooms[41].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[31]));
+            rooms[41].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[42]));
+            rooms[41].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[40]));
+
+            // Room 42 (Pascal room 43)
+            rooms[42].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[25]));
+            rooms[42].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[41]));
+            rooms[42].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[43]));
+
+            // Room 43 (Pascal room 44)
+            rooms[43].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[44]));
+            rooms[43].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[31]));
+            rooms[43].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[30]));
+
+            // Room 44 (Pascal room 45)
+            rooms[44].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[43]));
+            rooms[44].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[31]));
+            rooms[44].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[30]));
+
+            // Room 45 (Pascal room 46)
+            rooms[45].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[46]));
+            rooms[45].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[32]));
+            rooms[45].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[34]));
+
+            // Room 46 (Pascal room 47)
+            rooms[46].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[45]));
+            rooms[46].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[33]));
+            rooms[46].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[47]));
+
+            // Room 47 (Pascal room 48)
+            rooms[47].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[30]));
+            rooms[47].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[48]));
+            rooms[47].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[46]));
+
+            // Room 48 (Pascal room 49) - Exit from labyrinth
+            rooms[48].insert(new OpenLink('Salida', 'Conduce a la entrada del laberinto.',
+                'Usted regresa a la entrada del Laberinto.', rooms[27]));
+
+            // Room 49 (Pascal room 50) - False Garden
+            rooms[49].insert(new Thing('Inscripción', '¡Cuidado! Este no es el Jardín verdadero.', 1));
+            rooms[49].insert(new Thing('Cedro', 'Le faltan algunas ramas. Al parecer, alguien las cortó para hacerse una cama.', 41));  // succ(LWeight) = 41
+            rooms[49].insert(new OpenLink('Puerta verde', 'Conduce a los baños de la Bestia.',
+                'Usted sale del jardín.', rooms[25]));
+            rooms[49].insert(new OpenLink('Puerta azul', 'Debe haber algo hemoso detrás de esta puerta.',
+                'Usted sale del jardín.', rooms[25]));
+            rooms[49].insert(new OpenLink('Puerta amarilla', 'Conduce a la sala de infusiones.',
+                'Usted sale del jardín.', rooms[25]));
+            rooms[49].insert(new RiddleLink('Puerta de hierro', 'Conduce los calabozos.',
+                '¿Cuántas antorchas iluminan al Minotauro?',
+                'Seis', 'Usted entra al salón de los elegidos.', rooms[29]));
+            rooms[49].insert(new OpenLink('Puerta de madera', 'Conduce al almacén.', 'Usted sale del jardín.', rooms[25]));
         }
 
         // ==================== UI FUNCTIONS ====================
