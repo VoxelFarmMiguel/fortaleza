@@ -756,20 +756,65 @@
             try {
                 const state = JSON.parse(stateStr);
 
+                // Reinitialize rooms to get fresh item objects with all their methods
+                createRooms();
+
                 // Restore player position
                 gameState.player.curr = gameState.rooms[state.currentRoomIndex];
 
-                // First restore room states
+                // Clear inventory first
+                gameState.player.bag.items = [];
+
+                // FIRST: Restore inventory by finding items in the freshly created rooms
+                // and moving them to inventory
+                console.log('[LOAD] Restoring', state.inventoryItems.length, 'items to inventory');
+                for (let savedItem of state.inventoryItems) {
+                    console.log('[LOAD] Looking for:', savedItem.name);
+                    // Find the item in all rooms (they're all there initially after createRooms)
+                    let found = false;
+                    for (let room of gameState.rooms) {
+                        const itemIndex = room.items.findIndex(i => i.name === savedItem.name);
+                        if (itemIndex !== -1) {
+                            console.log('[LOAD] Found', savedItem.name, 'in room:', room.name);
+                            // Remove from room and add to inventory
+                            const item = room.items[itemIndex];
+                            room.items.splice(itemIndex, 1);
+
+                            // Restore item state
+                            if (savedItem.dead !== undefined) {
+                                item.dead = savedItem.dead;
+                            }
+                            if (savedItem.open !== undefined) {
+                                item.open = savedItem.open;
+                            }
+                            if (savedItem.happy !== undefined) {
+                                item.happy = savedItem.happy;
+                            }
+
+                            gameState.player.bag.items.push(item);
+                            console.log('[LOAD] Added to inventory. Bag now has', gameState.player.bag.items.length, 'items');
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        console.log('[LOAD] ERROR: Could not find', savedItem.name);
+                    }
+                }
+                console.log('[LOAD] After inventory restore, bag has', gameState.player.bag.items.length, 'items');
+
+                // SECOND: Now restore room states (visited, item states)
+                // At this point, inventory items are already removed from rooms
                 state.roomStates.forEach((roomState, idx) => {
                     gameState.rooms[idx].visited = roomState.visited;
 
-                    // Remove items that should be gone
-                    const currentItemNames = roomState.items.map(i => i.name);
+                    // Keep only items that should still be in this room according to save
+                    const savedItemNames = roomState.items.map(i => i.name);
                     gameState.rooms[idx].items = gameState.rooms[idx].items.filter(item =>
-                        currentItemNames.includes(item.name)
+                        savedItemNames.includes(item.name)
                     );
 
-                    // Update dead status for living things, open status for doors, and happy status for trolls
+                    // Update state properties (dead, open, happy) for remaining items
                     roomState.items.forEach(savedItem => {
                         const item = gameState.rooms[idx].items.find(i => i.name === savedItem.name);
                         if (item) {
@@ -786,36 +831,11 @@
                     });
                 });
 
-                // Now restore inventory - items need to be found and removed from rooms
-                gameState.player.bag.items = [];
-                for (let savedItem of state.inventoryItems) {
-                    // Find item in all rooms
-                    for (let room of gameState.rooms) {
-                        const item = room.items.find(i => i.name === savedItem.name);
-                        if (item) {
-                            const takenItem = room.take(savedItem.name);
-                            if (takenItem) {
-                                // Restore item state
-                                if (savedItem.dead !== undefined) {
-                                    takenItem.dead = savedItem.dead;
-                                }
-                                if (savedItem.open !== undefined) {
-                                    takenItem.open = savedItem.open;
-                                }
-                                if (savedItem.happy !== undefined) {
-                                    takenItem.happy = savedItem.happy;
-                                }
-                                gameState.player.bag.items.push(takenItem);
-                                break;
-                            }
-                        }
-                    }
-                }
-
                 gameState.player.visits = state.playerVisits;
                 gameState.gameOver = state.gameOver;
                 gameState.gameWon = state.gameWon;
 
+                console.log('[LOAD] Load complete. Final inventory has', gameState.player.bag.items.length, 'items');
                 return true;
             } catch (e) {
                 printLine('Error al cargar la partida: ' + e.message, 'error');
