@@ -1439,14 +1439,6 @@
             walkT(door) {
                 if (this.dead) return;
                 const link = this.curr.get(door);
-                console.log('[WALK] Trying to cross:', door);
-                console.log('[WALK] Found object:', link);
-                console.log('[WALK] Object name:', link ? link.name : 'null');
-                console.log('[WALK] Object constructor:', link ? link.constructor.name : 'null');
-                console.log('[WALK] Is Linking?', link instanceof Linking);
-                console.log('[WALK] Is OpenLink?', link instanceof OpenLink);
-                console.log('[WALK] Is DangerLink?', link instanceof DangerLink);
-                console.log('[WALK] Is open?', link ? link.open : 'n/a');
                 if (link && (link instanceof Linking || link instanceof OpenLink ||
                     link instanceof DangerLink || link instanceof DangerLink2 ||
                     link instanceof RiddleLink)) {

@@ -27,7 +27,7 @@ async function build() {
             dead_code: true,
             drop_console: false, // Keep console for debugging if needed
             drop_debugger: true,
-            keep_classnames: false,
+            keep_classnames: true, // MUST keep class names for instanceof checks!
             keep_fnames: false,
             passes: 2
         },
