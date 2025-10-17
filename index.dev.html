@@ -1592,7 +1592,6 @@
         // Properly decoded keys from the original Turbo Pascal CP437 encoding
         // Original encoding: each character has 20 added to its CP437 byte value
         const decodedKeys = [
-            '',  // key[0] - not used
             'Hay un nombre que vas a necesitar mucho: Rumpelstinskin.',
             'Abrete Sesamo',
             'Ariete',
@@ -1608,7 +1607,8 @@
             'Maza',
             'Nombus Rostomelaris',
             'Luz',
-            'Usted cae durante varios minutos y, gracias al candelabro, cuando toca el suelo no se hace daño. Oye una voz que dice: "Sea gentil con la doncella, regálele una flor."',
+            'Usted cae durante varios minutos y, gracias al candelabro, cuando toca el suelo no se hace daño. Oye una voz que dice: "Sea ',
+            'gentil con la doncella, regálele una flor."',
             'Escucha bien, hijo. Cuando te digan "Prohibido", invoca la luz. Recuerda que la palabra crea a su significado.',
             'Hacha',
             'Pocion para crecer',
@@ -1638,7 +1638,8 @@
             'nada',
             'AAARRRRGGGG!!!! La palabra mágica es "Agua".',
             'Arco',
-            'Ahora seré joven por toda la eternidad. ¡Gracias!'
+            'Maquina del tiempo',
+            'Solo con una daga podrás matar el corazón.'
         ];
 
         function decodeLine(keyIndex) {
