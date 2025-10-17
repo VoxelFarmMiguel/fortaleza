@@ -808,10 +808,31 @@
                 state.roomStates.forEach((roomState, idx) => {
                     gameState.rooms[idx].visited = roomState.visited;
 
-                    // Keep only items that should still be in this room according to save
+                    // First, handle Hidden objects - if saved state has an item that's currently
+                    // hidden inside a Hidden object, we need to break it out
                     const savedItemNames = roomState.items.map(i => i.name);
+                    const currentItemNames = gameState.rooms[idx].items.map(i => i.name);
+
+                    // Find items in save that aren't in current room
+                    const missingItems = savedItemNames.filter(name => !currentItemNames.includes(name));
+
+                    // Check if any missing items are hidden inside Hidden objects
+                    for (let missingName of missingItems) {
+                        for (let item of gameState.rooms[idx].items) {
+                            if (item instanceof Hidden && item.hiddenThing && item.hiddenThing.name === missingName) {
+                                // This item was broken out - simulate breaking it
+                                const hidden = item.hiddenThing;
+                                gameState.rooms[idx].items = gameState.rooms[idx].items.filter(i => i !== item);
+                                gameState.rooms[idx].items.push(hidden);
+                                break;
+                            }
+                        }
+                    }
+
+                    // Keep only items that should still be in this room according to save
+                    const finalSavedNames = roomState.items.map(i => i.name);
                     gameState.rooms[idx].items = gameState.rooms[idx].items.filter(item =>
-                        savedItemNames.includes(item.name)
+                        finalSavedNames.includes(item.name)
                     );
 
                     // Update state properties (dead, open, happy) for remaining items
