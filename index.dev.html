@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza v1.7 - Aventura de Texto</title>
+    <title>La Fortaleza v1.8 - Aventura de Texto</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -595,7 +595,7 @@
 
         <!-- NEW: only this part gets curved -->
         <div class="crt-screen">
-            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v1.7</span></div>
+            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v1.8</span></div>
             <div id="output"></div>
             <div id="input-container">
             <input type="text" id="input" placeholder="Escribe tu comando aquí..." autocomplete="off" autofocus>
@@ -805,14 +805,11 @@
                 // Suppress output and images during replay
                 const originalPrintLine = window.printLine;
                 const originalShowImage = window.showImage;
-                let replayOutput = [];
 
-                window.printLine = function(text, type) {
-                    replayOutput.push({text, type});
-                };
+                window.printLine = function() {}; // Completely suppress output during replay
                 window.showImage = function() {}; // Suppress image changes during replay
 
-                // Replay all commands
+                // Replay all commands silently
                 for (let cmd of commands) {
                     if (gameState.player.dead) break;
                     executeCommand(cmd);
@@ -822,10 +819,17 @@
                 window.printLine = originalPrintLine;
                 window.showImage = originalShowImage;
 
-                // Show current room state
+                // Clear the output display
+                const output = document.getElementById('output');
+                output.innerHTML = '';
+
+                // Show success message
+                printLine('Partida cargada exitosamente.', 'success');
+                printLine('');
+
+                // Show current room state and update image
                 gameState.player.look();
 
-                printLine('Partida cargada exitosamente.', 'success');
                 return true;
             } catch (e) {
                 printLine('Error al cargar la partida: ' + e.message, 'error');
