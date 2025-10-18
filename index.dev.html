@@ -2622,10 +2622,9 @@
 
         // Execute a command (used by both processCommand and load replay)
         function executeCommand(command) {
-            // Parse command
-            const lowerCommand = command.toLowerCase();
-            const words = lowerCommand.split(' ');
-            const verb = words[0];
+            // Parse command - keep original case for passwords/keys
+            const words = command.split(' ');
+            const verb = words[0].toLowerCase();
             const rest = words.slice(1).join(' ');
 
             // Command handling
@@ -2696,15 +2695,15 @@
                     break;
 
                 case 'abrir':
-                    const parts = lowerCommand.split(' con ');
-                    const door = parts[0].replace('abrir ', '').trim();
+                    const parts = command.split(' con ');
+                    const door = parts[0].replace(/abrir /i, '').trim();
                     const key = parts[1] ? parts[1].trim() : '';
                     gameState.player.openD(door, key);
                     break;
 
                 case 'romper':
-                    const breakParts = lowerCommand.split(' con ');
-                    const what = breakParts[0].replace('romper ', '').trim();
+                    const breakParts = command.split(' con ');
+                    const what = breakParts[0].replace(/romper /i, '').trim();
                     const weapon = breakParts[1] ? breakParts[1].trim() : '';
                     gameState.player.breakItem(what, weapon);
                     break;
@@ -2712,15 +2711,15 @@
                 case 'matar':
                 case 'atacar':
                 case 'destruir':
-                    const killParts = lowerCommand.split(' con ');
-                    const target = killParts[0].replace(/^(matar|atacar|destruir) /, '').trim();
+                    const killParts = command.split(' con ');
+                    const target = killParts[0].replace(/^(matar|atacar|destruir) /i, '').trim();
                     const weap = killParts[1] ? killParts[1].trim() : '';
                     gameState.player.kill(target, weap);
                     break;
 
                 case 'dar':
-                    const giveParts = lowerCommand.split(' a ');
-                    const gift = giveParts[0].replace('dar ', '').trim();
+                    const giveParts = command.split(' a ');
+                    const gift = giveParts[0].replace(/dar /i, '').trim();
                     const recipient = giveParts[1] ? giveParts[1].trim() : '';
                     gameState.player.give(gift, recipient);
                     break;
@@ -2803,12 +2802,12 @@
 
             printLine('> ' + command, 'prompt');
 
-            // Track state-changing commands for save system
+            executeCommand(command);
+
+            // Track state-changing commands AFTER execution
             if (shouldSaveCommand(command)) {
                 gameState.commandHistory.push(command);
             }
-
-            executeCommand(command);
         }
 
         // Check win condition
