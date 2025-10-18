@@ -1583,6 +1583,7 @@
         // Properly decoded keys from the original Turbo Pascal CP437 encoding
         // Original encoding: each character has 20 added to its CP437 byte value
         const decodedKeys = [
+            '',  // key[0] - not used, placeholder for 1-indexed Pascal array
             'Hay un nombre que vas a necesitar mucho: Rumpelstinskin.',
             'Abrete Sesamo',
             'Ariete',
@@ -1635,8 +1636,7 @@
 
         function decodeLine(keyIndex) {
             // Return the properly decoded key by index
-            // Pascal uses 1-indexed arrays, JavaScript uses 0-indexed
-            return decodedKeys[keyIndex - 1] || '';
+            return decodedKeys[keyIndex] || '';
         }
 
         // ==================== GAME INITIALIZATION ====================
