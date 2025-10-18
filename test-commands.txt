@@ -1,0 +1,36 @@
+mirar
+tomar maza
+inventario
+ver maza
+dejar maza
+tomar maza
+tomar pastel de cerezas
+inventario
+hablar llamador de bronce
+dar cigarro a llamador de bronce
+abrir puerta principal
+abrir puerta principal con abrete sesamo
+atravesar puerta principal
+mirar
+ver retrato
+romper monolito de mármol
+romper monolito de mármol con maza
+dar vaso de agua a trebol
+hablar trebol
+atravesar puerta negra
+mirar
+tomar escoba
+tomar hilo de ariadna
+atravesar puerta azul
+mirar
+tomar balanza
+dar lanza a estatua de atenea
+hablar estatua de atenea
+dar paraguas a estatua de hermes
+atravesar escalera
+mirar
+tomar hueso de gato
+romper espejo opaco
+romper espejo opaco con hueso de gato
+atravesar puerta oculta
+mirar

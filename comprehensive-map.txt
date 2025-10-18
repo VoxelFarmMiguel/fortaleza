@@ -1,0 +1,145 @@
+# Comprehensive exploration to map all areas
+# Start from beginning and explore systematically
+
+# Initial area
+mirar
+ayuda
+
+# Open main door and explore initial paths
+abrir puerta principal con abrete sesamo
+atravesar puerta principal
+mirar
+
+# Get maza and break monolito
+atravesar puerta principal
+tomar maza
+atravesar puerta principal
+romper monolito de mármol con maza
+mirar
+
+# Explore through Sala de juegos
+atravesar puerta negra
+mirar
+tomar hilo de ariadna
+tomar escoba
+inventario
+
+# Go to Patio through tunnel from exterior
+atravesar puerta negra
+atravesar puerta principal
+atravesar tunel
+mirar
+
+# Biblioteca
+atravesar puerta verde
+mirar
+dejar maza
+tomar vaso de agua
+tomar candelabro
+
+# Try the escalera riddle
+atravesar puerta verde
+atravesar puerta azul
+abrir escalera con treinta y nueve
+atravesar escalera
+mirar
+tomar hueso de gato
+romper espejo opaco con hueso de gato
+mirar
+
+# Doncella's room
+atravesar puerta oculta
+mirar
+tomar corazón de unicornio
+dar rosa a doncella
+hablar doncella
+
+# Jardín and its branches
+atravesar puerta azul
+mirar
+
+# Baños
+atravesar puerta verde
+mirar
+tomar rosa
+hablar troll
+
+# Sala de infusiones
+atravesar puerta verde
+atravesar puerta amarilla
+mirar
+tomar cigarro
+tomar taza de café
+hablar arpía
+
+# Pasillo
+atravesar puerta gris
+mirar
+tomar antorcha
+
+# Cuarto del guerrero
+atravesar puerta roja
+mirar
+tomar vendajes
+ver grabado
+
+# Alcoba de la bruja
+atravesar puerta roja
+atravesar puerta vieja
+mirar
+tomar polvo mágico
+tomar poción para crecer
+hablar bruja
+dar escoba a bruja
+hablar bruja
+
+# Try the giant door
+atravesar puerta vieja
+abrir puerta
+atravesar puerta
+mirar
+
+# Calabozos
+atravesar puerta
+atravesar puerta gris
+atravesar puerta amarilla
+atravesar puerta amarilla
+atravesar puerta de hierro
+mirar
+tomar paraguas
+tomar talismán de aire
+hablar esqueleto
+
+# Almacenes
+atravesar puerta de hierro
+atravesar puerta de madera
+mirar
+tomar hacha
+hablar ratón
+
+# Páramo
+atravesar puerta verde
+mirar
+ver lobo
+hablar lobo
+ver pozo
+
+# Try tunnel with protection
+tomar paraguas (if not already)
+atravesar tunel
+mirar
+
+# Puerta de cristal - need to kill lobo first?
+matar lobo con hacha
+atravesar puerta de cristal
+mirar
+
+# Back to exterior to give cigarro
+atravesar tunel (back out)
+tomar pastel de cerezas
+dar cigarro a llamador de bronce
+hablar llamador de bronce
+
+# Break pared solitaria if we have ariete
+romper pared solitaria con ariete
+mirar

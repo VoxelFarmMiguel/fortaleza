@@ -1,0 +1,8 @@
+# Test that will save in one session and load in another
+# This file is for the SAVE session
+abrir puerta principal con abrete sesamo
+atravesar puerta principal
+atravesar puerta principal
+tomar maza
+inventario
+guardar testsave

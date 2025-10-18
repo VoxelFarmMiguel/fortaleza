@@ -1,0 +1,154 @@
+# LA FORTALEZA - Solution Guide
+# (Work in Progress - Based on Natural Gameplay Exploration)
+
+## DISCOVERED THROUGH PLAYING:
+
+### Opening the Fortress
+abrir puerta principal con abrete sesamo
+atravesar puerta principal
+
+### Getting Started - Reveal Trebol
+atravesar puerta principal
+tomar maza
+atravesar puerta principal
+romper monolito de mármol con maza
+
+### Quest: Give Water to Trebol
+atravesar puerta negra
+atravesar puerta azul
+atravesar puerta verde
+tomar vaso de agua
+atravesar puerta verde
+atravesar puerta azul
+atravesar puerta negra
+atravesar puerta principal
+atravesar puerta principal
+dar vaso de agua a trebol
+hablar trebol
+# Trebol says: "Busca a la doncella al lado del espejo que romperás con un hueso"
+
+### Quest: Find the Doncella
+atravesar puerta principal
+atravesar puerta negra
+atravesar puerta azul
+abrir escalera con treinta y nueve
+atravesar escalera
+tomar hueso de gato
+romper espejo opaco con hueso de gato
+atravesar puerta oculta
+# Now in Alcoba de la doncella
+tomar corazón de unicornio
+
+### Exploring the Jardín
+atravesar puerta azul
+# Now in Jardín - major hub with many doors
+
+### Quest: The Troll in Baños wants Polvo Mágico
+atravesar puerta verde
+# In Baños de la Bestia
+tomar rosa
+# Troll says: "No me mates, por favor. Haz que nadie pueda ver mi fealdad"
+# The espejo shows: giving polvo to the troll
+# Inscription says: "¡Mate al Troll!"
+
+### Quest: Get Cigarro for Llamador de Bronce
+# From Jardín:
+atravesar puerta amarilla
+# In Sala de infusiones
+tomar cigarro
+tomar taza de café
+
+### Quest: Get Escoba for the Bruja
+# Escoba is in Sala de juegos
+# From Salón de recepciones:
+atravesar puerta negra
+tomar escoba
+# Then navigate to Pasillo:
+# (Salón -> Puerta negra -> Sala de juegos -> Puerta azul -> Patio ->
+#  Puerta verde -> Biblioteca - need to find alternate route)
+
+### Exploring Pasillo and Side Rooms
+# From Sala de infusiones:
+atravesar puerta gris
+# In Pasillo
+tomar antorcha
+
+# Cuarto del guerrero:
+atravesar puerta roja
+tomar vendajes
+ver grabado
+
+# Alcoba de la bruja:
+atravesar puerta vieja
+tomar polvo mágico
+tomar poción para crecer
+hablar bruja
+# Bruja says: "Tráeme mi escoba y te daré un consejo"
+
+### Quest Chains Discovered:
+# 1. Trebol wants water (vaso de agua) - COMPLETE
+# 2. Doncella needs polite greeting - rosa? - TODO
+# 3. Bruja wants escoba - TODO
+# 4. Troll in Baños wants polvo mágico - TODO
+# 5. Llamador de bronce wants cigarro - TODO
+# 6. Cíclope guards door - needs lanza or password - TODO
+
+### Areas Discovered:
+# - Exterior de la fortaleza
+# - Salón de recepciones
+# - Sala de juegos
+# - Patio interior
+# - Biblioteca
+# - Cuarto de espejos
+# - Alcoba de la doncella
+# - Jardín
+# - Baños de la Bestia
+# - Sala de infusiones
+# - Calabozos
+# - Almacenes de la Fortaleza
+# - Un extenso páramo
+# - Pasillo
+# - Cuarto del guerrero
+# - Alcoba de la bruja
+
+### Items Found:
+# - Maza (exterior)
+# - Vaso de agua (biblioteca)
+# - Hueso de gato (cuarto de espejos)
+# - Corazón de unicornio (alcoba de la doncella)
+# - Rosa (baños de la bestia)
+# - Cigarro (sala de infusiones)
+# - Taza de café (sala de infusiones)
+# - Escoba (sala de juegos)
+# - Hilo de Ariadna (sala de juegos)
+# - Antorcha (pasillo)
+# - Vendajes (cuarto del guerrero)
+# - Polvo mágico (alcoba de la bruja)
+# - Poción para crecer (alcoba de la bruja)
+# - Paraguas (calabozos)
+# - Talismán de aire (calabozos)
+# - Hacha (almacenes)
+# - Candelabro (biblioteca)
+# - Pastel de cerezas (exterior)
+
+### Still Need to Find:
+# - Lanza (for killing Cíclope)
+# - Ariete (for breaking Pared solitaria)
+# - Murciélago (mentioned in inscription)
+# - The 4 centers: Cerebro, Corazón, Estómago, Pulmones
+# - Route through Puerta prohibida
+# - Route through Puerta de cristal (after killing Lobo)
+# - Password for Biblioteca's Puerta
+
+### Key Clues:
+# - Roble: "Las palabras mágicas para abrir la puerta son obvias" → abrete sesamo
+# - Retrato: Hitchcock's "Los treinta y nueve escalones" → answer is "treinta y nueve"
+# - Inscripción (Sala de juegos): "Cuando hayas llegado casi al final, tendrás que regresar, a no ser que hayas hablado con el murciélago"
+# - Espejo in Baños: Shows giving polvo to Troll
+# - Lobo: "La única forma de pasar por la puerta de cristal es matándolo"
+# - Túnel in páramo kills without protection
+# - Puerta prohibida is "forbidden for humans" - may need transformation
+
+### TO BE CONTINUED...
+# This solution is incomplete. The game is very large and I am still exploring
+# to find all items and the centers needed to win.

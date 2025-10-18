@@ -1,0 +1,11 @@
+# Test save/load inventory persistence
+# Pick up items, save, load, check if inventory is restored
+
+abrir puerta principal con abrete sesamo
+atravesar puerta principal
+atravesar puerta principal
+tomar maza
+inventario
+guardar test1
+cargar test1
+inventario

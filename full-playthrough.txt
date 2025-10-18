@@ -1,0 +1,91 @@
+# Full playthrough - discovering all areas and solving the game
+# This will be run to create the final output
+
+# === PART 1: Opening and initial exploration ===
+mirar
+abrir puerta principal con abrete sesamo
+atravesar puerta principal
+mirar
+
+# Get maza and reveal Trebol
+atravesar puerta principal
+tomar maza
+atravesar puerta principal
+romper monolito de mármol con maza
+hablar trebol
+
+# Get water for Trebol
+atravesar puerta negra
+atravesar puerta azul
+atravesar puerta verde
+tomar vaso de agua
+atravesar puerta verde
+atravesar puerta azul
+atravesar puerta negra
+atravesar puerta principal
+atravesar puerta principal
+dar vaso de agua a trebol
+hablar trebol
+
+# === PART 2: Find the Doncella ===
+atravesar puerta principal
+atravesar puerta negra
+atravesar puerta azul
+abrir escalera con treinta y nueve
+atravesar escalera
+tomar hueso de gato
+romper espejo opaco con hueso de gato
+atravesar puerta oculta
+mirar
+
+# === PART 3: Explore the Jardín and all its branches ===
+atravesar puerta azul
+mirar
+
+# Baños de la Bestia
+atravesar puerta verde
+mirar
+tomar rosa
+hablar troll
+ver espejo
+atravesar puerta verde
+
+# Sala de infusiones
+atravesar puerta amarilla
+mirar
+tomar cigarro
+hablar arpía
+atravesar puerta amarilla
+
+# Calabozos
+atravesar puerta de hierro
+mirar
+tomar paraguas
+tomar talismán de aire
+hablar esqueleto
+atravesar puerta de hierro
+
+# Almacenes
+atravesar puerta de madera
+mirar
+tomar hacha
+hablar ratón
+
+# Páramo
+atravesar puerta verde
+mirar
+ver lobo
+ver pozo
+hablar lobo
+
+# Try to kill lobo
+matar lobo con hacha
+
+# Try puerta de cristal if lobo is dead
+atravesar puerta de cristal
+mirar
+
+# Try tunnel with paraguas
+tomar paraguas
+atravesar tunel
+mirar

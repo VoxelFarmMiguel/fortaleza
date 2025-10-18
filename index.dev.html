@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza v3.4 - Aventura de Texto</title>
+    <title>La Fortaleza v3.5 - Aventura de Texto</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -595,7 +595,7 @@
 
         <!-- NEW: only this part gets curved -->
         <div class="crt-screen">
-            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v3.4</span></div>
+            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v3.5</span></div>
             <div id="output"></div>
             <div id="input-container">
             <input type="text" id="input" placeholder="Escribe tu comando aquí..." autocomplete="off" autofocus>
@@ -725,28 +725,68 @@
         }
 
         // ==================== SAVE/LOAD SYSTEM ====================
+        // Command-based save system: saves the history of state-changing commands
+        // and replays them on load to reconstruct the exact game state
+
+        // Commands that don't change state and should not be saved
+        const READ_ONLY_COMMANDS = ['mirar', 'ver', 'observar', 'examinar', 'inventario', 'inv',
+                                     'hablar', 'ayuda', 'help', 'partidas', 'pistas'];
+
+        // Dictionary for compressing common words in commands
+        // Using special Unicode characters to avoid conflicts
+        const COMPRESSION_DICT = {
+            'tomar': '\u00A1', 'coger': '\u00A2', 'ir': '\u00A3', 'puerta': '\u00A4',
+            'matar': '\u00A5', 'dar': '\u00A6', 'abrir': '\u00A7', 'romper': '\u00A8',
+            'dejar': '\u00A9', 'soltar': '\u00AA', 'atravesar': '\u00AB', 'cuarto': '\u00AC',
+            'pasillo': '\u00AD', 'laboratorio': '\u00AE', 'jardin': '\u00AF', 'biblioteca': '\u00B0',
+            'espejo': '\u00B1', 'guerrero': '\u00B2', 'hacha': '\u00B3', 'espada': '\u00B4',
+            'daga': '\u00B5', 'principal': '\u00B6', 'con': '\u00B7'
+        };
+
+        function shouldSaveCommand(command) {
+            const cmd = command.trim().toLowerCase();
+            // Don't save load/save commands
+            if (cmd.startsWith('cargar') || cmd.startsWith('guardar') || cmd.startsWith('borrar')) {
+                return false;
+            }
+            // Don't save read-only commands
+            const firstWord = cmd.split(' ')[0];
+            return !READ_ONLY_COMMANDS.includes(firstWord);
+        }
+
+        function compressCommands(commands) {
+            return commands.map(cmd => {
+                let compressed = cmd;
+                // Replace each word with its Unicode character
+                for (let [word, char] of Object.entries(COMPRESSION_DICT)) {
+                    compressed = compressed.replace(new RegExp('\\b' + word + '\\b', 'gi'), char);
+                }
+                return compressed;
+            });
+        }
+
+        function decompressCommands(commands) {
+            // Build reverse dictionary
+            const reverse = {};
+            for (let [word, char] of Object.entries(COMPRESSION_DICT)) {
+                reverse[char] = word;
+            }
+
+            return commands.map(cmd => {
+                let decompressed = cmd;
+                // Replace each Unicode character back with its word
+                for (let [char, word] of Object.entries(reverse)) {
+                    decompressed = decompressed.replace(new RegExp(char, 'g'), word);
+                }
+                return decompressed;
+            });
+        }
 
         function serializeGameState() {
+            // Compress command history before saving
+            const compressed = compressCommands(gameState.commandHistory);
             const state = {
-                currentRoomIndex: gameState.rooms.indexOf(gameState.player.curr),
-                inventoryItems: gameState.player.bag.items.map(item => ({
-                    name: item.name,
-                    dead: item.dead || false,
-                    open: item.open !== undefined ? item.open : undefined,
-                    happy: item.happy !== undefined ? item.happy : undefined
-                })),
-                roomStates: gameState.rooms.map(room => ({
-                    items: room.items.map(item => ({
-                        name: item.name,
-                        dead: item.dead || false,
-                        open: item.open !== undefined ? item.open : undefined,
-                        happy: item.happy !== undefined ? item.happy : undefined
-                    })),
-                    visited: room.visited
-                })),
-                playerVisits: gameState.player.visits,
-                gameOver: gameState.gameOver,
-                gameWon: gameState.gameWon,
+                commands: compressed,
                 timestamp: new Date().toISOString()
             };
             return JSON.stringify(state);
@@ -756,110 +796,40 @@
             try {
                 const state = JSON.parse(stateStr);
 
-                // Reinitialize rooms to get fresh item objects with all their methods
-                createRooms();
+                // Decompress commands
+                const commands = decompressCommands(state.commands);
 
-                // Restore player position
-                gameState.player.curr = gameState.rooms[state.currentRoomIndex];
+                // Reset the game completely (silent mode - no welcome message or initial look)
+                initGame(true);
 
-                // Clear inventory first
-                gameState.player.bag.items = [];
+                // Suppress output and images during replay
+                const originalPrintLine = window.printLine;
+                const originalShowImage = window.showImage;
+                let replayOutput = [];
 
-                // FIRST: Restore inventory by finding items in the freshly created rooms
-                // and moving them to inventory
-                console.log('[LOAD] Restoring', state.inventoryItems.length, 'items to inventory');
-                for (let savedItem of state.inventoryItems) {
-                    console.log('[LOAD] Looking for:', savedItem.name);
-                    // Find the item in all rooms (they're all there initially after createRooms)
-                    let found = false;
-                    for (let room of gameState.rooms) {
-                        const itemIndex = room.items.findIndex(i => i.name === savedItem.name);
-                        if (itemIndex !== -1) {
-                            console.log('[LOAD] Found', savedItem.name, 'in room:', room.name);
-                            // Remove from room and add to inventory
-                            const item = room.items[itemIndex];
-                            room.items.splice(itemIndex, 1);
+                window.printLine = function(text, type) {
+                    replayOutput.push({text, type});
+                };
+                window.showImage = function() {}; // Suppress image changes during replay
 
-                            // Restore item state
-                            if (savedItem.dead !== undefined) {
-                                item.dead = savedItem.dead;
-                            }
-                            if (savedItem.open !== undefined) {
-                                item.open = savedItem.open;
-                            }
-                            if (savedItem.happy !== undefined) {
-                                item.happy = savedItem.happy;
-                            }
-
-                            gameState.player.bag.items.push(item);
-                            console.log('[LOAD] Added to inventory. Bag now has', gameState.player.bag.items.length, 'items');
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
-                        console.log('[LOAD] ERROR: Could not find', savedItem.name);
-                    }
+                // Replay all commands
+                for (let cmd of commands) {
+                    if (gameState.player.dead) break;
+                    executeCommand(cmd);
                 }
-                console.log('[LOAD] After inventory restore, bag has', gameState.player.bag.items.length, 'items');
 
-                // SECOND: Now restore room states (visited, item states)
-                // At this point, inventory items are already removed from rooms
-                state.roomStates.forEach((roomState, idx) => {
-                    gameState.rooms[idx].visited = roomState.visited;
+                // Restore output functions
+                window.printLine = originalPrintLine;
+                window.showImage = originalShowImage;
 
-                    // First, handle Hidden objects - if saved state has an item that's currently
-                    // hidden inside a Hidden object, we need to break it out
-                    const savedItemNames = roomState.items.map(i => i.name);
-                    const currentItemNames = gameState.rooms[idx].items.map(i => i.name);
+                // Show current room state
+                gameState.player.look();
 
-                    // Find items in save that aren't in current room
-                    const missingItems = savedItemNames.filter(name => !currentItemNames.includes(name));
-
-                    // Check if any missing items are hidden inside Hidden objects
-                    for (let missingName of missingItems) {
-                        for (let item of gameState.rooms[idx].items) {
-                            if (item instanceof Hidden && item.hiddenThing && item.hiddenThing.name === missingName) {
-                                // This item was broken out - simulate breaking it
-                                const hidden = item.hiddenThing;
-                                gameState.rooms[idx].items = gameState.rooms[idx].items.filter(i => i !== item);
-                                gameState.rooms[idx].items.push(hidden);
-                                break;
-                            }
-                        }
-                    }
-
-                    // Keep only items that should still be in this room according to save
-                    const finalSavedNames = roomState.items.map(i => i.name);
-                    gameState.rooms[idx].items = gameState.rooms[idx].items.filter(item =>
-                        finalSavedNames.includes(item.name)
-                    );
-
-                    // Update state properties (dead, open, happy) for remaining items
-                    roomState.items.forEach(savedItem => {
-                        const item = gameState.rooms[idx].items.find(i => i.name === savedItem.name);
-                        if (item) {
-                            if (savedItem.dead !== undefined) {
-                                item.dead = savedItem.dead;
-                            }
-                            if (savedItem.open !== undefined) {
-                                item.open = savedItem.open;
-                            }
-                            if (savedItem.happy !== undefined) {
-                                item.happy = savedItem.happy;
-                            }
-                        }
-                    });
-                });
-
-                gameState.player.visits = state.playerVisits;
-                gameState.gameOver = state.gameOver;
-                gameState.gameWon = state.gameWon;
-
-                console.log('[LOAD] Load complete. Final inventory has', gameState.player.bag.items.length, 'items');
+                printLine('Partida cargada exitosamente.', 'success');
                 return true;
             } catch (e) {
                 printLine('Error al cargar la partida: ' + e.message, 'error');
+                console.error('[LOAD] Error:', e);
                 return false;
             }
         }
@@ -1670,7 +1640,12 @@
 
         // ==================== GAME INITIALIZATION ====================
 
-        function initGame() {
+        function initGame(silent = false) {
+            // Reset command history for save system
+            gameState.commandHistory = [];
+            gameState.gameOver = false;
+            gameState.gameWon = false;
+
             // Create player
             gameState.player = new Man('Indy', 'Aventurero');
 
@@ -1680,20 +1655,22 @@
             // Set starting room
             gameState.player.go(gameState.rooms[0]);
 
-            // Welcome message
-            printLine('Bienvenido a LA FORTALEZA', 'success');
-            printLine('');
-            const hour = new Date().getHours();
-            if (hour < 12) {
-                printLine('Buenos días.');
-            } else if (hour > 18) {
-                printLine('Buenas noches.');
-            } else {
-                printLine('Buenas tardes.');
+            if (!silent) {
+                // Welcome message
+                printLine('Bienvenido a LA FORTALEZA', 'success');
+                printLine('');
+                const hour = new Date().getHours();
+                if (hour < 12) {
+                    printLine('Buenos días.');
+                } else if (hour > 18) {
+                    printLine('Buenas noches.');
+                } else {
+                    printLine('Buenas tardes.');
+                }
+                printLine('');
+                printLine('Escribe "ayuda" para ver los comandos disponibles.');
+                gameState.player.look();
             }
-            printLine('');
-            printLine('Escribe "ayuda" para ver los comandos disponibles.');
-            gameState.player.look();
         }
 
         function createRooms() {
@@ -2643,17 +2620,8 @@
 
         // ==================== COMMAND PROCESSING ====================
 
-        window.processCommand = function() {
-            if (gameState.gameOver || gameState.gameWon || gameState.player.dead) return;
-
-            const input = document.getElementById('input');
-            const command = input.value.trim();
-            input.value = '';
-
-            if (!command) return;
-
-            printLine('> ' + command, 'prompt');
-
+        // Execute a command (used by both processCommand and load replay)
+        function executeCommand(command) {
             // Parse command
             const words = command.toLowerCase().split(' ');
             const verb = words[0];
@@ -2820,6 +2788,26 @@
             }
 
             checkWinCondition();
+        }
+
+        // Process command from user input
+        window.processCommand = function() {
+            if (gameState.gameOver || gameState.gameWon || gameState.player.dead) return;
+
+            const input = document.getElementById('input');
+            const command = input.value.trim();
+            input.value = '';
+
+            if (!command) return;
+
+            printLine('> ' + command, 'prompt');
+
+            // Track state-changing commands for save system
+            if (shouldSaveCommand(command)) {
+                gameState.commandHistory.push(command);
+            }
+
+            executeCommand(command);
         }
 
         // Check win condition

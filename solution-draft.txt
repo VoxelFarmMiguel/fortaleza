@@ -1,0 +1,61 @@
+# La Fortaleza - Solution Draft (Work in Progress)
+
+## Opening sequence
+abrir puerta principal con abrete sesamo
+atravesar puerta principal
+
+## Get Maza and break Monolito to get Trebol
+atravesar puerta principal
+tomar maza
+atravesar puerta principal
+romper monolito de mármol con maza
+
+## Get Vaso de agua for Trebol
+atravesar puerta negra
+atravesar puerta azul
+atravesar puerta verde
+tomar vaso de agua
+atravesar puerta verde
+atravesar puerta azul
+atravesar puerta negra
+atravesar puerta principal
+atravesar puerta principal
+
+## Give water to Trebol (he tells about Doncella)
+dar vaso de agua a trebol
+hablar trebol
+
+## Go to mirror room and find Doncella
+atravesar puerta principal
+atravesar puerta negra
+atravesar puerta azul
+abrir escalera con treinta y nueve
+atravesar escalera
+tomar hueso de gato
+romper espejo opaco con hueso de gato
+atravesar puerta oculta
+
+## In Doncella's room - try giving her the Rosa?
+tomar rosa (need to go to Baños first)
+dar rosa a doncella?
+hablar doncella
+
+## Get Escoba for Bruja
+(need to go back to Sala de juegos)
+tomar escoba
+(go to Bruja)
+dar escoba a bruja
+hablar bruja
+
+## Get Polvo mágico for the Troll in Baños
+tomar polvo mágico
+(go to Baños)
+dar polvo mágico a troll
+hablar troll (or does he disappear/die?)
+
+## Still need to find:
+- Lanza (for Cíclope)
+- Ariete (for Pared solitaria)
+- The 4 centers to destroy
+- How to get through Puerta prohibida
+- Murciélago

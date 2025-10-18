@@ -1,0 +1,43 @@
+Bienvenido a LA FORTALEZA
+Buenas noches.
+Escribe "ayuda" para ver los comandos disponibles.
+Estás en el exterior de la fortaleza.
+Las paredes son muy negras y al parecer, no tienen ventanas. Usted trata de ver el final de las torres, pero las nubes no se lo permiten.
+Ves aquí: Roble, Maza, Pastel de cerezas, Llamador de bronce, Puerta principal, Túnel, Pared solitaria
+
+======================================================================
+
+> abrir puerta principal con abrete sesamo
+Invocas las palabras mágicas:
+abrete sesamo!!!
+Ok.
+
+> atravesar puerta principal
+Su sombra desaparece lentamente al cruzar la puerta. Siente cómo el miedo se le enreda en los zapatos.
+Estás en el Salón de recepciones.
+Parece hecho para criaturas cientos de veces más grandes que los humanos. Está desierto, pero usted siente que es observado.
+Ves aquí: Monolito de mármol, Retrato, Puerta principal, Puerta negra
+
+> atravesar puerta principal
+Usted se siente de regreso a la vida. Ha salido de La Fortaleza.
+Estás en el exterior de la fortaleza.
+Las paredes son muy negras y al parecer, no tienen ventanas. Usted trata de ver el final de las torres, pero las nubes no se lo permiten.
+Ves aquí: Roble, Maza, Pastel de cerezas, Llamador de bronce, Puerta principal, Túnel, Pared solitaria
+
+> tomar maza
+Ok.
+
+> atravesar puerta principal
+Su sombra desaparece lentamente al cruzar la puerta. Siente cómo el miedo se le enreda en los zapatos.
+Estás en el Salón de recepciones.
+Parece hecho para criaturas cientos de veces más grandes que los humanos. Está desierto, pero usted siente que es observado.
+Ves aquí: Monolito de mármol, Retrato, Puerta principal, Puerta negra
+
+> romper monolito de mármol con maza
+¡Crash! Usted ha roto Monolito de mármol.
+¡Sorpresa! Ha encontrado: Trebol
+
+> hablar trebol
+Dame agua, por favor...
+
+Session saved to output.txt

@@ -1,0 +1,80 @@
+# La Fortaleza - Exploration Notes
+
+## Key Discoveries
+
+### Important Items Found:
+- **Cigarro** - Sala de infusiones (what Llamador de bronce wants)
+- **Vaso de agua** - Biblioteca (what Trebol wants)
+- **Hueso de gato** - Cuarto de espejos (breaks Espejo opaco)
+- **Corazón de unicornio** - Alcoba de la doncella
+- **Maza** - Exterior (breaks Monolito de mármol)
+- **Pastel de cerezas** - Exterior
+- **Candelabro** - Biblioteca
+- **Hilo de Ariadna** - Sala de juegos
+- **Escoba** - Sala de juegos
+- **Talismán de aire** - Calabozos
+- **Paraguas** - Calabozos
+- **Hacha** - Almacenes de la Fortaleza
+- **Taza de café** - Sala de infusiones
+
+### Rooms Discovered:
+1. **Exterior de la fortaleza** - Starting point
+2. **Salón de recepciones** - Through Puerta principal (needs "abrete sesamo")
+3. **Sala de juegos** - Through Puerta negra from Salón
+4. **Patio interior** - Through Túnel from Exterior
+5. **Biblioteca** - Through Puerta verde from Patio
+6. **Cuarto de espejos** - Through Escalera (needs answer "treinta y nueve")
+7. **Alcoba de la doncella** - Through Puerta oculta (revealed by breaking Espejo opaco)
+8. **Jardín** - Through Puerta azul from Alcoba
+9. **Baños de la Bestia** - Through Puerta verde from Jardín
+10. **Sala de infusiones** - Through Puerta amarilla from Jardín
+11. **Calabozos** - Through Puerta de hierro from Jardín
+12. **Almacenes de la Fortaleza** - Through Puerta de madera from Jardín
+
+### NPCs/Creatures:
+- **Llamador de bronce** - Wants cigarro
+- **Trebol** (Troll) - In Salón (wants Vaso de agua, gives hint about Doncella)
+- **Doncella** - In Alcoba (needs polite greeting)
+- **Cíclope** - In Biblioteca (guards puerta)
+- **Troll** - In Baños de la Bestia
+- **Arpía** - In Sala de infusiones
+- **Esqueleto** - In Calabozos
+- **Ratón** - In Almacenes
+
+### Key Clues:
+1. Roble: "Las palabras mágicas para abrir la puerta son obvias" → "abrete sesamo"
+2. Retrato: Hitchcock, mentions "Los treinta y nueve escalones" → answer to riddle is "treinta y nueve"
+3. Trebol (after water): "Busca a la doncella al lado del espejo que romperás con un hueso"
+4. Inscripción in Sala de juegos: "Cuando hayas llegado casi al final, tendrás que regresar, a no ser que hayas hablado con el murciélago"
+5. Doncella: Needs polite greeting (not tried yet)
+
+### Puzzle Solutions:
+- Puerta principal: "abrete sesamo"
+- Escalera riddle: "treinta y nueve"
+- Espejo opaco: Break with "hueso de gato"
+- Monolito de mármol: Break with "maza"
+
+### Additional Rooms Found:
+13. **Pasillo** - Through Puerta gris from Sala de infusiones (has Antorcha)
+14. **Cuarto del guerrero** - Through Puerta roja from Pasillo (has Vendajes, Grabado)
+15. **Alcoba de la bruja** - Through Puerta vieja from Pasillo (has Polvo mágico, Poción para crecer, Bruja)
+16. **Un extenso páramo** - Through Puerta verde from Almacenes (has Lobo, Pozo, Túnel that kills without protection, Puerta de cristal)
+
+### Quest Chains Discovered:
+- **Bruja wants Escoba** - Escoba is in Sala de juegos
+- **Llamador de bronce wants Cigarro** - Cigarro is in Sala de infusiones (found!)
+- **Trebol wants Vaso de agua** - Already discovered this
+- **Doncella needs polite greeting** - Still need to figure out
+- **Cyclops guards door in Biblioteca** - Need password or to kill with Lanza
+- **Lobo guards Puerta de cristal** - Need to kill it
+- **Túnel in páramo kills you** - Need protection (Paraguas? Talismán de aire?)
+
+### Still Need To Find:
+- Lanza (weapon for Cíclope)
+- Ariete (for breaking Pared solitaria)
+- Murciélago (bat - mentioned in inscription)
+- The 4 centers: Cerebro, Corazón, Estómago, Pulmones
+- How to talk to Doncella properly
+- What's behind Puerta prohibida (forbidden for humans - need transformation?)
+- What's behind Puerta de cristal (need to kill Lobo)
+- What's behind the locked Puerta in Biblioteca

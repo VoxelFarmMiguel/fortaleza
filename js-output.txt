@@ -1,0 +1,150 @@
+Bienvenido a LA FORTALEZA
+Buenas noches.
+Escribe "ayuda" para ver los comandos disponibles.
+Estás en el exterior de la fortaleza.
+Las paredes son muy negras y al parecer, no tienen ventanas. Usted trata de ver el final de las torres, pero las nubes no se lo permiten.
+Ves aquí: Roble, Maza, Pastel de cerezas, Llamador de bronce, Puerta principal, Túnel, Pared solitaria
+
+======================================================================
+
+> abrir puerta principal con abrete sesamo
+Invocas las palabras mágicas:
+abrete sesamo!!!
+Ok.
+
+> atravesar puerta principal
+Su sombra desaparece lentamente al cruzar la puerta. Siente cómo el miedo se le enreda en los zapatos.
+Estás en el Salón de recepciones.
+Parece hecho para criaturas cientos de veces más grandes que los humanos. Está desierto, pero usted siente que es observado.
+Ves aquí: Monolito de mármol, Retrato, Puerta principal, Puerta negra
+
+> atravesar puerta principal
+Usted se siente de regreso a la vida. Ha salido de La Fortaleza.
+Estás en el exterior de la fortaleza.
+Las paredes son muy negras y al parecer, no tienen ventanas. Usted trata de ver el final de las torres, pero las nubes no se lo permiten.
+Ves aquí: Roble, Maza, Pastel de cerezas, Llamador de bronce, Puerta principal, Túnel, Pared solitaria
+
+> tomar maza
+Ok.
+
+> atravesar puerta principal
+Su sombra desaparece lentamente al cruzar la puerta. Siente cómo el miedo se le enreda en los zapatos.
+Estás en el Salón de recepciones.
+Parece hecho para criaturas cientos de veces más grandes que los humanos. Está desierto, pero usted siente que es observado.
+Ves aquí: Monolito de mármol, Retrato, Puerta principal, Puerta negra
+
+> romper monolito de mármol con maza
+¡Crash! Usted ha roto Monolito de mármol.
+¡Sorpresa! Ha encontrado: Trebol
+
+> hablar trebol
+Dame agua, por favor...
+
+> atravesar puerta negra
+Usted atraviesa la puerta sin dificultades.
+Estás en la Sala de juegos.
+Usted trata de imaginar cómo eran los juegos del salón. Hay doce mesas y cada una tiene doce erizos.
+Ves aquí: Escoba, Hilo de Ariadna, Inscripción, Puerta negra, Puerta azul, Escalera
+
+> atravesar puerta azul
+Usted atraviesa la puerta sin dificultades.
+Estás en el Patio interior.
+El patio tiene forma de caracol. Cada uno o dos pasos se levanta una columna de mármol negro y se confunde en la altura con los árboles. Usted siente el crujido de las hojas secas bajo sus zapatos.
+Ves aquí: Balanza, Puerta azul, Puerta verde, Estatua de Atenea, Estatua de Hermes
+
+> atravesar puerta verde
+Usted atraviesa la puerta sin dificultades.
+Estás en la Biblioteca.
+Hay miles de libros en este lugar. Todos tienen alguna hoja marcada con una servilleta.
+Ves aquí: Vaso de agua, Candelabro, Puerta verde, Libro, Cíclope, Puerta
+
+> tomar vaso de agua
+Ok.
+
+> inventario
+Sus pertenecias son:
+Maza (39)
+Vaso de agua (1)
+No puede cargar nada más.
+
+> atravesar puerta verde
+Usted atraviesa la puerta sin dificultades.
+Estás en el Patio interior.
+El patio tiene forma de caracol. Cada uno o dos pasos se levanta una columna de mármol negro y se confunde en la altura con los árboles. Usted siente el crujido de las hojas secas bajo sus zapatos.
+Ves aquí: Balanza, Puerta azul, Puerta verde, Estatua de Atenea, Estatua de Hermes
+
+> atravesar puerta azul
+Usted atraviesa la puerta sin dificultades.
+Estás en la Sala de juegos.
+Usted trata de imaginar cómo eran los juegos del salón. Hay doce mesas y cada una tiene doce erizos.
+Ves aquí: Escoba, Hilo de Ariadna, Inscripción, Puerta negra, Puerta azul, Escalera
+
+> atravesar puerta negra
+Usted atraviesa la puerta sin dificultades.
+Estás en el Salón de recepciones.
+Parece hecho para criaturas cientos de veces más grandes que los humanos. Está desierto, pero usted siente que es observado.
+Ves aquí: Retrato, Puerta principal, Puerta negra, Trebol
+
+> dar vaso de agua a trebol
+¡Muchas muchas gracias!
+
+> hablar trebol
+Busca a la doncella al lado del espejo que romperás con un hueso. Ella te dirá dónde está el final de la Bestia.
+
+> atravesar puerta negra
+Usted atraviesa la puerta sin dificultades.
+Estás en la Sala de juegos.
+Usted trata de imaginar cómo eran los juegos del salón. Hay doce mesas y cada una tiene doce erizos.
+Ves aquí: Escoba, Hilo de Ariadna, Inscripción, Puerta negra, Puerta azul, Escalera
+
+> atravesar puerta azul
+Usted atraviesa la puerta sin dificultades.
+Estás en el Patio interior.
+El patio tiene forma de caracol. Cada uno o dos pasos se levanta una columna de mármol negro y se confunde en la altura con los árboles. Usted siente el crujido de las hojas secas bajo sus zapatos.
+Ves aquí: Balanza, Puerta azul, Puerta verde, Estatua de Atenea, Estatua de Hermes
+
+> abrir escalera con treinta y nueve
+Invocas las palabras mágicas:
+treinta y nueve!!!
+No puede hacer eso. No hay "escalera" en esta habitación.
+
+> atravesar escalera
+No puedes atravesar eso.
+
+> tomar hueso de gato
+No existe "hueso de gato" en este lugar.
+
+> romper espejo opaco con hueso de gato
+"hueso de gato" no está dentro de sus pertenencias.
+
+> atravesar puerta oculta
+No puedes atravesar eso.
+
+> hablar doncella
+"doncella" no está aquí.
+
+> ver doncella
+No existe "doncella" en este lugar. Entre sus pertenencias tampoco.
+
+> atravesar puerta azul
+Usted atraviesa la puerta sin dificultades.
+Estás en la Sala de juegos.
+Usted trata de imaginar cómo eran los juegos del salón. Hay doce mesas y cada una tiene doce erizos.
+Ves aquí: Escoba, Hilo de Ariadna, Inscripción, Puerta negra, Puerta azul, Escalera
+
+> atravesar puerta verde
+No puedes atravesar eso.
+
+> hablar troll
+"troll" no está aquí.
+
+> ver espejo
+No existe "espejo" en este lugar. Entre sus pertenencias tampoco.
+
+> ver inscripción
+Dice: "Cuando hayas llegado casi al final, tendrás que regresar, a no ser que hayas hablado con el murciélago."
+
+> tomar rosa
+No existe "rosa" en este lugar.
+
+Session saved to output.txt

@@ -1,0 +1,40 @@
+# Commands to test in both Pascal and JavaScript versions
+# Fixed navigation
+
+# Test sequence 1: Opening through giving water to Trebol
+abrir puerta principal con abrete sesamo
+atravesar puerta principal
+atravesar puerta principal
+tomar maza
+atravesar puerta principal
+romper monolito de mármol con maza
+hablar trebol
+atravesar puerta negra
+atravesar puerta azul
+atravesar puerta verde
+tomar vaso de agua
+inventario
+atravesar puerta verde
+atravesar puerta azul
+atravesar puerta negra
+dar vaso de agua a trebol
+hablar trebol
+
+# Test sequence 2: Find doncella through mirror
+atravesar puerta negra
+atravesar puerta azul
+abrir escalera con treinta y nueve
+atravesar escalera
+tomar hueso de gato
+romper espejo opaco con hueso de gato
+atravesar puerta oculta
+hablar doncella
+ver doncella
+
+# Test sequence 3: Explore Jardín
+atravesar puerta azul
+atravesar puerta verde
+hablar troll
+ver espejo
+ver inscripción
+tomar rosa
