@@ -1,0 +1,6 @@
+1.7
+
+# Version Format: 1.X (2-part only)
+# MUST increment with EVERY deployment
+# Examples: 1.5, 1.6, 1.7, 1.123
+# NEVER use 3-part: 3.5.1 ✗
