@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza v1.5 - Aventura de Texto</title>
+    <title>La Fortaleza v1.6 - Aventura de Texto</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -595,7 +595,7 @@
 
         <!-- NEW: only this part gets curved -->
         <div class="crt-screen">
-            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v1.5</span></div>
+            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v1.6</span></div>
             <div id="output"></div>
             <div id="input-container">
             <input type="text" id="input" placeholder="Escribe tu comando aquí..." autocomplete="off" autofocus>
@@ -1635,7 +1635,8 @@
 
         function decodeLine(keyIndex) {
             // Return the properly decoded key by index
-            return decodedKeys[keyIndex] || '';
+            // Pascal uses 1-indexed arrays, JavaScript uses 0-indexed
+            return decodedKeys[keyIndex - 1] || '';
         }
 
         // ==================== GAME INITIALIZATION ====================
