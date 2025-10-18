@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza v1.9 - Aventura de Texto</title>
+    <title>La Fortaleza v1.10 - Aventura de Texto</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -595,7 +595,7 @@
 
         <!-- NEW: only this part gets curved -->
         <div class="crt-screen">
-            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v1.9</span></div>
+            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v1.10</span></div>
             <div id="output"></div>
             <div id="input-container">
             <input type="text" id="input" placeholder="Escribe tu comando aquí..." autocomplete="off" autofocus>
@@ -789,6 +789,12 @@
                 commands: compressed,
                 timestamp: new Date().toISOString()
             };
+
+            // Debug logging
+            console.log('[SAVE] Original commands:', gameState.commandHistory);
+            console.log('[SAVE] Compressed commands:', compressed);
+            console.log('[SAVE] Current room:', gameState.player.here ? gameState.player.here.name : 'none');
+
             return JSON.stringify(state);
         }
 
@@ -799,8 +805,14 @@
                 // Decompress commands
                 const commands = decompressCommands(state.commands);
 
+                // Debug logging
+                console.log('[LOAD] Compressed commands from save:', state.commands);
+                console.log('[LOAD] Decompressed commands:', commands);
+                console.log('[LOAD] Number of commands to replay:', commands.length);
+
                 // Reset the game completely (silent mode - no welcome message or initial look)
                 initGame(true);
+                console.log('[LOAD] Game initialized, player at room:', gameState.player.here ? gameState.player.here.name : 'none');
 
                 // Suppress output and images during replay
                 const originalPrintLine = window.printLine;
@@ -809,11 +821,31 @@
                 window.printLine = function() {}; // Completely suppress output during replay
                 window.updateRoomImage = function() {}; // Suppress image changes during replay
 
-                // Replay all commands silently
+                // Replay all commands silently and rebuild command history
+                let commandCount = 0;
                 for (let cmd of commands) {
-                    if (gameState.player.dead) break;
+                    commandCount++;
+                    console.log(`[LOAD] Replaying command ${commandCount}/${commands.length}: "${cmd}"`);
+                    console.log(`[LOAD] Before command - Room: ${gameState.player.here ? gameState.player.here.name : 'none'}`);
+
+                    if (gameState.player.dead) {
+                        console.log('[LOAD] Player died during replay, stopping');
+                        break;
+                    }
+
                     executeCommand(cmd);
+
+                    // CRITICAL: Rebuild command history during replay
+                    // This ensures subsequent saves include all commands
+                    if (shouldSaveCommand(cmd)) {
+                        gameState.commandHistory.push(cmd);
+                    }
+
+                    console.log(`[LOAD] After command - Room: ${gameState.player.here ? gameState.player.here.name : 'none'}`);
                 }
+
+                console.log('[LOAD] Replay complete. Final room:', gameState.player.here ? gameState.player.here.name : 'none');
+                console.log('[LOAD] Rebuilt command history length:', gameState.commandHistory.length);
 
                 // Restore output functions
                 window.printLine = originalPrintLine;
@@ -2811,7 +2843,9 @@
 
             // Track state-changing commands AFTER execution
             if (shouldSaveCommand(command)) {
+                console.log('[HISTORY] Adding command to history:', command);
                 gameState.commandHistory.push(command);
+                console.log('[HISTORY] Total commands in history:', gameState.commandHistory.length);
             }
         }
 
