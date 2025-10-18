@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza v1.8 - Aventura de Texto</title>
+    <title>La Fortaleza v1.9 - Aventura de Texto</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -595,7 +595,7 @@
 
         <!-- NEW: only this part gets curved -->
         <div class="crt-screen">
-            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v1.8</span></div>
+            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v1.9</span></div>
             <div id="output"></div>
             <div id="input-container">
             <input type="text" id="input" placeholder="Escribe tu comando aquí..." autocomplete="off" autofocus>
@@ -652,7 +652,7 @@
             return 'images/room_entrance.jpg'; // Default fallback
         }
 
-        function updateRoomImage(roomName) {
+        window.updateRoomImage = function(roomName) {
             const imageElement = document.getElementById('room-image');
             const container = document.getElementById('room-image-container');
             if (!imageElement || !container) return;
@@ -804,10 +804,10 @@
 
                 // Suppress output and images during replay
                 const originalPrintLine = window.printLine;
-                const originalShowImage = window.showImage;
+                const originalUpdateRoomImage = window.updateRoomImage;
 
                 window.printLine = function() {}; // Completely suppress output during replay
-                window.showImage = function() {}; // Suppress image changes during replay
+                window.updateRoomImage = function() {}; // Suppress image changes during replay
 
                 // Replay all commands silently
                 for (let cmd of commands) {
@@ -817,7 +817,7 @@
 
                 // Restore output functions
                 window.printLine = originalPrintLine;
-                window.showImage = originalShowImage;
+                window.updateRoomImage = originalUpdateRoomImage;
 
                 // Clear the output display
                 const output = document.getElementById('output');
@@ -891,9 +891,9 @@
             }
 
             if (deserializeGameState(state)) {
-                printLine('Juego cargado: ' + saveName, 'success');
+                // deserializeGameState already shows success message and calls look()
+                // Just update the inventory display
                 updateInventory();
-                gameState.player.look();
             }
         }
 
