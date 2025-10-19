@@ -12,7 +12,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza - Aventura de Texto (v1.31)</title>
+    <title>La Fortaleza - Aventura de Texto (v1.32)</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -647,6 +647,46 @@
             background: rgba(15, 255, 15, 0.2);
             border-color: #0f0;
             box-shadow: 0 0 8px rgba(15, 255, 15, 0.3);
+        }
+
+        /* On-screen keyboard */
+        .on-screen-keyboard {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .keyboard-row {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+        }
+
+        .keyboard-key {
+            min-width: 44px;
+            min-height: 44px;
+            background: rgba(15, 255, 15, 0.1);
+            border: 1px solid rgba(15, 255, 15, 0.3);
+            color: rgb(69, 191, 69);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+
+        .keyboard-key:hover {
+            background: rgba(15, 255, 15, 0.2);
+            border-color: #0f0;
+            box-shadow: 0 0 8px rgba(15, 255, 15, 0.3);
+        }
+
+        .keyboard-space {
+            flex: 2;
+        }
+
+        .keyboard-enter {
+            flex: 1;
+            background: rgba(15, 255, 15, 0.2);
         }
 
         .dropdown-option:active {
@@ -3197,10 +3237,10 @@
 
                 // Check if command needs additional parameters
                 if (verb === 'abrir') {
-                    // Abrir needs typed password/answer, not object selection
-                    toggleTouchMode();
-                    document.getElementById('input').value = touchModeState.commandParts.join(' ') + ' diciendo ';
-                    document.getElementById('input').focus();
+                    // Abrir needs typed password/answer
+                    touchModeState.currentStage = 'keyboard';
+                    document.getElementById('input').value = touchModeState.commandParts.join(' ') + ' ';
+                    showKeyboard();
                 } else if (verb === 'romper' || verb === 'matar') {
                     touchModeState.currentStage = 'with';
                     showWithOptions(verb);
@@ -3263,6 +3303,69 @@
                 document.getElementById('input').value = touchModeState.commandParts.join(' ');
                 executeTouchModeCommand();
             });
+        }
+
+        function showKeyboard() {
+            const container = document.getElementById('dropdown-container');
+            container.innerHTML = '';
+
+            const keyboard = document.createElement('div');
+            keyboard.className = 'on-screen-keyboard';
+
+            // Letter rows (Spanish keyboard layout)
+            const rows = [
+                ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+                ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ñ'],
+                ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '⌫']
+            ];
+
+            rows.forEach(row => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'keyboard-row';
+
+                row.forEach(key => {
+                    const btn = document.createElement('button');
+                    btn.className = 'keyboard-key';
+                    btn.textContent = key;
+                    btn.onclick = () => {
+                        const input = document.getElementById('input');
+                        if (key === '⌫') {
+                            // Backspace
+                            input.value = input.value.slice(0, -1);
+                        } else {
+                            // Add letter
+                            input.value += key.toLowerCase();
+                        }
+                    };
+                    rowDiv.appendChild(btn);
+                });
+
+                keyboard.appendChild(rowDiv);
+            });
+
+            // Space and Enter row
+            const bottomRow = document.createElement('div');
+            bottomRow.className = 'keyboard-row';
+
+            const spaceBtn = document.createElement('button');
+            spaceBtn.className = 'keyboard-key keyboard-space';
+            spaceBtn.textContent = 'ESPACIO';
+            spaceBtn.onclick = () => {
+                document.getElementById('input').value += ' ';
+            };
+
+            const enterBtn = document.createElement('button');
+            enterBtn.className = 'keyboard-key keyboard-enter';
+            enterBtn.textContent = 'EJECUTAR';
+            enterBtn.onclick = () => {
+                processCommand();
+            };
+
+            bottomRow.appendChild(spaceBtn);
+            bottomRow.appendChild(enterBtn);
+            keyboard.appendChild(bottomRow);
+
+            container.appendChild(keyboard);
         }
 
         function renderDropdown(title, options, onSelect) {
