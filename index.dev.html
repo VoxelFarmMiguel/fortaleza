@@ -12,7 +12,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza - Aventura de Texto (v1.32)</title>
+    <title>La Fortaleza - Aventura de Texto (v1.33)</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -3237,10 +3237,9 @@
 
                 // Check if command needs additional parameters
                 if (verb === 'abrir') {
-                    // Abrir needs typed password/answer
-                    touchModeState.currentStage = 'keyboard';
-                    document.getElementById('input').value = touchModeState.commandParts.join(' ') + ' ';
-                    showKeyboard();
+                    // Abrir: ask if with or without password
+                    touchModeState.currentStage = 'abrir-choice';
+                    showAbrirChoice();
                 } else if (verb === 'romper' || verb === 'matar') {
                     touchModeState.currentStage = 'with';
                     showWithOptions(verb);
@@ -3302,6 +3301,25 @@
                 touchModeState.commandParts.push('a', recipient);
                 document.getElementById('input').value = touchModeState.commandParts.join(' ');
                 executeTouchModeCommand();
+            });
+        }
+
+        function showAbrirChoice() {
+            const options = [
+                { display: 'SIN DECIR NADA', value: 'without' },
+                { display: 'CON PALABRAS', value: 'with' }
+            ];
+
+            renderDropdown('¿Cómo abrir?', options, (choice) => {
+                if (choice === 'without') {
+                    // Execute abrir without password
+                    executeTouchModeCommand();
+                } else {
+                    // Show keyboard for password entry
+                    touchModeState.currentStage = 'keyboard';
+                    document.getElementById('input').value = touchModeState.commandParts.join(' ') + ' ';
+                    showKeyboard();
+                }
             });
         }
 
