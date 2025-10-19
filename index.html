@@ -1,1 +1,2373 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>La Fortaleza - Aventura de Texto (v1.18)</title><link rel="icon" type="image/png" href="favicon.png"><style>@font-face{font-family:'IBM VGA';src:url('Flexi_IBM_VGA_True.ttf') format('truetype');font-weight:400;font-style:normal}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'IBM VGA',Courier,monospace;background-color:#000;color:#45bf45;padding:20px;line-height:1.4;font-size:160%}#game-container{max-width:900px;margin:0 auto;background-color:#000;xborder:2px solid #0f0;padding:20px;position:relative;overflow:hidden}#title{text-align:center;font-size:34px;margin-bottom:20px;color:#0f0;border-bottom:2px solid #0f0;padding-bottom:10px}#output{min-height:400px;max-height:500px;overflow-y:auto;margin-bottom:20px;padding:10px;xborder:1px solid #0f0}#output::-webkit-scrollbar{width:10px}#output::-webkit-scrollbar-track{background:#000}#output::-webkit-scrollbar-thumb{background:#123312}.output-line{margin-bottom:8px;position:relative;overflow:hidden}.text-scanline{position:absolute;left:0;top:50%;transform:translateY(-50%);width:2px;height:100%;background:rgba(57,255,20,.9);box-shadow:0 0 6px #39ff14,0 0 12px rgba(57,255,20,.7),0 0 18px rgba(57,255,20,.3);z-index:5}.text-scanline-dot{position:absolute;right:-3px;top:50%;transform:translateY(-50%);width:4px;height:4px;background:#fff;border-radius:50%;box-shadow:0 0 8px #39ff14,0 0 16px rgba(57,255,20,.6),0 0 24px rgba(57,255,20,.3)}.text-reveal{position:relative;display:inline-block}.text-mask{position:absolute;top:0;left:0;right:0;bottom:0;background:#000;z-index:4}#input-container{display:flex;gap:10px}#input{flex:1;background-color:#000;color:#0f0;border:1px solid #0f0;padding:10px;font-family:'IBM VGA',Courier,monospace;font-size:14px}#input:focus{outline:0;border-color:#0f0;xbox-shadow:0 0 5px #0f0}button{background-color:#000;color:#0f0;border:1px solid #0f0;padding:10px 20px;cursor:pointer;font-family:'IBM VGA',Courier,monospace;font-size:14px}button:hover{background-color:#0f0;color:#000}#fullscreen-btn{padding:10px 15px;margin-left:10px;font-size:18px;line-height:1}#inventory{margin-top:20px;padding:10px;border:1px solid #0f0}#inventory h3{margin-bottom:10px}.prompt{color:#ff0}.error{color:#ff9500}.success{margin-top:30px;color:#fc0}.system{color:#09ff00}:root{--phosphor:#39ff14;--scanline-strength:.08;--vignette-strength:.60}body{background:radial-gradient(ellipse at center,#020402 0,#000 90%);letter-spacing:.3px;position:relative}body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;background:repeating-linear-gradient(0deg,rgba(0,0,0,.5) 0,rgba(0,0,0,.5) 2px,transparent 2px,transparent 4px);opacity:var(--scanline-strength)}#game-container{position:relative;overflow:hidden;border-radius:16px;background:#000;box-shadow:inset 0 0 60px rgba(57,255,20,.06),inset 0 0 140px rgba(0,0,0,.9),0 0 0 1px rgba(57,255,20,.08);isolation:isolate;backface-visibility:hidden}.crt-screen{position:relative;z-index:0;backface-visibility:hidden;filter:url(#crt-warp)}#game-container::before{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:overlay;border-radius:inherit;background:repeating-linear-gradient(0deg,rgba(0,0,0,.5) 0,rgba(0,0,0,.5) 2px,transparent 2px,transparent 4px);opacity:var(--scanline-strength);z-index:1}#game-container::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 40%,rgba(0,0,0,var(--vignette-strength)) 100%),radial-gradient(ellipse at center,rgba(57,255,20,.12),rgba(0,0,0,0) 55%);mix-blend-mode:multiply;z-index:4}.crt-scanline{position:absolute;left:0;right:0;height:4px;top:-6px;background:linear-gradient(to bottom,rgba(255,255,255,.45),rgba(255,255,255,0));mix-blend-mode:screen;opacity:.25;pointer-events:none;z-index:2;will-change:top;animation:crtScanTop 30s linear infinite}@keyframes crtScanTop{0%{top:-6px}100%{top:calc(100% + 6px)}}.crt-flicker{position:absolute;inset:0;border-radius:inherit;pointer-events:none;mix-blend-mode:screen;z-index:3;background:rgba(57,255,20,.06);animation:crtFlicker 1.9s steps(1000) infinite}@keyframes crtFlicker{0%{opacity:.98}50%{opacity:1}100%{opacity:.99}}.crt-scanline{height:18px;opacity:.02;animation-duration:11s}.crt-flicker{background:rgba(57,255,20,.12)}#title{letter-spacing:3px;text-shadow:0 0 .6px var(--phosphor),0 0 6px rgba(57,255,20,.45),0 0 18px rgba(57,255,20,.15);border-bottom:1px dashed rgba(57,255,20,.25)}#output{text-shadow:0 0 1px rgba(57,255,20,.8),0 0 6px rgba(57,255,20,.46),0 0 24px rgba(57,255,20,.35),1px 0 0 rgba(255,0,0,.135),-1px 0 0 rgba(0,255,255,.135)}#input-container{position:relative;border-top:1px dashed rgba(57,255,20,.25);padding-top:10px;display:flex;align-items:center}#input-container::before{content:">";position:absolute;left:4px;color:var(--phosphor);text-shadow:0 0 .6px var(--phosphor),0 0 6px rgba(57,255,20,.45);opacity:.9;animation:blink 1.2s steps(1) infinite;line-height:1}@keyframes blink{0%,50%{opacity:1}100%,51%{opacity:.4}}.autocomplete-suggestion{position:absolute;pointer-events:none;color:#26ff00;font-family:'IBM VGA',Courier,monospace;z-index:1;white-space:pre}#input{background:0 0;border:none;border-bottom:1px solid rgba(57,255,20,.35);padding:10px 8px 6px 22px;font:inherit;color:var(--phosphor);caret-color:var(--phosphor);box-shadow:none;text-shadow:0 0 1px var(--phosphor),0 0 10px rgba(57,255,20,.28),0 0 24px rgba(57,255,20,.12)}#input::placeholder{color:rgba(57,255,20,.35)}button{background:rgba(0,0,0,.5);color:var(--phosphor);border:1px solid rgba(57,255,20,.35);border-radius:6px;text-shadow:0 0 1px var(--phosphor),0 0 10px rgba(57,255,20,.28);box-shadow:0 0 0 1px rgba(57,255,20,.12) inset,0 0 24px rgba(57,255,20,.08) inset;transition:transform .06s ease,box-shadow .12s ease,background .12s ease}button:hover{background:rgba(57,255,20,.12);box-shadow:0 0 40px rgba(57,255,20,.18) inset}button:active{transform:translateY(1px)}.prompt{text-shadow:0 0 1px #dfff8f,0 0 12px rgba(223,255,143,.5)}.error{text-shadow:0 0 1px #ff9500,0 0 12px rgba(255,149,0,.5)}.success{text-shadow:0 0 1px #c9ffcf,0 0 12px rgba(201,255,207,.5)}.system{text-shadow:0 0 1px #09ff00,0 0 10px rgba(9,255,0,.5)}body,html{height:100%;margin:0}body{padding:0}#game-container{position:fixed;inset:0;max-width:none;padding:24px;display:block;border-radius:16px}.crt-screen{position:relative;height:100%;display:grid;grid-template-columns:2fr 1fr;grid-template-rows:auto 1fr auto;gap:16px;z-index:0;backface-visibility:hidden}#right-sidebar{grid-column:2;grid-row:1/span 3;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden}#room-image{width:100%;height:auto;border-radius:12px;border:1px solid rgba(57,255,20,.25);display:block;flex-shrink:0;position:relative}#room-image-container{position:relative;overflow:visible;width:100%}.image-transition-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:#000;pointer-events:none;z-index:10}.scanline-wipe{position:absolute;left:0;right:0;height:2px;background:rgba(57,255,20,.8);box-shadow:0 0 8px #39ff14,0 0 16px rgba(57,255,20,.8),0 0 24px rgba(57,255,20,.4);z-index:11}.scanline-dot{position:absolute;right:0;top:50%;transform:translateY(-50%);width:6px;height:6px;background:#fff;border-radius:50%;box-shadow:0 0 12px #39ff14,0 0 24px rgba(57,255,20,.8),0 0 36px rgba(57,255,20,.4);z-index:12}#location-name{text-align:center;margin:0 auto;padding:8px 16px;border:1px solid rgba(57,255,20,.25);border-radius:8px;background:rgba(0,0,0,.9);letter-spacing:2px;text-shadow:0 0 1px var(--phosphor),0 0 6px rgba(57,255,20,.45),0 0 18px rgba(57,255,20,.15);position:relative;transform:translateY(-50%);width:fit-content;max-width:90%}#title{grid-column:1;grid-row:1}#output{grid-column:1;grid-row:2;overflow-y:auto;max-height:none!important;min-height:0!important}#input-container{grid-column:1;grid-row:3}#inventory{margin:0;padding:12px 12px 12px 16px;border:1px solid rgba(57,255,20,.25);border-radius:12px;background:rgba(0,0,0,.35);overflow:auto;flex:1;min-height:0}#inventory h3{position:sticky;top:0;background:#000;padding-bottom:8px;margin:0 0 12px;z-index:1;border-bottom:1px dashed rgba(57,255,20,.35)}#input{width:100%}@media (max-width:900px){.crt-screen{grid-template-columns:1fr;grid-template-rows:auto 1fr auto auto}#inventory{grid-column:1;grid-row:4}}.crt-noise{position:absolute;inset:0;pointer-events:none;z-index:2;opacity:.025;mix-blend-mode:screen;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/></filter><rect width="200" height="200" filter="url(%23n)" opacity="1"/></svg>');background-size:200px 200px}</style></head><body><svg width="0" height="0" style="position:absolute;left:-9999px;top:-9999px"><filter id="crt-warp" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.00015 0.003" numOctaves="1" seed="2" result="noise"/><feGaussianBlur in="noise" stdDeviation="2" result="softNoise"/><feDisplacementMap in="SourceGraphic" in2="softNoise" scale="34" xChannelSelector="R" yChannelSelector="G"/></filter></svg><div id="game-container"><div class="crt-scanline" aria-hidden="true"></div><div class="crt-flicker" aria-hidden="true"></div><div class="crt-noise" aria-hidden="true"></div><div class="crt-screen"><div id="title">LA FORTALEZA</div><div id="output"></div><div id="input-container"><input type="text" id="input" placeholder="Escribe tu comando aquí..." autocomplete="off" autofocus> <button onclick="processCommand()">ENVIAR</button> <button id="fullscreen-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen">⛶</button></div><div id="right-sidebar"><div id="room-image-container"><img id="room-image" src="images/room_entrance.jpg" alt="Room"></div><div id="location-name">EXTERIOR DE LA FORTALEZA</div></div></div></div><script>const e={"el exterior de la fortaleza":["images/room_entrance.jpg"],"el Salón de recepciones":["images/room_reception.jpg"],"la Sala de juegos":["images/room_game.jpg"],"el Patio interior":["images/room_patio.jpg","images/room_patio_2.jpg"],"el Jardín":["images/room_gardens.jpg","images/room_gardens_2.jpg"],"la Biblioteca":["images/room_library.jpg"],"el Cuarto de espejos":["images/room_mirrors.jpg"],Pasillo:["images/room_pasillo.jpg"],"la Alcoba de la bruja":["images/room_witch.jpg"],"el Cuarto del guerrero":["images/room_warrior.jpg"],"el Laboratorio de la Bestia":["images/room_lab.jpg"],"la Sala de armas":["images/room_armory.jpg"],"los Baños de la Bestia":["images/room_bathroom.jpg"],"la Alcoba de la doncella":["images/room_maid.jpg"],"la Sala de infusiones":["images/room_tearoom.jpg"],"los Calabozos":["images/room_jail.jpg"],"los Almacenes de la Fortaleza":["images/room_warehouse.jpg"],"Salón de cristal":["images/room_crystal.jpg"],"Boca de la Bestia":["images/room_mouth.jpg"],"Interior de la Bestia":["images/room_beast_interior.jpg"],"Pulmones de la Bestia":["images/room_lungs.jpg"],"el Estómago de la Bestia":["images/room_stomach.jpg"],"el Corazón de la Bestia":["images/room_heart.jpg"],"el Cerebro de la Bestia":["images/room_brain.jpg"],"un extenso páramo":["images/room_moor.jpg"],"celda pequeña":["images/room_labrynth_cell.jpg"],"un puente de mármol":["images/room_marble_bridge.jpg"],"la Antesala del Laberinto":["images/room_labrynth_entrance.jpg"],"la cueva del Minotauro":["images/room_minotaur.jpg"],"el Salón de los elegidos":["images/room_chosen.jpg"],"un pasillo del Laberinto":["images/room_labrynth_entrance.jpg","images/room_labrynth_node_1.jpg","images/room_labrynth_node_2.jpg","images/room_labrynth_node_3.jpg","images/room_labrynth_node_4.jpg"]};function a(a){const s=e[a];return s&&s.length>0?s[Math.floor(Math.random()*s.length)]:"images/room_entrance.jpg"}function s(e){return e.normalize("NFD").replace(/[\u0300-\u036f]/g,"")}window.updateRoomImage=function(e){const s=document.getElementById("room-image"),t=document.getElementById("room-image-container");if(!s||!t)return;const r=a(e);if(s.src.endsWith(r))return;const n=document.createElement("div");n.className="image-transition-overlay";const o=document.createElement("div");o.className="scanline-wipe",o.style.top="0px";const i=document.createElement("div");i.className="scanline-dot",o.appendChild(i),t.appendChild(n),t.appendChild(o);const l=new Image;l.onload=()=>{const e=s.offsetHeight,a=performance.now();s.src=r,requestAnimationFrame(function s(r){const i=r-a,l=Math.min(i/800,1),d=(l<.5?2*l*l:1-Math.pow(-2*l+2,2)/2)*e;o.style.top=d+"px",n.style.clipPath=`inset(${d}px 0 0 0)`,l<1?requestAnimationFrame(s):(t.removeChild(n),t.removeChild(o))})},l.src=r};const t=["mirar","ver","observar","examinar","inventario","inv","hablar","ayuda","help","partidas","pistas"],r={tomar:"¡",coger:"¢",ir:"£",puerta:"¤",matar:"¥",dar:"¦",abrir:"§",romper:"¨",dejar:"©",soltar:"ª",atravesar:"«",cuarto:"¬",pasillo:"­",laboratorio:"®",jardin:"¯",biblioteca:"°",espejo:"±",guerrero:"²",hacha:"³",espada:"´",daga:"µ",principal:"¶",con:"·"};function n(e){const a=e.trim().toLowerCase();if(a.startsWith("cargar")||a.startsWith("guardar")||a.startsWith("borrar"))return!1;const s=a.split(" ")[0];return!t.includes(s)}function o(e){return e.map(e=>{let a=e;for(let[e,s]of Object.entries(r))a=a.replace(new RegExp("\\b"+e+"\\b","gi"),s);return a})}function i(e){const a={};for(let[e,s]of Object.entries(r))a[s]=e;return e.map(e=>{let s=e;for(let[e,t]of Object.entries(a))s=s.replace(new RegExp(e,"g"),t);return s})}function l(){const e=o(k.commandHistory),a={commands:e,timestamp:(new Date).toISOString()};return console.log("[SAVE] Original commands:",k.commandHistory),console.log("[SAVE] Compressed commands:",e),console.log("[SAVE] Current room:",k.player.here?k.player.here.name:"none"),JSON.stringify(a)}function d(e){try{const a=JSON.parse(e),s=i(a.commands);console.log("[LOAD] Compressed commands from save:",a.commands),console.log("[LOAD] Decompressed commands:",s),console.log("[LOAD] Number of commands to replay:",s.length),A(!0),console.log("[LOAD] Game initialized, player at room:",k.player.here?k.player.here.name:"none");const t=window.printLine,r=window.updateRoomImage;window.printLine=function(){},window.updateRoomImage=function(){};let o=0;for(let e of s){if(o++,console.log(`[LOAD] Replaying command ${o}/${s.length}: "${e}"`),console.log(`[LOAD] Before command - Room: ${k.player.here?k.player.here.name:"none"}`),k.player.dead){console.log("[LOAD] Player died during replay, stopping");break}V(e),n(e)&&k.commandHistory.push(e),console.log(`[LOAD] After command - Room: ${k.player.here?k.player.here.name:"none"}`)}return console.log("[LOAD] Replay complete. Final room:",k.player.here?k.player.here.name:"none"),console.log("[LOAD] Rebuilt command history length:",k.commandHistory.length),window.printLine=t,window.updateRoomImage=r,document.getElementById("output").innerHTML="",S("Partida cargada exitosamente.","success"),S(""),k.player.look(),!0}catch(e){return S("Error al cargar la partida: "+e.message,"error"),console.error("[LOAD] Error:",e),!1}}function u(){const e=[];for(let a=0;a<localStorage.length;a++){const s=localStorage.key(a);if(s.startsWith("fortaleza_save_")){const a=s.replace("fortaleza_save_",""),t=localStorage.getItem(s);try{const s=JSON.parse(t);e.push({name:a,timestamp:s.timestamp})}catch(e){}}}return e.sort((e,a)=>new Date(a.timestamp)-new Date(e.timestamp)),e}function c(e){if(!e||""===e.trim())return void S("Debe proporcionar un nombre para el juego.","error");const a="fortaleza_save_"+e.trim(),s=l();try{localStorage.setItem(a,s),S("Juego guardado como: "+e,"success")}catch(e){S("Error al guardar: "+e.message,"error")}}function m(e){if(!e||""===e.trim())return void S("Debe proporcionar un nombre de juego.","error");const a="fortaleza_save_"+e.trim(),s=localStorage.getItem(a);s?d(s)&&_():S("No existe un juego con ese nombre.","error")}function p(e){if(!e||""===e.trim())return void S("Debe proporcionar un nombre de juego.","error");const a="fortaleza_save_"+e.trim();localStorage.getItem(a)?(localStorage.removeItem(a),S("Juego eliminado: "+e,"success")):S("No existe un juego con ese nombre.","error")}function g(){const e=u();0!==e.length?(S("Juegos guardados:","system"),e.forEach(e=>{const a=new Date(e.timestamp).toLocaleString("es-ES");S("  - "+e.name+" ("+a+")")})):S("No hay juegos guardados.","system")}class h{constructor(e,a,s){this.name=e,this.desc=a,this.mass=s,this.items=[]}image(){return this.desc}get(e){const a=s(e.toLowerCase().trim());let t=this.items.find(e=>s(e.name.toLowerCase())===a);if(t)return t;let r=this.items.filter(e=>s(e.name.toLowerCase()).startsWith(a));return r.length>0?r.reduce((e,a)=>a.name.length<e.name.length?a:e):this.items.find(e=>s(e.name.toLowerCase()).includes(a))}take(e){const a=this.get(e);return a&&(this.items=this.items.filter(e=>e!==a)),a}insert(e){this.items.push(e)}}class b extends h{constructor(e,a,s){super(e,a,s),this.dead=!1}speak(){S("...")}die(e){return this.dead=!0,!0}accept(e){}}class w extends b{constructor(e,a,s,t,r){super(e,a,100),this.likeness=s,this.hiData=t,this.lowData=r,this.happy=!1}speak(){this.happy?S(this.hiData):S(this.lowData)}accept(e){this.happy=e.name.toLowerCase()===this.likeness.toLowerCase(),this.happy?S("¡Muchas muchas gracias!"):S("Gracias.")}die(e){return S("¡Ahhhhhhh!"),super.die(e)}}class f extends b{constructor(e,a,s,t){super(e,a,999),this.confession=s,this.lethalWeapon=t}die(e){return(e?e.toLowerCase():"")===(this.lethalWeapon?this.lethalWeapon.toLowerCase():"")?(S(this.confession),super.die(e)):(S("¡Ja ja ja! ¡Eso no me hará daño!"),!1)}}class v extends h{constructor(e,a,s,t,r){super(e,a,999),this.destination=r,this.passComment=t,this.key=s||"",this.open=""===s||null===s}openDoor(e){return!(""!==this.key&&!e.toLowerCase().includes(this.key.toLowerCase())||(this.open=!0,0))}pass(e){this.passComment&&S(this.passComment)}dest(){return this.open?this.destination:null}}class E extends v{constructor(e,a,s,t){super(e,a,"",s,t),this.open=!0}}class y extends v{constructor(e,a,s,t,r,n){super(e,a,s,t,n),this.talisman=r}pass(e){const a=k.player;a.bag.get(this.talisman)?super.pass(e):(S("No tiene protección. Usted muere."),a.die(""),k.gameOver=!0)}}class U extends y{pass(e){const a=k.player;a.bag.get(this.talisman)?(S("El objeto "+this.talisman+" lo mata."),a.die(""),k.gameOver=!0):v.prototype.pass.call(this,e)}}class P extends v{constructor(e,a,s,t,r,n){super(e,a,"",r,n),this.riddle=s,this.answer=t,this.open=!1}openDoor(e){return e.toLowerCase()===this.answer.toLowerCase()?(S("¡Ha resuelto el acertijo!"),this.open=!0,!0):(""===e?(S("Debe resolver el acertijo primero:"),S(this.riddle)):(S("Respuesta incorrecta. El acertijo es:"),S(this.riddle)),!1)}}class j extends h{constructor(e,a,s,t){super(e,a,999),this.breaker=s,this.hiddenThing=t}breakWith(e){return!(this.breaker&&!e.toLowerCase().includes(this.breaker.toLowerCase()))}}class C extends h{constructor(e,a){super(e,a,999),this.visited=!1}describe(){this.items.length>0&&S("Ves aquí: "+this.items.map(e=>e.name).join(", "))}openItem(e,a){const s=this.get(e);if(s&&(s instanceof v||s instanceof P))if(s.open)S("Ya está abierto.");else if(s.openDoor(a)){if(s.destination&&s.destination instanceof C){const t=s.destination.get(e);t&&(t instanceof v||t instanceof y||t instanceof U||t instanceof P||t instanceof E)&&t.openDoor(a)}S("Ok.")}else S("No puede abrir esto."),S(""===a?"Necesita una palabra clave.":'"'+a+'" no es la palabra correcta.');else S(s?"No puede abrir esto.":e?'No puede hacer eso. No hay "'+e+'" en esta habitación.':"Complete su frase.")}breakItem(e,a){const s=this.get(e);if(s&&s instanceof j)if(s.breakWith(a)){const e=s.hiddenThing;this.items=this.items.filter(e=>e!==s),this.items.push(e),S("¡Crash! Usted ha roto "+s.name+"."),S("¡Sorpresa! Ha encontrado: "+e.name)}else S("Usted trata, pero no lo consigue.");else S(e?"No se puede romper eso.":"Complete su frase.")}}class L extends C{constructor(){super("Mochila","Su mochila")}empty(){return 0===this.items.length}heaviness(){return this.items.reduce((e,a)=>e+a.mass,0)}describe(){if(this.empty())return;for(let e of this.items)S(e.name+" ("+e.mass+")");const e=k.maxWeight-this.heaviness();S(0===e?"No puede cargar nada más.":1===e?"Está a punto de agotar sus capacidades.":"Podría cargar "+e+" bolsas más.")}}class q extends b{constructor(e,a){super(e,a,0),this.curr=null,this.bag=new L,this.visits=0,this.firstLook=!0}go(e){this.dead||(this.curr=e,e.visited||(e.visited=!0,this.visits++))}look(e=!1){if(this.dead)return;e&&!this.firstLook&&(document.getElementById("output").innerHTML=""),this.firstLook&&(this.firstLook=!1),S(""),S("Estás en "+this.curr.name+".","success"),S(this.curr.desc),S(""),this.curr.describe();const a=document.getElementById("location-name");a&&(a.textContent=this.curr.name.toUpperCase()),updateRoomImage(this.curr.name)}inventary(){this.dead||(this.bag.empty()?S("Usted no lleva nada consigo."):(S("Sus pertenecias son:"),this.bag.describe()))}see(e){if(this.dead)return;if(!e)return void S("¿Qué quieres ver?");let a=this.curr.get(e);a?S(a.image()):(a=this.bag.get(e),S(a?a.image():'No existe "'+e+'" en este lugar. Entre sus pertenencias tampoco.'))}take(e){if(this.dead)return;const a=this.curr.get(e);a?a.mass>k.maxWeight?S("Usted no puede cargar con eso."):this.bag.heaviness()+a.mass<=k.maxWeight?(this.bag.insert(this.curr.take(e)),S("Ok."),_()):S("Sería demasiado peso."):S(e?'No existe "'+e+'" en este lugar.':"Complete su frase.")}leave(e){this.dead||(this.bag.get(e)?(this.curr.insert(this.bag.take(e)),S("Ok."),_()):S(e?'"'+e+'" no está dentro de sus pertenencias.':"Complete su frase."))}leaveAll(){if(!this.dead)if(this.bag.empty())S("Usted no lleva nada consigo.");else{for(;!this.bag.empty();){const e=this.bag.items[0];this.curr.insert(this.bag.take(e.name))}S("Usted deja todas sus pertencias en el suelo."),_()}}openD(e,a){this.dead||(a&&(S("Invocas las palabras mágicas:"),S(a+"!!!")),this.curr.openItem(e,a))}walkT(e){if(this.dead)return;const a=this.curr.get(e);if(a&&(a instanceof v||a instanceof E||a instanceof y||a instanceof U||a instanceof P)){const e=a.dest();if(e){const s=document.getElementById("output"),t=Array.from(s.children);let r=-1;for(let e=t.length-1;e>=0;e--)if(t[e].classList.contains("prompt")){r=e;break}if(r>=0){const e=t.slice(r);s.innerHTML="",e.forEach(e=>s.appendChild(e))}this.go(e),a.pass(this),this.dead||this.look()}else S("¡Auch! Te golpeas la cabeza."),S("Sería más fácil si primero abrieras la puerta.")}else S(e?"No puedes atravesar eso.":"Complete su frase.")}kill(e,a){if(this.dead)return;const s=this.curr.get(e);if(s&&(s instanceof w||s instanceof f)){if(a&&!this.bag.get(a))return void S('"'+a+'" no está dentro de sus pertenencias.');s.die(a)&&(this.curr.items=this.curr.items.filter(e=>e!==s))}else S(e?'"'+e+'" no está aquí.':"Complete su frase.")}ask(e){if(this.dead)return;const a=this.curr.get(e);a&&(a instanceof w||a instanceof f)?a.speak():S(e?'"'+e+'" no está aquí.':"Complete su frase.")}give(e,a){if(this.dead)return;if(this.bag.empty())return void S("Usted no lleva nada consigo.");const s=this.curr.get(a);if(s&&s instanceof w){const a=this.bag.take(e);a?(s.accept(a),_()):S('"'+e+'" no está dentro de sus pertenencias.')}else S(a?"Ese regalo no es aceptado.":"¿Para quién es el regalo?")}breakItem(e,a){this.dead||(!a||this.bag.get(a)?this.curr.breakItem(e,a):S('"'+a+'" no está dentro de sus pertenencias.'))}weigh(e){if(this.dead)return;if(!this.bag.get("Balanza"))return void S("Usted no trae la balanza.");let a=this.bag.get(e);if(a||(a=this.curr.get(e)),a)if("balanza"===a.name.toLowerCase())S("Usted trata infructuosamente de colocar la balanza sobre ella misma.");else if(a.mass>k.maxWeight)S("¡Se ha vuelto loco! ¿Cómo va a pesar eso?");else{const e=1===a.mass?"bolsa":"bolsas";S("Usted coloca el objeto en el plato de la balanza."),S("La aguja indica "+a.mass+" "+e+".")}else S(e?'No hay "'+e+'" en este lugar. Ni en sus pertenencias tampoco.':"Complete su frase.")}die(e){return this.dead||(super.die(e),S("¡Me estoy muriendo!","error")),!0}}const k={player:null,rooms:[],currentRoom:null,gameOver:!1,gameWon:!1,maxWeight:40},z=["","Hay un nombre que vas a necesitar mucho: Rumpelstinskin.","Abrete Sesamo","Ariete","Maza","Busca a la doncella al lado del espejo que romperás con un hueso. Ella te dirá dónde está el final de la Bestia.","Treinta y nueve","Lanza","Para llegar a los pulmones de la Bestia debes tener el talisman de aire.","Paraguas","En la biblioteca hay un libro que conduce al jardín.","Hueso de gato",' Puedes pasar, la contraseña es "Nombus Rostomelaris"',"Maza","Nombus Rostomelaris","Luz",'Usted cae durante varios minutos y, gracias al candelabro, cuando toca el suelo no se hace daño. Oye una voz que dice: "Sea gentil con la doncella, regálele una flor."','Escucha bien, hijo. Cuando te digan "Prohibido", invoca la luz. Recuerda que la palabra crea a su significado.',"Hacha","Pocion para crecer","Para atravezar por el escaparate de la bruja, debes llevar un candelabro. Y al hacerlo vas a conocer algo importante.","Polvo magico","El corazón de unicornio te protegerá en el corazón de la Bestia.","Rumpelstinskin","Rosa","La última habitación está al principio.","Imnus humiscuol rastomislakis!! Con esta esapada matarás a los pulmones de la Bestia.","Espada","Taza de cafe","Al entrar al estómago, lleva contigo un pastel.","Talisman de aire","Pastel de cerezas","Espada","Latigo","Daga","Usted ha destruido los pulmones! Solo con un látigo podrás destruir el estómago.","Usted ha destruido el estómago! Solo con una daga podrás destruir el corazón.","Usted ha destruido el corazón! Busca el cerebro de la bestia lejos de aquí. Solo el fuego puede destruirlo.","Antorcha","¿Mataste al Troll?","Piedra filosofal","Cuidado con el túnel y la puerta de tela. Solo conducen a la muerte.","Agua","nada",'AAARRRRGGGG!!!! La palabra mágica es "Agua".',"Arco","Maquina del tiempo","Solo con una daga podrás matar el corazón."];function x(e){return z[e]||""}function A(e=!1){if(k.commandHistory=[],k.gameOver=!1,k.gameWon=!1,k.player=new q("Indy","Aventurero"),B(),k.player.go(k.rooms[0]),!e){S("Bienvenido a LA FORTALEZA","success"),S("");const e=(new Date).getHours();S(e<12?"Buenos días.":e>18?"Buenas noches.":"Buenas tardes."),S(""),S('Escribe "ayuda" para ver los comandos disponibles.'),k.player.look()}}function B(){const e=[];e[0]=new C("el exterior de la fortaleza","Las paredes son muy negras y al parecer, no tienen ventanas. Usted trata de ver el final de las torres, pero las nubes no se lo permiten."),e[1]=new C("el Salón de recepciones","Parece hecho para criaturas cientos de veces más grandes que los humanos. Está desierto, pero usted siente que es observado."),e[2]=new C("la Sala de juegos","Usted trata de imaginar cómo eran los juegos del salón. Hay doce mesas y cada una tiene doce erizos."),e[3]=new C("el Patio interior","El patio tiene forma de caracol. Cada uno o dos pasos se levanta una columna de mármol negro y se confunde en la altura con los árboles. Usted siente el crujido de las hojas secas bajo sus zapatos."),e[4]=new C("el Cuarto de espejos","Hay tantos espejos que no puede reconocer si usted es real o es una imagen de sí mismo."),e[5]=new C("la Biblioteca","Hay miles de libros en este lugar. Todos tienen alguna hoja marcada con una servilleta. Los pasillos estan numerados usando el viejo alfabeto bestial ABCDEFGHIJKLMNOPQRSTUVWXYZ"),e[6]=new C("Pasillo","Tiene tres puertas al lado y una al final."),e[7]=new C("la Alcoba de la bruja","Hasta un ciego descubriría que aquí habita una bruja. El cuarto tiene una ventana, pero usted no recuerda haberla visto desde afuera."),e[8]=new C("el Cuarto del guerrero","El cuarto está muy ordenado. A usted le sorprende que no hayan armas."),e[9]=new C("el Laboratorio de la Bestia","Hay muchos frascos. A usted le llaman la atención los últimos: están llenos de homúnculos."),e[10]=new C("la Sala de armas","Este lugar parece salido del sueño de un guerrero."),e[11]=new C("los Baños de la Bestia","El baño es tan grande que usted no puede ver las paredes que lo limitan."),e[12]=new C("el Jardín","Se podrían construir varias ciudades en su interior."),e[13]=new C("la Alcoba de la doncella","Es una habitación muy pequeña y húmeda."),e[14]=new C("la Sala de infusiones","Hay varias mesas regadas por el suelo. Usted tiene la impresión de que ningún humano ha estado en ese lugar anteriormente."),e[15]=new C("los Calabozos","Son tan húmedos que usted no resistiría ni unas horas dentro de ellos."),e[16]=new C("Boca de la Bestia","Es como una boca humana, pero del tamaño de una casa."),e[17]=new C("Interior de la Bestia","Usted puede sentir los latidos del corazón de la Bestia, al igual que su respiración o el ruido de los líquidos revueltos en su estómago."),e[18]=new C("Pulmones de la Bestia","Sopla un aire tan fuerte que usted se ha tirado al suelo."),e[19]=new C("el Estómago de la Bestia","Hay varios esqueletos humanos."),e[20]=new C("el Corazón de la Bestia","Todo palpita rítmicamente. Usted siente cómo los latidos se adueñan del lugar, especialmente de su propio corazón."),e[21]=new C("el Cerebro de la Bestia","Es como un tarjetero gigante. Cada idea está escrita en una tarjeta y, cuando es necesario, la tarjeta es sacada por una mano invisible y leída al resto de la Bestia."),e[22]=new C("los Almacenes de la Fortaleza","Están llenos de carne humana. Usted aparta el cadáver de una mujer para poder observar bien el lugar."),e[23]=new C("un extenso páramo","Hay muy poca vegetación y el suelo es pantanoso. Usted nunca imaginó que el interior de la fortaleza fuera tan grande."),e[24]=new C("Salón de cristal","Es como un caleidoscopio gigante. Cada varios segundos las paredes cambian de color y usted siente como si lo hubieran trasladado a otro lugar."),e[25]=new C("celda pequeña","Es una celda muy pequeña y oscura."),e[26]=new C("un puente de mármol","El puente es de mármol negro y está suspendido sobre un abismo sin fondo."),e[27]=new C("la Antesala del Laberinto","Usted puede sentir el laberinto esperándolo. El aire huele a miedo y a polvo antiguo."),e[28]=new C("la cueva del Minotauro","Una cueva enorme con paredes cubiertas de sangre seca. Hay huesos por todas partes."),e[29]=new C("el Salón de los elegidos","Las paredes están cubiertas con los nombres de aquellos que llegaron hasta aquí."),e[30]=new C("un pasillo del Laberinto","Las paredes son idénticas en todas direcciones. Es imposible saber dónde está."),e[31]=new C("un pasillo del Laberinto","Las paredes son idénticas en todas direcciones. Es imposible saber dónde está."),e[32]=new C("un pasillo del Laberinto","Las paredes son idénticas en todas direcciones. Es imposible saber dónde está."),e[33]=new C("un pasillo del Laberinto","Las paredes son idénticas en todas direcciones. Es imposible saber dónde está."),e[34]=new C("un pasillo del Laberinto","Las paredes son idénticas en todas direcciones. Es imposible saber dónde está."),e[35]=new C("un pasillo del Laberinto","Las paredes son idénticas en todas direcciones. Es imposible saber dónde está."),e[36]=new C("un pasillo del Laberinto","Las paredes son idénticas en todas direcciones. Es imposible saber dónde está."),e[37]=new C("un pasillo del Laberinto","Las paredes son idénticas en todas direcciones. Es imposible saber dónde está."),e[38]=new C("un pasillo del Laberinto","Las paredes son idénticas en todas direcciones. Es imposible saber dónde está."),e[39]=new C("un pasillo del Laberinto","Las paredes son idénticas en todas direcciones. Es imposible saber dónde está."),e[40]=new C("un pasillo del Laberinto","Las paredes son idénticas en todas direcciones. Es imposible saber dónde está."),e[41]=new C("un pasillo del Laberinto","Las paredes son idénticas en todas direcciones. Es imposible saber dónde está."),e[42]=new C("un pasillo del Laberinto","Las paredes son idénticas en todas direcciones. Es imposible saber dónde está."),e[43]=new C("un pasillo del Laberinto","Las paredes son idénticas en todas direcciones. Es imposible saber dónde está."),e[44]=new C("un pasillo del Laberinto","Las paredes son idénticas en todas direcciones. Es imposible saber dónde está."),e[45]=new C("un pasillo del Laberinto","Las paredes son idénticas en todas direcciones. Es imposible saber dónde está."),e[46]=new C("un pasillo del Laberinto","Las paredes son idénticas en todas direcciones. Es imposible saber dónde está."),e[47]=new C("un pasillo del Laberinto","Las paredes son idénticas en todas direcciones. Es imposible saber dónde está."),e[48]=new C("un pasillo del Laberinto","Las paredes son idénticas en todas direcciones. Es imposible saber dónde está."),e[49]=new C("el Jardín","Se podrían construir varias ciudades en su interior."),k.rooms=e,I(e)}function I(e){e[0].insert(new h("Roble",'Está completamente seco y lleno de mordiscos. Tiene las siguientes palabras talladas en el tronco: "Las palabras mágicas para abrir la puerta son obvias."',200)),e[0].insert(new h("Maza","Es muy pesada.",39)),e[0].insert(new h("Pastel de cerezas","¿Qué hace un pastel de cerezas en un lugar como este?",2)),e[0].insert(new w("Llamador de bronce","Parece de carne, y tiene forma de murciélago.","Cigarro",x(1),"¿Me puede regalar un cigarro?")),e[0].insert(new v("Puerta principal","Inmensa y oprimente.",x(2),"Su sombra desaparece lentamente al cruzar la puerta. Siente cómo el miedo se le enreda en los zapatos.",e[1])),e[0].insert(new E("Túnel","Parece muy largo.","El olor de la carne descompuesta lo golpea. Usted siente ganas de vomitar.",e[3])),e[0].insert(new j("Pared solitaria","Usted no puede imaginar con qué motivo fue colocada ahí.",x(3),new y("Puerta secreta","Usted se pregunta a dónde conducirá, pero la oscuridad no le deja ver.","","Usted atraviesa la puerta.","Antorcha",e[26]))),e[1].insert(new j("Monolito de mármol","Es muy oscuro, pero a usted le parece que hay algo vivo en su interior.",x(4),new w("Trebol","Tiene cinco hojas.","Vaso de agua",x(5),"Dame agua, por favor..."))),e[1].insert(new h("Retrato","Es de Hitchcock (un anacronismo). Usted recuerda instintivamente algunas películas que le erizaron la piel: Psicosis, Vértigo y Los treinta y nueve escalones.",1)),e[1].insert(new v("Puerta principal","Inmensa y oprimente.",x(2),"Usted se siente de regreso a la vida. Ha salido de La Fortaleza.",e[0])),e[1].insert(new v("Puerta negra","Es muy negra.","","Usted atraviesa la puerta sin dificultades.",e[2])),e[2].insert(new h("Escoba","Es una escoba voladora.",1)),e[2].insert(new h("Hilo de Ariadna","Debe tener varios kilómetros de largo.",1)),e[2].insert(new h("Inscripción",'Dice: "Cuando hayas llegado casi al final, tendrás que regresar, a no ser que hayas hablado con el murciélago."',10)),e[2].insert(new v("Puerta negra","Es muy negra.","","Usted atraviesa la puerta sin dificultades.",e[1])),e[2].insert(new v("Puerta azul","Esta puerta conduce al patio interior.","","Usted atraviesa la puerta sin dificultades.",e[3])),e[2].insert(new P("Escalera","La escalera está detrás de una puerta de cristal. Usted trata de ver cuántos escalones tiene, pero no puede.","¿Cuántos peldaños tiene la escalera?",x(6),"Usted sube por la escalera. No se explica cómo, siendo tan larga, solo tiene "+x(6)+" escalones.",e[4])),e[3].insert(new h("Balanza","La balanza tiene el plato en forma de mano. La aguja es muy delgada, hecha con varios bigotes de gato trenzados entre sí.",1)),e[3].insert(new v("Puerta azul","Esta puerta conduce a la sala de juegos.","","Usted atraviesa la puerta sin dificultades.",e[2])),e[3].insert(new v("Puerta verde","Esta puerta conduce a la biblioteca.","","Usted atraviesa la puerta sin dificultades.",e[5])),e[3].insert(new w("Estatua de Atenea","Fue hecha por Fidias, siete años después de su muerte. Le falta la lanza.",x(7),x(8),"¡Sal de mi presencia, estúpido mortal!")),e[3].insert(new w("Estatua de Hermes","Desde el techo caen gotas continuamente sobre su cabeza.",x(9),x(10),"La humedad me destruye.")),e[4].insert(new h("Hueso de gato","Este es un hueso de gato (o de la imagen de un gato).",1)),e[4].insert(new v("Escalera","Usted trata de ver hasta dónde llega, pero no puede. Está detrás de una puerta de cristal.","treinta y nueve","Usted se sorprende: La escalera tiene ahora muchos escalones más.",e[2])),e[4].insert(new j("Espejo opaco","En realidad, usted no tiene idea de por qué es un espejo. Hay algo muy extraño en él.",x(11),new v("Puerta oculta","Parece formada por diminutos fragmentos de cristal.","","Su imagen regresa al atravesar la puerta.",e[13]))),e[5].insert(new h("Vaso de agua","Por un momento cree ver un bote en el vaso.",1)),e[5].insert(new h("Candelabro","La llama en su extremo está inmóvil, como si fuera de cera.",1)),e[5].insert(new v("Puerta verde","Esta puerta conduce al patio interior.","","Usted atraviesa la puerta sin dificultades.",e[3])),e[5].insert(new v("Libro","Es un libro normal.","","¡Usted ha atravesado el libro!",e[12])),e[5].insert(new f("Cíclope","Parece estar cuidando la puerta.","¡Arrrggghhhh! ¡Me has matado!"+x(12),x(13))),e[5].insert(new v("Puerta","Es una puerta para gigantes.",x(14),"Usted se encuentra del otro lado de la puerta.",e[6])),e[6].insert(new h("Antorcha","La llama parece bailar en su propia luz.",1)),e[6].insert(new v("Puerta","Es una puerta para gigantes.",x(14),"Usted se encuentra del otro lado de la puerta.",e[5])),e[6].insert(new v("Puerta vieja","Es la puerta de las habitaciones de una bruja.","","Usted ha entrado.",e[7])),e[6].insert(new v("Puerta roja","Es la puerta del guerrero.","","Usted se encuentra del otro lado de la puerta.",e[8])),e[6].insert(new v("Puerta prohibida","Esta puerta está prohibida para los humanos.",x(15),"Usted se encuentra del otro lado de la puerta.",e[9])),e[6].insert(new v("Puerta gris","Esta puerta conduce a la sala de las infusiones.","","Usted se encuentra del otro lado de la puerta.",e[14])),e[7].insert(new h("Polvo mágico","Puede hacer invisible a cualquiera.",1)),e[7].insert(new h("Poción para crecer","Tiene un olor muy repugnante.",5)),e[7].insert(new v("Puerta vieja","Da al pasillo.","","Usted ha salido.",e[6])),e[7].insert(new y("Escaparate","Tiene las puertas llenas de arañazos.","",x(16),"Candelabro",e[13])),e[7].insert(new w("Bruja","Parece tener mil años.","Escoba",x(17),"Tráeme mi escoba y te daré un consejo.")),e[8].insert(new h("Vendajes","Están manchados de sangre.",3)),e[8].insert(new h("Grabado","En el grabado está usted, hablando con una muchacha.",3)),e[8].insert(new v("Puerta roja","Da al pasillo.","","Usted está en el pasillo nuevamente.",e[6])),e[8].insert(new j("Cama","Es tan fuerte que solo con un hacha podría romperla.",x(18),new v("Puerta","Está en el suelo.","","Usted entra a la armería.",e[10]))),e[9].insert(new h("Piedra filosofal","Usted es el primer humano en ver la quinta esencia.",10)),e[9].insert(new h("Máquina del tiempo","Es muy parecida a una máquina de moler carne.",3)),e[9].insert(new v("Puerta prohibida","Esta puerta está prohibida para los humanos.",x(15),"Usted se encuentra en el otro lado de la puerta.",e[6])),e[9].insert(new w("Homúnculo","Parece que escapó de algún frasco. Es tan pequeño que usted se arrodilla para verlo.","Poción para crecer",x(20),"¡Quiero crecer!")),e[10].insert(new h("Espada","Es muy brillante.",5)),e[10].insert(new h("Lanza","Está hecha de piedra.",10)),e[10].insert(new h("Arco","Es el arco de Odiseo.",5)),e[10].insert(new h("Daga","Es afilada como la lengua de la serpiente bíblica.",3)),e[10].insert(new h("Ariete","Demasiado grande y pesado.",30)),e[10].insert(new h("Látigo","Parece una culebra.",2)),e[10].insert(new v("Puerta","Está en el techo.","","Usted regresa al cuarto del guerrero.",e[8])),e[11].insert(new h("Rosa","Es más hermosa que todas las doncellas que usted no ha visto.",1)),e[11].insert(new h("Espejo","Usted se ve a sí mismo entregándole unos polvos al Troll.",20)),e[11].insert(new h("Inscripción","Dice: ¡Mate al Troll! Y no haga sus necesidades en el suelo.",2)),e[11].insert(new v("Puerta verde","Conduce al jardín.","","Usted entra al jardín.",e[12])),e[11].insert(new w("Troll","Está mirándose en un espejo. Tiene una figura tan repulsiva que usted aparta la vista.","Polvo mágico",x(22),"No me mates, por favor. Haz que nadie pueda ver mi fealdad.")),e[12].insert(new h("Cedro","Le faltan algunas ramas. Al parecer, alguien las cortó para hacerse una cama.",999)),e[12].insert(new h("Inscripción","Es un buen lugar para instalar una tienda de campaña ¿no cree?",1)),e[12].insert(new v("Puerta verde","Conduce a los baños de la Bestia.","","Usted sale del jardín.",e[11])),e[12].insert(new v("Puerta azul","Debe haber algo hermoso detrás de esta puerta.","","Usted sale del jardín.",e[13])),e[12].insert(new v("Puerta amarilla","Conduce a la sala de infusiones.","","Usted sale del jardín.",e[14])),e[12].insert(new v("Puerta de hierro","Conduce a los calabozos.","","Usted entra a los calabozos.",e[15])),e[12].insert(new v("Puerta de madera","Conduce al almacén.","","Usted sale del jardín.",e[22])),e[13].insert(new h("Cuadro","Está pintado de negro, infinitamente negro y contundente.",10)),e[13].insert(new h("Corazón de unicornio","Aún late.",1)),e[13].insert(new v("Puerta azul","Debe haber algo hermoso detrás de esta puerta.","","Usted sale al jardín.",e[12])),e[13].insert(new v("Puerta oculta","Parece formada por diminutos fragmentos de cristal.","","Su imagen regresa al atravesar la puerta.",e[4])),e[13].insert(new v("Escaparate","Las puertas son doradas.","","Usted sube durante varios minutos hasta llegar al escaparate de la bruja.",e[7])),e[13].insert(new w("Doncella","Nunca antes había contemplado tanta hermosura. Usted está como hipnotizado.",x(24),x(25),"¡Qué brusco! Un caballero debe dirigirse a una dama de otra forma.")),e[14].insert(new h("Taza de café","Humea.",1)),e[14].insert(new h("Cigarro","Está encendido.",1)),e[14].insert(new v("Puerta gris","Da al pasillo.","","Usted se encuentra del otro lado de la puerta.",e[6])),e[14].insert(new v("Puerta amarilla","Conduce al jardín.","","Usted sale al jardín.",e[12])),e[14].insert(new f("Arpía","Está desayunando. Usted recuerda a su suegra sin darse cuenta.",x(26),x(27))),e[15].insert(new h("Paraguas","Está cerrado.",2)),e[15].insert(new h("Talismán de aire","Está hecho de cinco vientos amarrados con un cordón negro.",1)),e[15].insert(new v("Puerta de hierro","Conduce al jardín.","","Usted sale al jardín.",e[12])),e[15].insert(new w("Esqueleto","Debe tener varios siglos.","Taza de café",x(29),"Dame algo para calentarme la barriga, por favor.")),e[16].insert(new v("Puerta triangular","Tiene forma de un triángulo de siete lados.","","Usted sale de la boca de la Bestia.",e[24])),e[16].insert(new E("Garganta","Es roja y carnosa.","Usted atraviesa por la garganta de la Bestia.",e[17])),e[17].insert(new h("Inscripción","No continúe si no está protegido.",10)),e[17].insert(new v("Garganta","Es roja y carnosa.","","Usted atraviesa por la garganta de la Bestia.",e[16])),e[17].insert(new y("Tráquea","Luce igual que en los libros de biología que había en su escuela.","","Usted atraviesa por la tráquea de la Bestia.",x(30),e[18])),e[17].insert(new y("Esófago","Parece un túnel.","","Usted atraviesa por el esófago de la Bestia.",x(31),e[19])),e[17].insert(new y("Arteria principal","Conduce al corazón seguramente.","","Usted atraviesa por la arteria principal de la Bestia.","Corazón de unicornio",e[20])),e[18].insert(new v("Tráquea","Luce igual que en los libros de biología que había en su escuela.","","Usted atraviesa por la tráquea de la Bestia.",e[17])),e[18].insert(new f("Centro de los pulmones","De aquí surge la vida de los pulmones.",x(35),x(32))),e[19].insert(new v("Esófago","Parece un túnel.","","Usted atraviesa por el esófago de la Bestia.",e[17])),e[19].insert(new f("Centro del estomago","De aquí surge la vida del estómago.","¡Usted ha matado al centro del estómago!",x(33))),e[20].insert(new v("Arteria principal","Conduce al corazón seguramente.","","Usted atraviesa por la arteria principal de la Bestia.",e[17])),e[20].insert(new f("Centro del corazon","De aquí surge la vida del corazón.",x(37),x(34))),e[21].insert(new h("Inscripción",x(39),10)),e[21].insert(new f("Centro del cerebro","¡Usa la antorcha!","XVBCZXV XBVCZX BVZXC!!!!! ",x(38))),e[22].insert(new h("Hacha","Está muy afilada.",10)),e[22].insert(new v("Puerta de madera","Conduce al jardín.","","Usted sale del almacén.",e[12])),e[22].insert(new v("Puerta verde","Usted presiente que hay algo muy grande detrás de ella.","","Usted entra al páramo.",e[23])),e[22].insert(new w("Ratón","Tiene puesto un delantal de alquimista.",x(40),x(41),"No tengo tiempo para atenderte. Llevo medio siglo buscando la quinta esencia.")),e[23].insert(new v("Puerta verde","Conduce al almacén.","","Usted sale del páramo.",e[22])),e[23].insert(new v("Puerta de cristal","Es muy delgada.",x(42),"Usted sale del páramo.",e[24])),e[23].insert(new y("Túnel","Parece más acogedor que el túnel del exterior de la fortaleza.","","Usted atraviesa el túnel.",x(43),e[23])),e[23].insert(new E("Pozo","Es muy profundo.","Usted cae vertiginosamente por el pozo y, antes de que pueda darse cuenta, está en el exterior de la fortaleza.",e[0])),e[23].insert(new f("Lobo","Es del tamaño de un ternero. La única forma de pasar por la puerta de cristal es matándolo.",x(44),"Latigo")),e[24].insert(new v("Puerta de cristal","Es muy delgada.",x(42),"Usted sale al páramo.",e[23])),e[24].insert(new v("Puerta de tela","Es una puerta aparentemente normal, pero de tela. Algo le preocupa sobre esta puerta.","","Usted sale del salón de cristal.",e[25])),e[24].insert(new P("Puerta triangular","Tiene forma de un triángulo de siete lados.","¿Cuál es el nombre del duende?",x(23),"Usted entra a la boca de la Bestia.",e[16])),e[24].insert(new w("Bailarina","Es muy joven.","Máquina del tiempo",x(47),"Quiero ser joven para siempre.")),e[25].insert(new h("Inscripción","Dice que usted pasará en esta celda el resto de sus días.",41)),e[26].insert(new w("Araña","Es un poco mayor que usted, pero ya no puede producir hilo.","Hilo de Ariadna","Busca al Minotauro y mátalo con la espada.","¡Pssssssss!")),e[26].insert(new h("Martillo","Tiene dos mangos y tres cabezas.",2)),e[26].insert(new y("Puerta secreta","Conduce al exterior de la fortaleza.","","Usted atraviesa la puerta.","Antorcha",e[0])),e[26].insert(new j("Estatua de Satanás","Es infinitamente negra.","Cuadro",new v("Puerta oculta","Conduce a la antesala del laberinto.","","Usted atraviesa la puerta.",e[27]))),e[26].insert(new U("Puerta","Conduce a la antesala del Laberinto.","","Usted atraviesa la puerta.","Espada",e[27])),e[27].insert(new v("Puerta","Conduce al puente.","","Usted atraviesa la puerta.",e[26])),e[27].insert(new w("Crunch","Es muy similar a una boca con patas.","Pastel de cerezas","Las secuencia que necesitas es 1, 2, 3, 1, 2, 3, 1","¡Qué hambre!")),e[27].insert(new j("Columna de Cristal","Es muy alta.","Antorcha 3",new j("Puerta de madera","Parece muy frágil, tiene dos picaportes y tres bisagras.","Martillo",new v("Puerta negra","Conduce al Jardín","","Usted entra al Jardín.",e[49])))),e[27].insert(new E("Puerta verde","Conduce al Laberinto.","Usted atraviesa la puerta.",e[30])),e[27].insert(new w("Dédalo","Parece haber sido herido por el cuerno de un toro gigante.","Vendajes","Solo el hierro te protegerá contra las flores.","Me muero...")),e[28].insert(new E("Puerta","Conduce al Laberinto.","Usted atraviesa la puerta.",e[46])),e[28].insert(new h("Antorcha 1","Es muy brillante.",2)),e[28].insert(new h("Antorcha 2","Es muy brillante.",2)),e[28].insert(new h("Antorcha 3","Es muy brillante.",2)),e[28].insert(new h("Antorcha 4","Es muy brillante.",2)),e[28].insert(new h("Antorcha 5","Es muy brillante.",2)),e[28].insert(new h("Antorcha 6","Está apagada.",2)),e[28].insert(new h("Antorcha 7","Es muy brillante.",2)),e[28].insert(new f("Minotauro","Está sentado en un enorme trono de rocas.","¡Me has matado! Coge la antorcha del número divino y rompe la columna de cristal.","Espada")),e[29].insert(new P("Puerta dorada","Es de oro macizo.","Invente un alfabeto (el mayor que pueda) con el que no pueda crearse a la Bestia.","cdfghjklmnopqruvwxyz","¡Usted ha entrado al Cerebro de la Bestia!",e[21])),e[30].insert(new E("Puerta 1","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[31])),e[30].insert(new E("Puerta 2","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[27])),e[30].insert(new E("Puerta 3","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[37])),e[31].insert(new E("Puerta 1","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[30])),e[31].insert(new E("Puerta 2","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[32])),e[31].insert(new E("Puerta 3","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[43])),e[32].insert(new E("Puerta 1","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[25])),e[32].insert(new E("Puerta 2","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[31])),e[32].insert(new E("Puerta 3","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[33])),e[33].insert(new E("Puerta 1","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[34])),e[33].insert(new E("Puerta 2","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[40])),e[33].insert(new E("Puerta 3","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[32])),e[34].insert(new E("Puerta 1","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[33])),e[34].insert(new E("Puerta 2","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[35])),e[34].insert(new E("Puerta 3","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[45])),e[35].insert(new E("Puerta 1","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[48])),e[35].insert(new E("Puerta 2","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[34])),e[35].insert(new E("Puerta 3","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[36])),e[36].insert(new E("Puerta 1","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[28])),e[36].insert(new E("Puerta 2","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[30])),e[36].insert(new E("Puerta 3","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[35])),e[37].insert(new E("Puerta 1","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[25])),e[37].insert(new E("Puerta 2","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[38])),e[37].insert(new E("Puerta 3","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[30])),e[38].insert(new E("Puerta 1","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[30])),e[38].insert(new E("Puerta 2","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[37])),e[38].insert(new E("Puerta 3","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[39])),e[39].insert(new E("Puerta 1","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[30])),e[39].insert(new E("Puerta 2","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[25])),e[39].insert(new E("Puerta 3","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[38])),e[40].insert(new E("Puerta 1","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[32])),e[40].insert(new E("Puerta 2","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[33])),e[40].insert(new E("Puerta 3","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[41])),e[41].insert(new E("Puerta 1","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[31])),e[41].insert(new E("Puerta 2","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[42])),e[41].insert(new E("Puerta 3","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[40])),e[42].insert(new E("Puerta 1","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[25])),e[42].insert(new E("Puerta 2","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[41])),e[42].insert(new E("Puerta 3","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[43])),e[43].insert(new E("Puerta 1","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[44])),e[43].insert(new E("Puerta 2","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[31])),e[43].insert(new E("Puerta 3","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[30])),e[44].insert(new E("Puerta 1","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[43])),e[44].insert(new E("Puerta 2","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[31])),e[44].insert(new E("Puerta 3","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[30])),e[45].insert(new E("Puerta 1","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[46])),e[45].insert(new E("Puerta 2","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[32])),e[45].insert(new E("Puerta 3","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[34])),e[46].insert(new E("Puerta 1","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[45])),e[46].insert(new E("Puerta 2","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[33])),e[46].insert(new E("Puerta 3","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[47])),e[47].insert(new E("Puerta 1","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[30])),e[47].insert(new E("Puerta 2","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[48])),e[47].insert(new E("Puerta 3","Es idéntica a las otras dos.","Usted atraviesa la puerta.",e[46])),e[48].insert(new E("Salida","Conduce a la entrada del laberinto.","Usted regresa a la entrada del Laberinto.",e[27])),e[49].insert(new h("Inscripción","¡Cuidado! Este no es el Jardín verdadero.",1)),e[49].insert(new h("Cedro","Le faltan algunas ramas. Al parecer, alguien las cortó para hacerse una cama.",41)),e[49].insert(new E("Puerta verde","Conduce a los baños de la Bestia.","Usted sale del jardín.",e[25])),e[49].insert(new E("Puerta azul","Debe haber algo hemoso detrás de esta puerta.","Usted sale del jardín.",e[25])),e[49].insert(new E("Puerta amarilla","Conduce a la sala de infusiones.","Usted sale del jardín.",e[25])),e[49].insert(new P("Puerta de hierro","Conduce los calabozos.","¿Cuántas antorchas iluminan al Minotauro?","Seis","Usted entra al salón de los elegidos.",e[29])),e[49].insert(new E("Puerta de madera","Conduce al almacén.","Usted sale del jardín.",e[25]))}function S(e,a=""){if(""===e)return;const s=document.getElementById("output"),t=document.createElement("div");t.className="output-line"+(a?" "+a:"");const r=document.createElement("span");r.className="text-reveal",r.textContent=e;const n=document.createElement("div");n.className="text-mask";const o=document.createElement("div");o.className="text-scanline",o.style.left="0px";const i=document.createElement("div");i.className="text-scanline-dot",o.appendChild(i),r.appendChild(n),r.appendChild(o),t.appendChild(r),s.appendChild(t);const l=r.offsetWidth;if(e.length>100)r.removeChild(n),r.removeChild(o);else{const a=Math.max(80,Math.min(200,3*e.length)),s=performance.now();requestAnimationFrame(function e(t){const i=t-s,d=Math.min(i/a,1),u=d*l;o.style.left=u+"px",n.style.clipPath=`inset(0 0 0 ${u}px)`,d<1?requestAnimationFrame(e):(r.removeChild(n),r.removeChild(o))})}s.scrollTop=s.scrollHeight}function _(){}const D={suggestions:[],currentIndex:-1,originalInput:""},T=["ir","atravesar","entrar","cruzar","pasar","tomar","coger","recoger","agarrar","dejar","soltar","tirar","ver","examinar","mirar","abrir","romper","matar","atacar","destruir","dar","hablar","preguntar","preguntarle","pesar","inventario","ayuda","guardar","cargar","partidas","borrar","salir","quit"],H=["con","a"];function N(){const e=[];return k.player&&k.player.curr&&k.player.curr.items.forEach(a=>{e.push({name:a.name,location:"room"})}),k.player&&k.player.bag&&k.player.bag.items.forEach(a=>{e.push({name:a.name,location:"inventory"})}),e}function W(e){if(!e)return[];const a=e.toLowerCase().split(" "),s=a[a.length-1];if(1!==a.length||e.endsWith(" ")){const s=a[0];if((["abrir","romper","matar","atacar","destruir"].includes(s)||"dar"===s&&!e.toLowerCase().includes(" a "))&&!e.toLowerCase().includes(" con ")&&!e.toLowerCase().includes(" a ")){const t=a.slice(1).join(" ").trim();if(""!==t&&e.endsWith(" "))return["dar"===s?"a":"con"];if(""!==t){const e=a.slice(1,-1).join(" ").trim(),t=a[a.length-1].toLowerCase(),r="dar"===s?"a":"con";if(""!==e&&r.startsWith(t)&&""!==t&&r!==t)return[r]}}let t=N(),r=a.slice(1).join(" ").trim();const n=e.toLowerCase().lastIndexOf(" con "),o=e.toLowerCase().lastIndexOf(" a ");if(-1!==n){if(r=e.substring(n+5).trim(),"abrir"===s)return[]}else-1!==o?r=e.substring(o+3).trim():["dar","dejar","soltar","tirar","pesar"].includes(s)?t=t.filter(e=>"inventory"===e.location):["tomar","coger","recoger","agarrar"].includes(s)&&(t=t.filter(e=>"room"===e.location));return t.filter(e=>e.name.toLowerCase().startsWith(r.toLowerCase())||""===r).map(e=>e.name)}return T.filter(e=>e.startsWith(s)&&e!==s).map(e=>e)}function O(e){const a=e.value;D.suggestions=W(a),D.currentIndex=-1,D.originalInput=a;const s=e.parentElement.querySelector(".autocomplete-suggestion");s&&s.remove(),D.suggestions.length>0&&R(e,D.suggestions[0])}function R(e,a){const s=e.parentElement.querySelector(".autocomplete-suggestion");s&&s.remove();const t=e.value;let r="";const n=t.split(" ");if(1!==n.length||t.endsWith(" "))if("con"===a||"a"===a)if(t.endsWith(" "))r=" "+a;else{const e=n[n.length-1].toLowerCase();if(!a.startsWith(e)||""===e)return;r=a.substring(e.length)}else{const e=n.slice(1).join(" ").trim();if(""===e)r=t.endsWith(" ")?" "+a:a;else{if(!a.toLowerCase().startsWith(e.toLowerCase()))return;r=a.substring(e.length)}}else{const e=n[0];if(!a.toLowerCase().startsWith(e.toLowerCase()))return;r=a.substring(e.length)}if(!r)return;const o=document.createElement("span");o.className="autocomplete-suggestion";let i=t;t.endsWith(" ")&&(i=t.slice(0,-1)),o.textContent=r;const l=document.createElement("span");l.style.visibility="hidden",l.style.position="absolute",l.style.whiteSpace="pre",l.style.font=window.getComputedStyle(e).font,l.textContent=i,document.body.appendChild(l);const d=l.offsetWidth;document.body.removeChild(l),o.style.position="absolute",o.style.left=e.offsetLeft+22-e.scrollLeft+d+"px",o.style.top=e.offsetTop+10+"px",o.style.pointerEvents="none",o.style.color="rgba(57, 255, 20, 0.35)",o.style.whiteSpace="pre",e.parentElement.appendChild(o)}function M(e){0!==D.suggestions.length&&(D.currentIndex+=e,D.currentIndex<0?D.currentIndex=D.suggestions.length-1:D.currentIndex>=D.suggestions.length&&(D.currentIndex=0),R(document.getElementById("input"),D.suggestions[D.currentIndex]))}function F(){if(0===D.suggestions.length)return!1;const e=document.getElementById("input"),a=e.value,s=D.suggestions[-1===D.currentIndex?0:D.currentIndex],t=a.split(" ");if(1===t.length||2===t.length&&a.endsWith(" "))a.endsWith(" ")?e.value=a+s+" ":e.value=s+" ";else{const r=t.slice(1).join(" ").trim();""===r?e.value=t[0]+" "+s+" ":s.toLowerCase().startsWith(r.toLowerCase())?e.value=a+s.substring(r.length)+" ":(t[t.length-1]=s,e.value=t.join(" ")+" ")}const r=e.parentElement.querySelector(".autocomplete-suggestion");return r&&r.remove(),D.suggestions=[],D.currentIndex=-1,O(e),!0}function V(e){const a=e.split(" "),s=a[0].toLowerCase(),t=a.slice(1).join(" ");switch(s){case"ayuda":case"help":S("Comandos disponibles:"),S("- ir/atravesar [lugar]: ir a un lugar"),S("- tomar/coger [objeto]: tomar un objeto"),S("- dejar/soltar [objeto]: dejar un objeto"),S("- dejar todo: dejar todos los objetos"),S("- mirar: mirar alrededor"),S("- ver/examinar [objeto]: examinar un objeto"),S("- inventario/i: ver tu inventario"),S("- abrir [puerta] con [palabra]: abrir una puerta"),S("- romper [objeto] con [arma]: romper algo"),S("- matar/atacar [objetivo] con [arma]: atacar algo"),S("- dar [objeto] a [quien]: dar un objeto"),S("- hablar/preguntar [quien]: hablar con alguien"),S("- pesar [objeto]: pesar un objeto"),S("- guardar [nombre]: guardar partida"),S("- cargar [nombre]: cargar partida"),S("- partidas: listar partidas guardadas"),S("- borrar [nombre]: borrar partida guardada"),S("- salir/quit: abandonar el juego");break;case"inventario":case"i":case"inv":k.player.inventary();break;case"mirar":t&&t.trim()?k.player.see(t):k.player.look(!0);break;case"look":k.player.look(!0);break;case"ver":case"examinar":case"v":k.player.see(t);break;case"tomar":case"coger":case"recoger":case"agarrar":k.player.take(t);break;case"dejar":case"soltar":case"tirar":"todo"===t?k.player.leaveAll():k.player.leave(t);break;case"ir":case"atravesar":case"entrar":case"cruzar":case"pasar":k.player.walkT(t);break;case"abrir":const a=e.split(" con "),s=a[0].replace(/abrir /i,"").trim(),r=a[1]?a[1].trim():"";k.player.openD(s,r);break;case"romper":const n=e.split(" con "),o=n[0].replace(/romper /i,"").trim(),i=n[1]?n[1].trim():"";k.player.breakItem(o,i);break;case"matar":case"atacar":case"destruir":const l=e.split(" con "),d=l[0].replace(/^(matar|atacar|destruir) /i,"").trim(),u=l[1]?l[1].trim():"";k.player.kill(d,u);break;case"dar":const h=e.split(" a "),b=h[0].replace(/dar /i,"").trim(),w=h[1]?h[1].trim():"";k.player.give(b,w);break;case"hablar":case"preguntar":case"preguntarle":k.player.ask(t);break;case"pesar":k.player.weigh(t);break;case"guardar":case"save":t?c(t):(g(),S(""),S("Escribe: guardar [nombre] para guardar tu juego","system"));break;case"cargar":case"load":t?m(t):(g(),S(""),S("Escribe: cargar [nombre] para cargar tu juego","system"));break;case"partidas":case"saves":case"listar":case"juegos":g();break;case"borrar":case"eliminar":case"delete":t?p(t):(g(),S(""),S("Escribe: borrar [nombre] para eliminar un juego","system"));break;case"salir":case"quit":case"morir":S("Su entierro se efectuará el próximo domingo a las 3:00 am. Está invitado.","system"),k.player.die(""),k.gameOver=!0;break;default:S('No entiendo ese comando. Escribe "ayuda" para ver comandos disponibles.',"error")}J()}function J(){const e=["Centro del cerebro","Centro del corazon","Centro del estomago","Centro de los pulmones"];let a=!0;for(let s of e){let e=!1;for(let a of k.rooms)if(a.get(s)){e=!0;break}if(e){a=!1;break}}let s=!0;const t=k.rooms[11].get("Troll");t&&!t.dead&&(s=!1),a&&s&&(k.gameWon=!0,S("",""),S("¡¡¡VICTORIA!!!","success"),S("Usted ha vencido a la Bestia.","success"),S("Parece ser una persona persistente y eso es un mérito muy grande."),S("La persistencia es indispensable para los que luchan por el bien,"),S("sobre todo porque los que luchan por el mal son muy persistentes también."),S("Veremos si en la próxima versión de La Fortaleza tiene igual suerte."),S("",""),S("                                             Un servidor:","system"),S("                                             M. Cepero","system"))}window.processCommand=function(){if(k.gameOver||k.gameWon||k.player.dead)return;const e=document.getElementById("input"),a=e.value.trim();e.value="",a&&(S("> "+a,"prompt"),V(a),n(a)&&(console.log("[HISTORY] Adding command to history:",a),k.commandHistory.push(a),console.log("[HISTORY] Total commands in history:",k.commandHistory.length)))};const G=document.getElementById("input");G.addEventListener("input",function(e){O(this)}),G.addEventListener("keydown",function(e){if("Tab"===e.key)e.preventDefault(),F();else if("ArrowDown"===e.key)e.preventDefault(),M(1);else if("ArrowUp"===e.key)e.preventDefault(),M(-1);else if("Escape"===e.key){const e=this.parentElement.querySelector(".autocomplete-suggestion");e&&e.remove(),D.suggestions=[],D.currentIndex=-1}}),G.addEventListener("keypress",function(e){if("Enter"===e.key){const e=this.parentElement.querySelector(".autocomplete-suggestion");e&&e.remove(),D.suggestions=[],processCommand()}}),window.toggleFullscreen=function(){const e=document.documentElement,a=document.getElementById("fullscreen-btn");document.fullscreenElement?(document.exitFullscreen?document.exitFullscreen():document.webkitExitFullscreen?document.webkitExitFullscreen():document.msExitFullscreen&&document.msExitFullscreen(),a.textContent="⛶"):(e.requestFullscreen?e.requestFullscreen():e.webkitRequestFullscreen?e.webkitRequestFullscreen():e.msRequestFullscreen&&e.msRequestFullscreen(),a.textContent="⛶")},document.addEventListener("fullscreenchange",function(){document.getElementById("fullscreen-btn").textContent=(document.fullscreenElement,"⛶")}),A(),document.getElementById("input").focus();</script></body></html>
+<!DOCTYPE html><html lang="es"><head><script async src="https://www.googletagmanager.com/gtag/js?id=G-D7CWN7QR83"></script><script>const a=a=>{try{return atob(a)}catch(t){return a}},t={};function n(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],n("js",new Date),n("config","G-D7CWN7QR83");</script><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>La Fortaleza - Aventura de Texto (v1.19)</title><link rel="icon" type="image/png" href="favicon.png"><style>@font-face{font-family:'IBM VGA';src:url('Flexi_IBM_VGA_True.ttf') format('truetype');font-weight:400;font-style:normal}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'IBM VGA',Courier,monospace;background-color:#000;color:#45bf45;padding:20px;line-height:1.4;font-size:160%}#game-container{max-width:900px;margin:0 auto;background-color:#000;xborder:2px solid #0f0;padding:20px;position:relative;overflow:hidden}#title{text-align:center;font-size:34px;margin-bottom:20px;color:#0f0;border-bottom:2px solid #0f0;padding-bottom:10px}#output{min-height:400px;max-height:500px;overflow-y:auto;margin-bottom:20px;padding:10px;xborder:1px solid #0f0}#output::-webkit-scrollbar{width:10px}#output::-webkit-scrollbar-track{background:#000}#output::-webkit-scrollbar-thumb{background:#123312}.output-line{margin-bottom:8px;position:relative;overflow:hidden}.text-scanline{position:absolute;left:0;top:50%;transform:translateY(-50%);width:2px;height:100%;background:rgba(57,255,20,.9);box-shadow:0 0 6px #39ff14,0 0 12px rgba(57,255,20,.7),0 0 18px rgba(57,255,20,.3);z-index:5}.text-scanline-dot{position:absolute;right:-3px;top:50%;transform:translateY(-50%);width:4px;height:4px;background:#fff;border-radius:50%;box-shadow:0 0 8px #39ff14,0 0 16px rgba(57,255,20,.6),0 0 24px rgba(57,255,20,.3)}.text-reveal{position:relative;display:inline-block}.text-mask{position:absolute;top:0;left:0;right:0;bottom:0;background:#000;z-index:4}#input-container{display:flex;gap:10px}#input{flex:1;background-color:#000;color:#0f0;border:1px solid #0f0;padding:10px;font-family:'IBM VGA',Courier,monospace;font-size:14px}#input:focus{outline:0;border-color:#0f0;xbox-shadow:0 0 5px #0f0}button{background-color:#000;color:#0f0;border:1px solid #0f0;padding:10px 20px;cursor:pointer;font-family:'IBM VGA',Courier,monospace;font-size:14px}button:hover{background-color:#0f0;color:#000}#fullscreen-btn{padding:10px 15px;margin-left:10px;font-size:18px;line-height:1}#inventory{margin-top:20px;padding:10px;border:1px solid #0f0}#inventory h3{margin-bottom:10px}.prompt{color:#ff0}.error{color:#ff9500}.success{margin-top:30px;color:#fc0}.system{color:#09ff00}:root{--phosphor:#39ff14;--scanline-strength:.08;--vignette-strength:.60}body{background:radial-gradient(ellipse at center,#020402 0,#000 90%);letter-spacing:.3px;position:relative}body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;background:repeating-linear-gradient(0deg,rgba(0,0,0,.5) 0,rgba(0,0,0,.5) 2px,transparent 2px,transparent 4px);opacity:var(--scanline-strength)}#game-container{position:relative;overflow:hidden;border-radius:16px;background:#000;box-shadow:inset 0 0 60px rgba(57,255,20,.06),inset 0 0 140px rgba(0,0,0,.9),0 0 0 1px rgba(57,255,20,.08);isolation:isolate;backface-visibility:hidden}.crt-screen{position:relative;z-index:0;backface-visibility:hidden;filter:url(#crt-warp)}#game-container::before{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:overlay;border-radius:inherit;background:repeating-linear-gradient(0deg,rgba(0,0,0,.5) 0,rgba(0,0,0,.5) 2px,transparent 2px,transparent 4px);opacity:var(--scanline-strength);z-index:1}#game-container::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 40%,rgba(0,0,0,var(--vignette-strength)) 100%),radial-gradient(ellipse at center,rgba(57,255,20,.12),rgba(0,0,0,0) 55%);mix-blend-mode:multiply;z-index:4}.crt-scanline{position:absolute;left:0;right:0;height:4px;top:-6px;background:linear-gradient(to bottom,rgba(255,255,255,.45),rgba(255,255,255,0));mix-blend-mode:screen;opacity:.25;pointer-events:none;z-index:2;will-change:top;animation:crtScanTop 30s linear infinite}@keyframes crtScanTop{0%{top:-6px}100%{top:calc(100% + 6px)}}.crt-flicker{position:absolute;inset:0;border-radius:inherit;pointer-events:none;mix-blend-mode:screen;z-index:3;background:rgba(57,255,20,.06);animation:crtFlicker 1.9s steps(1000) infinite}@keyframes crtFlicker{0%{opacity:.98}50%{opacity:1}100%{opacity:.99}}.crt-scanline{height:18px;opacity:.02;animation-duration:11s}.crt-flicker{background:rgba(57,255,20,.12)}#title{letter-spacing:3px;text-shadow:0 0 .6px var(--phosphor),0 0 6px rgba(57,255,20,.45),0 0 18px rgba(57,255,20,.15);border-bottom:1px dashed rgba(57,255,20,.25)}#output{text-shadow:0 0 1px rgba(57,255,20,.8),0 0 6px rgba(57,255,20,.46),0 0 24px rgba(57,255,20,.35),1px 0 0 rgba(255,0,0,.135),-1px 0 0 rgba(0,255,255,.135)}#input-container{position:relative;border-top:1px dashed rgba(57,255,20,.25);padding-top:10px;display:flex;align-items:center}#input-container::before{content:">";position:absolute;left:4px;color:var(--phosphor);text-shadow:0 0 .6px var(--phosphor),0 0 6px rgba(57,255,20,.45);opacity:.9;animation:blink 1.2s steps(1) infinite;line-height:1}@keyframes blink{0%,50%{opacity:1}100%,51%{opacity:.4}}.autocomplete-suggestion{position:absolute;pointer-events:none;color:#26ff00;font-family:'IBM VGA',Courier,monospace;z-index:1;white-space:pre}#input{background:0 0;border:none;border-bottom:1px solid rgba(57,255,20,.35);padding:10px 8px 6px 22px;font:inherit;color:var(--phosphor);caret-color:var(--phosphor);box-shadow:none;text-shadow:0 0 1px var(--phosphor),0 0 10px rgba(57,255,20,.28),0 0 24px rgba(57,255,20,.12)}#input::placeholder{color:rgba(57,255,20,.35)}button{background:rgba(0,0,0,.5);color:var(--phosphor);border:1px solid rgba(57,255,20,.35);border-radius:6px;text-shadow:0 0 1px var(--phosphor),0 0 10px rgba(57,255,20,.28);box-shadow:0 0 0 1px rgba(57,255,20,.12) inset,0 0 24px rgba(57,255,20,.08) inset;transition:transform .06s ease,box-shadow .12s ease,background .12s ease}button:hover{background:rgba(57,255,20,.12);box-shadow:0 0 40px rgba(57,255,20,.18) inset}button:active{transform:translateY(1px)}.prompt{text-shadow:0 0 1px #dfff8f,0 0 12px rgba(223,255,143,.5)}.error{text-shadow:0 0 1px #ff9500,0 0 12px rgba(255,149,0,.5)}.success{text-shadow:0 0 1px #c9ffcf,0 0 12px rgba(201,255,207,.5)}.system{text-shadow:0 0 1px #09ff00,0 0 10px rgba(9,255,0,.5)}body,html{height:100%;margin:0}body{padding:0}#game-container{position:fixed;inset:0;max-width:none;padding:24px;display:block;border-radius:16px}.crt-screen{position:relative;height:100%;display:grid;grid-template-columns:2fr 1fr;grid-template-rows:auto 1fr auto;gap:16px;z-index:0;backface-visibility:hidden}#right-sidebar{grid-column:2;grid-row:1/span 3;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden}#room-image{width:100%;height:auto;border-radius:12px;border:1px solid rgba(57,255,20,.25);display:block;flex-shrink:0;position:relative}#room-image-container{position:relative;overflow:visible;width:100%}.image-transition-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:#000;pointer-events:none;z-index:10}.scanline-wipe{position:absolute;left:0;right:0;height:2px;background:rgba(57,255,20,.8);box-shadow:0 0 8px #39ff14,0 0 16px rgba(57,255,20,.8),0 0 24px rgba(57,255,20,.4);z-index:11}.scanline-dot{position:absolute;right:0;top:50%;transform:translateY(-50%);width:6px;height:6px;background:#fff;border-radius:50%;box-shadow:0 0 12px #39ff14,0 0 24px rgba(57,255,20,.8),0 0 36px rgba(57,255,20,.4);z-index:12}#location-name{text-align:center;margin:0 auto;padding:8px 16px;border:1px solid rgba(57,255,20,.25);border-radius:8px;background:rgba(0,0,0,.9);letter-spacing:2px;text-shadow:0 0 1px var(--phosphor),0 0 6px rgba(57,255,20,.45),0 0 18px rgba(57,255,20,.15);position:relative;transform:translateY(-50%);width:fit-content;max-width:90%}#title{grid-column:1;grid-row:1}#output{grid-column:1;grid-row:2;overflow-y:auto;max-height:none!important;min-height:0!important}#input-container{grid-column:1;grid-row:3}#inventory{margin:0;padding:12px 12px 12px 16px;border:1px solid rgba(57,255,20,.25);border-radius:12px;background:rgba(0,0,0,.35);overflow:auto;flex:1;min-height:0}#inventory h3{position:sticky;top:0;background:#000;padding-bottom:8px;margin:0 0 12px;z-index:1;border-bottom:1px dashed rgba(57,255,20,.35)}#input{width:100%}@media (max-width:900px){.crt-screen{grid-template-columns:1fr;grid-template-rows:auto 1fr auto auto}#inventory{grid-column:1;grid-row:4}}.crt-noise{position:absolute;inset:0;pointer-events:none;z-index:2;opacity:.025;mix-blend-mode:screen;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/></filter><rect width="200" height="200" filter="url(%23n)" opacity="1"/></svg>');background-size:200px 200px}</style></head><body><svg width="0" height="0" style="position:absolute;left:-9999px;top:-9999px"><filter id="crt-warp" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.00015 0.003" numOctaves="1" seed="2" result="noise"/><feGaussianBlur in="noise" stdDeviation="2" result="softNoise"/><feDisplacementMap in="SourceGraphic" in2="softNoise" scale="34" xChannelSelector="R" yChannelSelector="G"/></filter></svg><div id="game-container"><div class="crt-scanline" aria-hidden="true"></div><div class="crt-flicker" aria-hidden="true"></div><div class="crt-noise" aria-hidden="true"></div><div class="crt-screen"><div id="title">LA FORTALEZA</div><div id="output"></div><div id="input-container"><input type="text" id="input" placeholder="Escribe tu comando aquí..." autocomplete="off" autofocus> <button onclick="processCommand()">ENVIAR</button> <button id="fullscreen-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen">⛶</button></div><div id="right-sidebar"><div id="room-image-container"><img id="room-image" src="images/room_entrance.jpg" alt="Room"></div><div id="location-name">EXTERIOR DE LA FORTALEZA</div></div></div></div><script>// ==================== ROOM IMAGE MAPPING ====================
+
+        const roomImages = {
+            'el exterior de la fortaleza': ['images/room_entrance.jpg'],
+            'el Salón de recepciones': ['images/room_reception.jpg'],
+            'la Sala de juegos': ['images/room_game.jpg'],
+            'el Patio interior': ['images/room_patio.jpg', 'images/room_patio_2.jpg'],
+            'el Jardín': ['images/room_gardens.jpg', 'images/room_gardens_2.jpg'],
+            'la Biblioteca': ['images/room_library.jpg'],
+            'el Cuarto de espejos': ['images/room_mirrors.jpg'],
+            'Pasillo': ['images/room_pasillo.jpg'],
+            'la Alcoba de la bruja': ['images/room_witch.jpg'],
+            'el Cuarto del guerrero': ['images/room_warrior.jpg'],
+            'el Laboratorio de la Bestia': ['images/room_lab.jpg'],
+            'la Sala de armas': ['images/room_armory.jpg'],
+            'los Baños de la Bestia': ['images/room_bathroom.jpg'],
+            'la Alcoba de la doncella': ['images/room_maid.jpg'],
+            'la Sala de infusiones': ['images/room_tearoom.jpg'],
+            'los Calabozos': ['images/room_jail.jpg'],
+            'los Almacenes de la Fortaleza': ['images/room_warehouse.jpg'],
+            'Salón de cristal': ['images/room_crystal.jpg'],
+            'Boca de la Bestia': ['images/room_mouth.jpg'],
+            'Interior de la Bestia': ['images/room_beast_interior.jpg'],
+            'Pulmones de la Bestia': ['images/room_lungs.jpg'],
+            'el Estómago de la Bestia': ['images/room_stomach.jpg'],
+            'el Corazón de la Bestia': ['images/room_heart.jpg'],
+            'el Cerebro de la Bestia': ['images/room_brain.jpg'],
+            'un extenso páramo': ['images/room_moor.jpg'],
+            'celda pequeña': ['images/room_labrynth_cell.jpg'],
+            'un puente de mármol': ['images/room_marble_bridge.jpg'],
+            'la Antesala del Laberinto': ['images/room_labrynth_entrance.jpg'],
+            'la cueva del Minotauro': ['images/room_minotaur.jpg'],
+            'el Salón de los elegidos': ['images/room_chosen.jpg'],
+            'un pasillo del Laberinto': ['images/room_labrynth_node_1.jpg', 'images/room_labrynth_node_2.jpg', 'images/room_labrynth_node_3.jpg', 'images/room_labrynth_node_4.jpg']
+        };
+
+        function getRandomRoomImage(roomName) {
+            const images = roomImages[roomName];
+            if (images && images.length > 0) {
+                const randomIndex = Math.floor(Math.random() * images.length);
+                return images[randomIndex];
+            }
+            return 'images/room_entrance.jpg'; // Default fallback
+        }
+
+        window.updateRoomImage = function(roomName) {
+            const imageElement = document.getElementById('room-image');
+            const container = document.getElementById('room-image-container');
+            if (!imageElement || !container) return;
+
+            const newSrc = getRandomRoomImage(roomName);
+
+            // Don't animate if it's the same image
+            if (imageElement.src.endsWith(newSrc)) return;
+
+            // Create overlay and scanline elements
+            const overlay = document.createElement('div');
+            overlay.className = 'image-transition-overlay';
+
+            const scanline = document.createElement('div');
+            scanline.className = 'scanline-wipe';
+            scanline.style.top = '0px';
+
+            const dot = document.createElement('div');
+            dot.className = 'scanline-dot';
+            scanline.appendChild(dot);
+
+            container.appendChild(overlay);
+            container.appendChild(scanline);
+
+            // Preload new image
+            const newImage = new Image();
+            newImage.onload = () => {
+                // Start the scanline animation
+                const imageHeight = imageElement.offsetHeight;
+                const duration = 800; // ms
+                const startTime = performance.now();
+
+                function animate(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+
+                    // Ease-in-out for smoother motion
+                    const eased = progress < 0.5
+                        ? 2 * progress * progress
+                        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+                    const currentY = eased * imageHeight;
+                    scanline.style.top = currentY + 'px';
+
+                    // Clip the overlay to reveal image progressively
+                    overlay.style.clipPath = `inset(${currentY}px 0 0 0)`;
+
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        // Animation complete, clean up
+                        container.removeChild(overlay);
+                        container.removeChild(scanline);
+                    }
+                }
+
+                // Change the image source and start animation
+                imageElement.src = newSrc;
+                requestAnimationFrame(animate);
+            };
+
+            newImage.src = newSrc;
+        }
+
+        // ==================== HELPER FUNCTIONS ====================
+
+        // Normalize string to remove accents for easier matching
+        function normalizeString(str) {
+            return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        }
+
+        // ==================== SAVE/LOAD SYSTEM ====================
+        // Command-based save system: saves the history of state-changing commands
+        // and replays them on load to reconstruct the exact game state
+
+        // Commands that don't change state and should not be saved
+        const READ_ONLY_COMMANDS = ['mirar', 'ver', 'observar', 'examinar', 'inventario', 'inv',
+                                     'hablar', 'ayuda', 'help', 'partidas', 'pistas'];
+
+        // Dictionary for compressing common words in commands
+        // Using special Unicode characters to avoid conflicts
+        const COMPRESSION_DICT = {
+            'tomar': '\u00A1', 'coger': '\u00A2', 'ir': '\u00A3', 'puerta': '\u00A4',
+            'matar': '\u00A5', 'dar': '\u00A6', 'abrir': '\u00A7', 'romper': '\u00A8',
+            'dejar': '\u00A9', 'soltar': '\u00AA', 'atravesar': '\u00AB', 'cuarto': '\u00AC',
+            'pasillo': '\u00AD', 'laboratorio': '\u00AE', 'jardin': '\u00AF', 'biblioteca': '\u00B0',
+            'espejo': '\u00B1', 'guerrero': '\u00B2', 'hacha': '\u00B3', 'espada': '\u00B4',
+            'daga': '\u00B5', 'principal': '\u00B6', 'con': '\u00B7'
+        };
+
+        function shouldSaveCommand(command) {
+            const cmd = command.trim().toLowerCase();
+            // Don't save load/save commands
+            if (cmd.startsWith('cargar') || cmd.startsWith('guardar') || cmd.startsWith('borrar')) {
+                return false;
+            }
+            // Don't save read-only commands
+            const firstWord = cmd.split(' ')[0];
+            return !READ_ONLY_COMMANDS.includes(firstWord);
+        }
+
+        function compressCommands(commands) {
+            return commands.map(cmd => {
+                let compressed = cmd;
+                // Replace each word with its Unicode character
+                for (let [word, char] of Object.entries(COMPRESSION_DICT)) {
+                    compressed = compressed.replace(new RegExp('\\b' + word + '\\b', 'gi'), char);
+                }
+                return compressed;
+            });
+        }
+
+        function decompressCommands(commands) {
+            // Build reverse dictionary
+            const reverse = {};
+            for (let [word, char] of Object.entries(COMPRESSION_DICT)) {
+                reverse[char] = word;
+            }
+
+            return commands.map(cmd => {
+                let decompressed = cmd;
+                // Replace each Unicode character back with its word
+                for (let [char, word] of Object.entries(reverse)) {
+                    decompressed = decompressed.replace(new RegExp(char, 'g'), word);
+                }
+                return decompressed;
+            });
+        }
+
+        function serializeGameState() {
+            // Compress command history before saving
+            const compressed = compressCommands(gameState.commandHistory);
+            const state = {
+                commands: compressed,
+                timestamp: new Date().toISOString()
+            };
+
+            // Debug logging
+            console.log('[SAVE] Original commands:', gameState.commandHistory);
+            console.log('[SAVE] Compressed commands:', compressed);
+            console.log('[SAVE] Current room:', gameState.player.here ? gameState.player.here.name : 'none');
+
+            return JSON.stringify(state);
+        }
+
+        function deserializeGameState(stateStr) {
+            try {
+                const state = JSON.parse(stateStr);
+
+                // Decompress commands
+                const commands = decompressCommands(state.commands);
+
+                // Debug logging
+                console.log('[LOAD] Compressed commands from save:', state.commands);
+                console.log('[LOAD] Decompressed commands:', commands);
+                console.log('[LOAD] Number of commands to replay:', commands.length);
+
+                // Reset the game completely (silent mode - no welcome message or initial look)
+                initGame(true);
+                console.log('[LOAD] Game initialized, player at room:', gameState.player.here ? gameState.player.here.name : 'none');
+
+                // Suppress output and images during replay
+                const originalPrintLine = window.printLine;
+                const originalUpdateRoomImage = window.updateRoomImage;
+
+                window.printLine = function() {}; // Completely suppress output during replay
+                window.updateRoomImage = function() {}; // Suppress image changes during replay
+
+                // Replay all commands silently and rebuild command history
+                let commandCount = 0;
+                for (let cmd of commands) {
+                    commandCount++;
+                    console.log(`[LOAD] Replaying command ${commandCount}/${commands.length}: "${cmd}"`);
+                    console.log(`[LOAD] Before command - Room: ${gameState.player.here ? gameState.player.here.name : 'none'}`);
+
+                    if (gameState.player.dead) {
+                        console.log('[LOAD] Player died during replay, stopping');
+                        break;
+                    }
+
+                    executeCommand(cmd);
+
+                    // CRITICAL: Rebuild command history during replay
+                    // This ensures subsequent saves include all commands
+                    if (shouldSaveCommand(cmd)) {
+                        gameState.commandHistory.push(cmd);
+                    }
+
+                    console.log(`[LOAD] After command - Room: ${gameState.player.here ? gameState.player.here.name : 'none'}`);
+                }
+
+                console.log('[LOAD] Replay complete. Final room:', gameState.player.here ? gameState.player.here.name : 'none');
+                console.log('[LOAD] Rebuilt command history length:', gameState.commandHistory.length);
+
+                // Restore output functions
+                window.printLine = originalPrintLine;
+                window.updateRoomImage = originalUpdateRoomImage;
+
+                // Clear the output display
+                const output = document.getElementById('output');
+                output.innerHTML = '';
+
+                // Show success message
+                printLine('Partida cargada exitosamente.', 'success');
+                printLine('');
+
+                // Show current room state and update image
+                gameState.player.look();
+
+                return true;
+            } catch (e) {
+                printLine('Error al cargar la partida: ' + e.message, 'error');
+                console.error('[LOAD] Error:', e);
+                return false;
+            }
+        }
+
+        function listSaves() {
+            const saves = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('fortaleza_save_')) {
+                    const saveName = key.replace('fortaleza_save_', '');
+                    const saveData = localStorage.getItem(key);
+                    try {
+                        const state = JSON.parse(saveData);
+                        saves.push({
+                            name: saveName,
+                            timestamp: state.timestamp
+                        });
+                    } catch (e) {
+                        // Skip invalid saves
+                    }
+                }
+            }
+            // Sort by timestamp descending (newest first)
+            saves.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            return saves;
+        }
+
+        function saveGame(saveName) {
+            if (!saveName || saveName.trim() === '') {
+                printLine('Debe proporcionar un nombre para el juego.', 'error');
+                return;
+            }
+
+            const key = 'fortaleza_save_' + saveName.trim();
+            const state = serializeGameState();
+
+            try {
+                localStorage.setItem(key, state);
+                printLine('Juego guardado como: ' + saveName, 'success');
+            } catch (e) {
+                printLine('Error al guardar: ' + e.message, 'error');
+            }
+        }
+
+        function loadGame(saveName) {
+            if (!saveName || saveName.trim() === '') {
+                printLine('Debe proporcionar un nombre de juego.', 'error');
+                return;
+            }
+
+            const key = 'fortaleza_save_' + saveName.trim();
+            const state = localStorage.getItem(key);
+
+            if (!state) {
+                printLine('No existe un juego con ese nombre.', 'error');
+                return;
+            }
+
+            if (deserializeGameState(state)) {
+                // deserializeGameState already shows success message and calls look()
+                // Just update the inventory display
+                updateInventory();
+            }
+        }
+
+        function deleteSave(saveName) {
+            if (!saveName || saveName.trim() === '') {
+                printLine('Debe proporcionar un nombre de juego.', 'error');
+                return;
+            }
+
+            const key = 'fortaleza_save_' + saveName.trim();
+
+            if (!localStorage.getItem(key)) {
+                printLine('No existe un juego con ese nombre.', 'error');
+                return;
+            }
+
+            localStorage.removeItem(key);
+            printLine('Juego eliminado: ' + saveName, 'success');
+        }
+
+        function showSaves() {
+            const saves = listSaves();
+
+            if (saves.length === 0) {
+                printLine('No hay juegos guardados.', 'system');
+                return;
+            }
+
+            printLine('Juegos guardados:', 'system');
+            saves.forEach(save => {
+                const date = new Date(save.timestamp);
+                const dateStr = date.toLocaleString('es-ES');
+                printLine('  - ' + save.name + ' (' + dateStr + ')');
+            });
+        }
+
+        // ==================== OBJECT CLASSES ====================
+
+        // Base Thing class
+        class Thing {
+            constructor(name, desc, mass) {
+                this.name = name;
+                this.desc = desc;
+                this.mass = mass;
+                this.items = [];
+            }
+
+            image() {
+                return this.desc;
+            }
+
+            get(nm) {
+                const normalized = normalizeString(nm.toLowerCase().trim());
+
+                // First, try exact match
+                let exactMatch = this.items.find(item => {
+                    const itemName = normalizeString(item.name.toLowerCase());
+                    return itemName === normalized;
+                });
+                if (exactMatch) return exactMatch;
+
+                // Then find all partial matches where item name starts with the search term
+                let matches = this.items.filter(item => {
+                    const itemName = normalizeString(item.name.toLowerCase());
+                    return itemName.startsWith(normalized);
+                });
+
+                // If we have matches, return the shortest one (most specific)
+                if (matches.length > 0) {
+                    return matches.reduce((shortest, current) =>
+                        current.name.length < shortest.name.length ? current : shortest
+                    );
+                }
+
+                // Finally, try substring match (item name contains search term)
+                return this.items.find(item => {
+                    const itemName = normalizeString(item.name.toLowerCase());
+                    return itemName.includes(normalized);
+                });
+            }
+
+            take(nm) {
+                const item = this.get(nm);
+                if (item) {
+                    this.items = this.items.filter(i => i !== item);
+                }
+                return item;
+            }
+
+            insert(item) {
+                this.items.push(item);
+            }
+        }
+
+        // LivingThing class
+        class LivingThing extends Thing {
+            constructor(name, desc, mass) {
+                super(name, desc, mass);
+                this.dead = false;
+            }
+
+            speak() {
+                printLine('...');
+            }
+
+            die(weapon) {
+                this.dead = true;
+                return true;
+            }
+
+            accept(gift) {
+                // abstract
+            }
+        }
+
+        // Troll class
+        class Troll extends LivingThing {
+            constructor(name, desc, likeness, hiData, lowData) {
+                super(name, desc, 100);
+                this.likeness = likeness;
+                this.hiData = hiData;
+                this.lowData = lowData;
+                this.happy = false;
+            }
+
+            speak() {
+                if (this.happy) {
+                    printLine(this.hiData);
+                } else {
+                    printLine(this.lowData);
+                }
+            }
+
+            accept(gift) {
+                this.happy = gift.name.toLowerCase() === this.likeness.toLowerCase();
+                if (this.happy) {
+                    printLine('¡Muchas muchas gracias!');
+                } else {
+                    printLine('Gracias.');
+                }
+            }
+
+            die(weapon) {
+                printLine('¡Ahhhhhhh!');
+                return super.die(weapon);
+            }
+        }
+
+        // Guard class
+        class Guard extends LivingThing {
+            constructor(name, desc, confession, lethalWeapon) {
+                super(name, desc, 999);
+                this.confession = confession;
+                this.lethalWeapon = lethalWeapon;
+            }
+
+            die(weapon) {
+                const weaponName = weapon ? weapon.toLowerCase() : '';
+                const lethalName = this.lethalWeapon ? this.lethalWeapon.toLowerCase() : '';
+
+                // Weapon must match exactly (Pascal uses Equals function)
+                if (weaponName === lethalName) {
+                    printLine(this.confession);
+                    return super.die(weapon);
+                } else {
+                    printLine('¡Ja ja ja! ¡Eso no me hará daño!');
+                    return false;
+                }
+            }
+        }
+
+        // Linking class (doors, passages)
+        class Linking extends Thing {
+            constructor(name, desc, key, passComment, destination) {
+                super(name, desc, 999);
+                this.destination = destination;
+                this.passComment = passComment;
+                this.key = key || '';
+                this.open = (key === '' || key === null);
+            }
+
+            openDoor(psKey) {
+                if (this.key === '' || psKey.toLowerCase().includes(this.key.toLowerCase())) {
+                    this.open = true;
+                    return true;
+                }
+                return false;
+            }
+
+            pass(body) {
+                if (this.passComment) {
+                    printLine(this.passComment);
+                }
+            }
+
+            dest() {
+                return this.open ? this.destination : null;
+            }
+        }
+
+        // OpenLink class (always open)
+        class OpenLink extends Linking {
+            constructor(name, desc, passComment, destination) {
+                super(name, desc, '', passComment, destination);
+                this.open = true;
+            }
+        }
+
+        // DangerLink class (requires talisman)
+        class DangerLink extends Linking {
+            constructor(name, desc, key, passComment, talisman, destination) {
+                super(name, desc, key, passComment, destination);
+                this.talisman = talisman;
+            }
+
+            pass(body) {
+                const player = gameState.player;
+                const item = player.bag.get(this.talisman);
+                if (!item) {
+                    printLine('No tiene protección. Usted muere.');
+                    player.die('');
+                    gameState.gameOver = true;
+                } else {
+                    super.pass(body);
+                }
+            }
+        }
+
+        // DangerLink2 class (kills if you have item)
+        class DangerLink2 extends DangerLink {
+            pass(body) {
+                const player = gameState.player;
+                const item = player.bag.get(this.talisman);
+                if (item) {
+                    printLine('El objeto ' + this.talisman + ' lo mata.');
+                    player.die('');
+                    gameState.gameOver = true;
+                } else {
+                    Linking.prototype.pass.call(this, body);
+                }
+            }
+        }
+
+        // RiddleLink class (requires answer)
+        class RiddleLink extends Linking {
+            constructor(name, desc, riddle, answer, passComment, destination) {
+                super(name, desc, '', passComment, destination);
+                this.riddle = riddle;
+                this.answer = answer;
+                this.open = false;  // RiddleLinks start closed
+            }
+
+            openDoor(psKey) {
+                if (psKey.toLowerCase() === this.answer.toLowerCase()) {
+                    printLine('¡Ha resuelto el acertijo!');
+                    this.open = true;
+                    return true;
+                } else {
+                    if (psKey === '') {
+                        printLine('Debe resolver el acertijo primero:');
+                        printLine(this.riddle);
+                    } else {
+                        printLine('Respuesta incorrecta. El acertijo es:');
+                        printLine(this.riddle);
+                    }
+                    return false;
+                }
+            }
+        }
+
+        // Hidden class (reveals hidden thing when broken)
+        class Hidden extends Thing {
+            constructor(name, desc, breaker, hiddenThing) {
+                super(name, desc, 999);
+                this.breaker = breaker;
+                this.hiddenThing = hiddenThing;
+            }
+
+            breakWith(weapon) {
+                if (!this.breaker || weapon.toLowerCase().includes(this.breaker.toLowerCase())) {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        // Room class
+        class Room extends Thing {
+            constructor(name, desc) {
+                super(name, desc, 999);
+                this.visited = false;
+            }
+
+            describe() {
+                if (this.items.length > 0) {
+                    const itemNames = this.items.map(i => i.name).join(', ');
+                    printLine('Ves aquí: ' + itemNames);
+                }
+            }
+
+            openItem(nm, psKey) {
+                const item = this.get(nm);
+                if (item && (item instanceof Linking || item instanceof RiddleLink)) {
+                    if (item.open) {
+                        printLine('Ya está abierto.');
+                    } else {
+                        if (item.openDoor(psKey)) {
+                            // Auto-open reverse link (matches Pascal behavior at CASTLES.PAS:410-416)
+                            if (item.destination && item.destination instanceof Room) {
+                                const reverseLink = item.destination.get(nm);
+                                if (reverseLink && (reverseLink instanceof Linking ||
+                                    reverseLink instanceof DangerLink || reverseLink instanceof DangerLink2 ||
+                                    reverseLink instanceof RiddleLink || reverseLink instanceof OpenLink)) {
+                                    reverseLink.openDoor(psKey);
+                                }
+                            }
+                            printLine('Ok.');
+                        } else {
+                            printLine('No puede abrir esto.');
+                            if (psKey === '') {
+                                printLine('Necesita una palabra clave.');
+                            } else {
+                                printLine('"' + psKey + '" no es la palabra correcta.');
+                            }
+                        }
+                    }
+                } else if (item) {
+                    // Item exists but is not a link/door
+                    printLine('No puede abrir esto.');
+                } else if (nm) {
+                    printLine('No puede hacer eso. No hay "' + nm + '" en esta habitación.');
+                } else {
+                    printLine('Complete su frase.');
+                }
+            }
+
+            breakItem(nm, weapon) {
+                const item = this.get(nm);
+                if (item && item instanceof Hidden) {
+                    if (item.breakWith(weapon)) {
+                        const hidden = item.hiddenThing;
+                        this.items = this.items.filter(i => i !== item);
+                        this.items.push(hidden);
+                        printLine('¡Crash! Usted ha roto ' + item.name + '.');
+                        printLine('¡Sorpresa! Ha encontrado: ' + hidden.name);
+                    } else {
+                        printLine('Usted trata, pero no lo consigue.');
+                    }
+                } else if (nm) {
+                    printLine('No se puede romper eso.');
+                } else {
+                    printLine('Complete su frase.');
+                }
+            }
+        }
+
+        // Suitcase class (inventory)
+        class Suitcase extends Room {
+            constructor() {
+                super('Mochila', 'Su mochila');
+            }
+
+            empty() {
+                return this.items.length === 0;
+            }
+
+            heaviness() {
+                return this.items.reduce((sum, item) => sum + item.mass, 0);
+            }
+
+            describe() {
+                if (this.empty()) {
+                    return;
+                }
+                for (let item of this.items) {
+                    printLine(item.name + ' (' + item.mass + ')');
+                }
+                const remaining = gameState.maxWeight - this.heaviness();
+                if (remaining === 0) {
+                    printLine('No puede cargar nada más.');
+                } else if (remaining === 1) {
+                    printLine('Está a punto de agotar sus capacidades.');
+                } else {
+                    printLine('Podría cargar ' + remaining + ' bolsas más.');
+                }
+            }
+        }
+
+        // Man class (player)
+        class Man extends LivingThing {
+            constructor(name, desc) {
+                super(name, desc, 0);
+                this.curr = null;
+                this.bag = new Suitcase();
+                this.visits = 0;
+                this.firstLook = true;
+            }
+
+            go(newRoom) {
+                if (this.dead) return;
+                this.curr = newRoom;
+                if (!newRoom.visited) {
+                    newRoom.visited = true;
+                    this.visits++;
+                }
+            }
+
+            look(clearHistory = false) {
+                if (this.dead) return;
+
+                // Clear output only when explicitly requested (mirar command)
+                if (clearHistory && !this.firstLook) {
+                    const output = document.getElementById('output');
+                    output.innerHTML = '';
+                }
+
+                if (this.firstLook) {
+                    this.firstLook = false;
+                }
+
+                printLine('');
+                printLine('Estás en ' + this.curr.name + '.', 'success');
+                printLine(this.curr.desc);
+                printLine('');
+                this.curr.describe();
+
+                // Update location name display
+                const locationElement = document.getElementById('location-name');
+                if (locationElement) {
+                    locationElement.textContent = this.curr.name.toUpperCase();
+                }
+
+                // Update room image
+                updateRoomImage(this.curr.name);
+
+                // Do NOT Show exits
+                /*
+                const exits = this.curr.items.filter(i =>
+                    i instanceof Linking ||
+                    i instanceof OpenLink ||
+                    i instanceof DangerLink ||
+                    i instanceof DangerLink2 ||
+                    i instanceof RiddleLink
+                );
+                if (exits.length > 0) {
+                    const exitNames = exits.map(e => e.name).join(', ');
+                    printLine('');
+                    printLine('Salidas: ' + exitNames);
+                }
+                printLine('');
+                */
+            }
+
+            inventary() {
+                if (this.dead) return;
+                if (!this.bag.empty()) {
+                    printLine('Sus pertenecias son:');
+                    this.bag.describe();
+                } else {
+                    printLine('Usted no lleva nada consigo.');
+                }
+            }
+
+            see(what) {
+                if (this.dead) return;
+                if (!what) {
+                    printLine('¿Qué quieres ver?');
+                    return;
+                }
+
+                let item = this.curr.get(what);
+                if (item) {
+                    printLine(item.image());
+                } else {
+                    item = this.bag.get(what);
+                    if (item) {
+                        printLine(item.image());
+                    } else {
+                        printLine('No existe "' + what + '" en este lugar. Entre sus pertenencias tampoco.');
+                    }
+                }
+            }
+
+            take(what) {
+                if (this.dead) return;
+                const item = this.curr.get(what);
+                if (item) {
+                    if (item.mass > gameState.maxWeight) {
+                        printLine('Usted no puede cargar con eso.');
+                    } else if (this.bag.heaviness() + item.mass <= gameState.maxWeight) {
+                        this.bag.insert(this.curr.take(what));
+                        printLine('Ok.');
+                        updateInventory();
+                    } else {
+                        printLine('Sería demasiado peso.');
+                    }
+                } else if (what) {
+                    printLine('No existe "' + what + '" en este lugar.');
+                } else {
+                    printLine('Complete su frase.');
+                }
+            }
+
+            leave(what) {
+                if (this.dead) return;
+                const item = this.bag.get(what);
+                if (item) {
+                    this.curr.insert(this.bag.take(what));
+                    printLine('Ok.');
+                    updateInventory();
+                } else if (what) {
+                    printLine('"' + what + '" no está dentro de sus pertenencias.');
+                } else {
+                    printLine('Complete su frase.');
+                }
+            }
+
+            leaveAll() {
+                if (this.dead) return;
+                if (this.bag.empty()) {
+                    printLine('Usted no lleva nada consigo.');
+                } else {
+                    while (!this.bag.empty()) {
+                        const item = this.bag.items[0];
+                        this.curr.insert(this.bag.take(item.name));
+                    }
+                    printLine('Usted deja todas sus pertencias en el suelo.');
+                    updateInventory();
+                }
+            }
+
+            openD(door, key) {
+                if (this.dead) return;
+                if (key) {
+                    printLine('Invocas las palabras mágicas:');
+                    printLine(key + '!!!');
+                }
+                this.curr.openItem(door, key);
+            }
+
+            walkT(door) {
+                if (this.dead) return;
+                const link = this.curr.get(door);
+                if (link && (link instanceof Linking || link instanceof OpenLink ||
+                    link instanceof DangerLink || link instanceof DangerLink2 ||
+                    link instanceof RiddleLink)) {
+                    const nextRoom = link.dest();
+                    if (nextRoom) {
+                        // Get the output element to preserve recent messages
+                        const output = document.getElementById('output');
+                        const lines = Array.from(output.children);
+
+                        // Find the last prompt (user command) - it should be the most recent line
+                        let lastPromptIndex = -1;
+                        for (let i = lines.length - 1; i >= 0; i--) {
+                            if (lines[i].classList.contains('prompt')) {
+                                lastPromptIndex = i;
+                                break;
+                            }
+                        }
+
+                        // Clear output but keep the command and any messages after it
+                        if (lastPromptIndex >= 0) {
+                            const linesToKeep = lines.slice(lastPromptIndex);
+                            output.innerHTML = '';
+                            linesToKeep.forEach(line => output.appendChild(line));
+                        }
+
+                        this.go(nextRoom);
+                        link.pass(this);
+                        // Check if player died from passing through the link
+                        if (!this.dead) {
+                            this.look();
+                        }
+                    } else {
+                        printLine('¡Auch! Te golpeas la cabeza.');
+                        printLine('Sería más fácil si primero abrieras la puerta.');
+                    }
+                } else if (door) {
+                    printLine('No puedes atravesar eso.');
+                } else {
+                    printLine('Complete su frase.');
+                }
+            }
+
+            kill(who, weapon) {
+                if (this.dead) return;
+                const target = this.curr.get(who);
+                if (target && (target instanceof Troll || target instanceof Guard)) {
+                    if (weapon && !this.bag.get(weapon)) {
+                        printLine('"' + weapon + '" no está dentro de sus pertenencias.');
+                        return;
+                    }
+                    if (target.die(weapon)) {
+                        this.curr.items = this.curr.items.filter(i => i !== target);
+                    }
+                } else if (who) {
+                    printLine('"' + who + '" no está aquí.');
+                } else {
+                    printLine('Complete su frase.');
+                }
+            }
+
+            ask(who) {
+                if (this.dead) return;
+                const target = this.curr.get(who);
+                if (target && (target instanceof Troll || target instanceof Guard)) {
+                    target.speak();
+                } else if (who) {
+                    printLine('"' + who + '" no está aquí.');
+                } else {
+                    printLine('Complete su frase.');
+                }
+            }
+
+            give(what, who) {
+                if (this.dead) return;
+                if (this.bag.empty()) {
+                    printLine('Usted no lleva nada consigo.');
+                    return;
+                }
+
+                const target = this.curr.get(who);
+                if (target && target instanceof Troll) {
+                    const item = this.bag.take(what);
+                    if (item) {
+                        target.accept(item);
+                        updateInventory();
+                    } else {
+                        printLine('"' + what + '" no está dentro de sus pertenencias.');
+                    }
+                } else if (who) {
+                    printLine('Ese regalo no es aceptado.');
+                } else {
+                    printLine('¿Para quién es el regalo?');
+                }
+            }
+
+            breakItem(what, how) {
+                if (this.dead) return;
+                if (how && !this.bag.get(how)) {
+                    printLine('"' + how + '" no está dentro de sus pertenencias.');
+                    return;
+                }
+                this.curr.breakItem(what, how);
+            }
+
+            weigh(what) {
+                if (this.dead) return;
+                if (!this.bag.get('Balanza')) {
+                    printLine('Usted no trae la balanza.');
+                    return;
+                }
+
+                let item = this.bag.get(what);
+                if (!item) item = this.curr.get(what);
+
+                if (item) {
+                    if (item.name.toLowerCase() === 'balanza') {
+                        printLine('Usted trata infructuosamente de colocar la balanza sobre ella misma.');
+                    } else if (item.mass > gameState.maxWeight) {
+                        printLine('¡Se ha vuelto loco! ¿Cómo va a pesar eso?');
+                    } else {
+                        const unit = item.mass === 1 ? 'bolsa' : 'bolsas';
+                        printLine('Usted coloca el objeto en el plato de la balanza.');
+                        printLine('La aguja indica ' + item.mass + ' ' + unit + '.');
+                    }
+                } else if (what) {
+                    printLine('No hay "' + what + '" en este lugar. Ni en sus pertenencias tampoco.');
+                } else {
+                    printLine('Complete su frase.');
+                }
+            }
+
+            die(weapon) {
+                if (this.dead) return true;
+                super.die(weapon);
+                printLine('¡Me estoy muriendo!', 'error');
+                return true;
+            }
+        }
+
+        // ==================== GAME STATE ====================
+
+        const gameState = {
+            player: null,
+            rooms: [],
+            currentRoom: null,
+            gameOver: false,
+            gameWon: false,
+            maxWeight: 40
+        };
+
+        // Properly decoded keys from the original Turbo Pascal CP437 encoding
+        // Original encoding: each character has 20 added to its CP437 byte value
+        const decodedKeys = [
+            '',  // key[0] - not used, placeholder for 1-indexed Pascal array
+            'Hay un nombre que vas a necesitar mucho: Rumpelstinskin.',
+            'Abrete Sesamo',
+            'Ariete',
+            'Maza',
+            'Busca a la doncella al lado del espejo que romperás con un hueso. Ella te dirá dónde está el final de la Bestia.',
+            'Treinta y nueve',
+            'Lanza',
+            'Para llegar a los pulmones de la Bestia debes tener el talisman de aire.',
+            'Paraguas',
+            'En la biblioteca hay un libro que conduce al jardín.',
+            'Hueso de gato',
+            ' Puedes pasar, la contraseña es "Nombus Rostomelaris"',
+            'Maza',
+            'Nombus Rostomelaris',
+            'Luz',
+            'Usted cae durante varios minutos y, gracias al candelabro, cuando toca el suelo no se hace daño. Oye una voz que dice: "Sea gentil con la doncella, regálele una flor."',
+            'Escucha bien, hijo. Cuando te digan "Prohibido", invoca la luz. Recuerda que la palabra crea a su significado.',
+            'Hacha',
+            'Pocion para crecer',
+            'Para atravezar por el escaparate de la bruja, debes llevar un candelabro. Y al hacerlo vas a conocer algo importante.',
+            'Polvo magico',
+            'El corazón de unicornio te protegerá en el corazón de la Bestia.',
+            'Rumpelstinskin',
+            'Rosa',
+            'La última habitación está al principio.',
+            'Imnus humiscuol rastomislakis!! Con esta esapada matarás a los pulmones de la Bestia.',
+            'Espada',
+            'Taza de cafe',
+            'Al entrar al estómago, lleva contigo un pastel.',
+            'Talisman de aire',
+            'Pastel de cerezas',
+            'Espada',
+            'Latigo',
+            'Daga',
+            'Usted ha destruido los pulmones! Solo con un látigo podrás destruir el estómago.',
+            'Usted ha destruido el estómago! Solo con una daga podrás destruir el corazón.',
+            'Usted ha destruido el corazón! Busca el cerebro de la bestia lejos de aquí. Solo el fuego puede destruirlo.',
+            'Antorcha',
+            '¿Mataste al Troll?',
+            'Piedra filosofal',
+            'Cuidado con el túnel y la puerta de tela. Solo conducen a la muerte.',
+            'Agua',
+            'nada',
+            'AAARRRRGGGG!!!! La palabra mágica es "Agua".',
+            'Arco',
+            'Maquina del tiempo',
+            'Solo con una daga podrás matar el corazón.'
+        ];
+
+        function decodeLine(keyIndex) {
+            // Return the properly decoded key by index
+            return decodedKeys[keyIndex] || '';
+        }
+
+        // ==================== GAME INITIALIZATION ====================
+
+        function initGame(silent = false) {
+            // Reset command history for save system
+            gameState.commandHistory = [];
+            gameState.gameOver = false;
+            gameState.gameWon = false;
+
+            // Create player
+            gameState.player = new Man('Indy', 'Aventurero');
+
+            // Create all rooms
+            createRooms();
+
+            // Set starting room
+            gameState.player.go(gameState.rooms[0]);
+
+            if (!silent) {
+                // Welcome message
+                printLine('Bienvenido a LA FORTALEZA', 'success');
+                printLine('');
+                const hour = new Date().getHours();
+                if (hour < 12) {
+                    printLine('Buenos días.');
+                } else if (hour > 18) {
+                    printLine('Buenas noches.');
+                } else {
+                    printLine('Buenas tardes.');
+                }
+                printLine('');
+                printLine('Escribe "ayuda" para ver los comandos disponibles.');
+                gameState.player.look();
+            }
+        }
+
+        function createRooms() {
+            // Create rooms
+            const rooms = [];
+
+            rooms[0] = new Room('el exterior de la fortaleza',
+                'Las paredes son muy negras y al parecer, no tienen ventanas. Usted trata de ver el final de las torres, pero las nubes no se lo permiten.');
+
+            rooms[1] = new Room('el Salón de recepciones',
+                'Parece hecho para criaturas cientos de veces más grandes que los humanos. Está desierto, pero usted siente que es observado.');
+
+            rooms[2] = new Room('la Sala de juegos',
+                'Usted trata de imaginar cómo eran los juegos del salón. Hay doce mesas y cada una tiene doce erizos.');
+
+            rooms[3] = new Room('el Patio interior',
+                'El patio tiene forma de caracol. Cada uno o dos pasos se levanta una columna de mármol negro y se confunde en la altura con los árboles. Usted siente el crujido de las hojas secas bajo sus zapatos.');
+
+            rooms[4] = new Room('el Cuarto de espejos',
+                'Hay tantos espejos que no puede reconocer si usted es real o es una imagen de sí mismo.');
+
+            rooms[5] = new Room('la Biblioteca',
+                'Hay miles de libros en este lugar. Todos tienen alguna hoja marcada con una servilleta. Los pasillos estan numerados usando el viejo alfabeto bestial ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+
+            rooms[6] = new Room('Pasillo',
+                'Tiene tres puertas al lado y una al final.');
+
+            rooms[7] = new Room('la Alcoba de la bruja',
+                'Hasta un ciego descubriría que aquí habita una bruja. El cuarto tiene una ventana, pero usted no recuerda haberla visto desde afuera.');
+
+            rooms[8] = new Room('el Cuarto del guerrero',
+                'El cuarto está muy ordenado. A usted le sorprende que no hayan armas.');
+
+            rooms[9] = new Room('el Laboratorio de la Bestia',
+                'Hay muchos frascos. A usted le llaman la atención los últimos: están llenos de homúnculos.');
+
+            rooms[10] = new Room('la Sala de armas',
+                'Este lugar parece salido del sueño de un guerrero.');
+
+            rooms[11] = new Room('los Baños de la Bestia',
+                'El baño es tan grande que usted no puede ver las paredes que lo limitan.');
+
+            rooms[12] = new Room('el Jardín',
+                'Se podrían construir varias ciudades en su interior.');
+
+            rooms[13] = new Room('la Alcoba de la doncella',
+                'Es una habitación muy pequeña y húmeda.');
+
+            rooms[14] = new Room('la Sala de infusiones',
+                'Hay varias mesas regadas por el suelo. Usted tiene la impresión de que ningún humano ha estado en ese lugar anteriormente.');
+
+            rooms[15] = new Room('los Calabozos',
+                'Son tan húmedos que usted no resistiría ni unas horas dentro de ellos.');
+
+            rooms[16] = new Room('Boca de la Bestia',
+                'Es como una boca humana, pero del tamaño de una casa.');
+
+            rooms[17] = new Room('Interior de la Bestia',
+                'Usted puede sentir los latidos del corazón de la Bestia, al igual que su respiración o el ruido de los líquidos revueltos en su estómago.');
+
+            rooms[18] = new Room('Pulmones de la Bestia',
+                'Sopla un aire tan fuerte que usted se ha tirado al suelo.');
+
+            rooms[19] = new Room('el Estómago de la Bestia',
+                'Hay varios esqueletos humanos.');
+
+            rooms[20] = new Room('el Corazón de la Bestia',
+                'Todo palpita rítmicamente. Usted siente cómo los latidos se adueñan del lugar, especialmente de su propio corazón.');
+
+            rooms[21] = new Room('el Cerebro de la Bestia',
+                'Es como un tarjetero gigante. Cada idea está escrita en una tarjeta y, cuando es necesario, la tarjeta es sacada por una mano invisible y leída al resto de la Bestia.');
+
+            rooms[22] = new Room('los Almacenes de la Fortaleza',
+                'Están llenos de carne humana. Usted aparta el cadáver de una mujer para poder observar bien el lugar.');
+
+            rooms[23] = new Room('un extenso páramo',
+                'Hay muy poca vegetación y el suelo es pantanoso. Usted nunca imaginó que el interior de la fortaleza fuera tan grande.');
+
+            rooms[24] = new Room('Salón de cristal',
+                'Es como un caleidoscopio gigante. Cada varios segundos las paredes cambian de color y usted siente como si lo hubieran trasladado a otro lugar.');
+
+            rooms[25] = new Room('celda pequeña',
+                'Es una celda muy pequeña y oscura.');
+
+            rooms[26] = new Room('un puente de mármol',
+                'El puente es de mármol negro y está suspendido sobre un abismo sin fondo.');
+
+            rooms[27] = new Room('la Antesala del Laberinto',
+                'Usted puede sentir el laberinto esperándolo. El aire huele a miedo y a polvo antiguo.');
+
+            rooms[28] = new Room('la cueva del Minotauro',
+                'Una cueva enorme con paredes cubiertas de sangre seca. Hay huesos por todas partes.');
+
+            rooms[29] = new Room('el Salón de los elegidos',
+                'Las paredes están cubiertas con los nombres de aquellos que llegaron hasta aquí.');
+
+            rooms[30] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[31] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[32] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[33] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[34] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[35] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[36] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[37] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[38] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[39] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[40] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[41] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[42] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[43] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[44] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[45] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[46] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[47] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[48] = new Room('un pasillo del Laberinto',
+                'Las paredes son idénticas en todas direcciones. Es imposible saber dónde está.');
+
+            rooms[49] = new Room('el Jardín',
+                'Se podrían construir varias ciudades en su interior.');
+
+            gameState.rooms = rooms;
+
+            // Populate rooms with items and links
+            populateRooms(rooms);
+        }
+
+        function populateRooms(rooms) {
+            // Room 0: Exterior
+            rooms[0].insert(new Thing('Roble', 'Está completamente seco y lleno de mordiscos. Tiene las siguientes palabras talladas en el tronco: "Las palabras mágicas para abrir la puerta son obvias."', 200));
+            rooms[0].insert(new Thing('Maza', 'Es muy pesada.', 39));
+            rooms[0].insert(new Thing('Pastel de cerezas', '¿Qué hace un pastel de cerezas en un lugar como este?', 2));
+            rooms[0].insert(new Troll('Llamador de bronce', 'Parece de carne, y tiene forma de murciélago.', 'Cigarro',
+                decodeLine(1),  // key[1]: Hay un nombre que vas a necesitar mucho: Rumpelstinskin.
+                '¿Me puede regalar un cigarro?'));
+            rooms[0].insert(new Linking('Puerta principal', 'Inmensa y oprimente.', decodeLine(2),  // key[2]: Abrete Sesamo
+                'Su sombra desaparece lentamente al cruzar la puerta. Siente cómo el miedo se le enreda en los zapatos.', rooms[1]));
+            rooms[0].insert(new OpenLink('Túnel', 'Parece muy largo.',
+                'El olor de la carne descompuesta lo golpea. Usted siente ganas de vomitar.', rooms[3]));
+            rooms[0].insert(new Hidden('Pared solitaria', 'Usted no puede imaginar con qué motivo fue colocada ahí.',
+                decodeLine(3),  // key[3]: Ariete
+                new DangerLink('Puerta secreta', 'Usted se pregunta a dónde conducirá, pero la oscuridad no le deja ver.', '',
+                    'Usted atraviesa la puerta.', 'Antorcha', rooms[26])));
+
+            // Room 1: Salón de recepciones
+            rooms[1].insert(new Hidden('Monolito de mármol', 'Es muy oscuro, pero a usted le parece que hay algo vivo en su interior.',
+                decodeLine(4),  // key[4]: Maza
+                new Troll('Trebol', 'Tiene cinco hojas.', 'Vaso de agua',
+                    decodeLine(5),  // key[5]: Busca a la doncella al lado del espejo...
+                    'Dame agua, por favor...')));
+            rooms[1].insert(new Thing('Retrato', 'Es de Hitchcock (un anacronismo). Usted recuerda instintivamente algunas películas que le erizaron la piel: Psicosis, Vértigo y Los treinta y nueve escalones.', 1));
+            rooms[1].insert(new Linking('Puerta principal', 'Inmensa y oprimente.', decodeLine(2),  // key[2]: Abrete Sesamo
+                'Usted se siente de regreso a la vida. Ha salido de La Fortaleza.', rooms[0]));
+            rooms[1].insert(new Linking('Puerta negra', 'Es muy negra.', '',
+                'Usted atraviesa la puerta sin dificultades.', rooms[2]));
+
+            // Room 2: Sala de juegos
+            rooms[2].insert(new Thing('Escoba', 'Es una escoba voladora.', 1));
+            rooms[2].insert(new Thing('Hilo de Ariadna', 'Debe tener varios kilómetros de largo.', 1));
+            rooms[2].insert(new Thing('Inscripción', 'Dice: "Cuando hayas llegado casi al final, tendrás que regresar, a no ser que hayas hablado con el murciélago."', 10));
+            rooms[2].insert(new Linking('Puerta negra', 'Es muy negra.', '',
+                'Usted atraviesa la puerta sin dificultades.', rooms[1]));
+            rooms[2].insert(new Linking('Puerta azul', 'Esta puerta conduce al patio interior.', '',
+                'Usted atraviesa la puerta sin dificultades.', rooms[3]));
+            rooms[2].insert(new RiddleLink('Escalera', 'La escalera está detrás de una puerta de cristal. Usted trata de ver cuántos escalones tiene, pero no puede.',
+                '¿Cuántos peldaños tiene la escalera?', decodeLine(6),  // key[6]: Treinta y nueve
+                'Usted sube por la escalera. No se explica cómo, siendo tan larga, solo tiene ' + decodeLine(6) + ' escalones.', rooms[4]));
+
+            // Room 3: Patio interior
+            rooms[3].insert(new Thing('Balanza', 'La balanza tiene el plato en forma de mano. La aguja es muy delgada, hecha con varios bigotes de gato trenzados entre sí.', 1));
+            rooms[3].insert(new Linking('Puerta azul', 'Esta puerta conduce a la sala de juegos.', '',
+                'Usted atraviesa la puerta sin dificultades.', rooms[2]));
+            rooms[3].insert(new Linking('Puerta verde', 'Esta puerta conduce a la biblioteca.', '',
+                'Usted atraviesa la puerta sin dificultades.', rooms[5]));
+            rooms[3].insert(new Troll('Estatua de Atenea', 'Fue hecha por Fidias, siete años después de su muerte. Le falta la lanza.', decodeLine(7),  // key[7]: Lanza
+                decodeLine(8), '¡Sal de mi presencia, estúpido mortal!'));  // key[8]: Para llegar a los pulmones...
+            rooms[3].insert(new Troll('Estatua de Hermes', 'Desde el techo caen gotas continuamente sobre su cabeza.', decodeLine(9),  // key[9]: Paraguas
+                decodeLine(10), 'La humedad me destruye.'));  // key[10]: En la biblioteca hay un libro...
+
+            // Room 4: Cuarto de espejos
+            rooms[4].insert(new Thing('Hueso de gato', 'Este es un hueso de gato (o de la imagen de un gato).', 1));
+            rooms[4].insert(new Linking('Escalera', 'Usted trata de ver hasta dónde llega, pero no puede. Está detrás de una puerta de cristal.', 'treinta y nueve',
+                'Usted se sorprende: La escalera tiene ahora muchos escalones más.', rooms[2]));
+            rooms[4].insert(new Hidden('Espejo opaco', 'En realidad, usted no tiene idea de por qué es un espejo. Hay algo muy extraño en él.',
+                decodeLine(11),  // key[11]: Hueso de gato
+                new Linking('Puerta oculta', 'Parece formada por diminutos fragmentos de cristal.', '',
+                'Su imagen regresa al atravesar la puerta.', rooms[13])));
+
+            // Room 5: Biblioteca
+            rooms[5].insert(new Thing('Vaso de agua', 'Por un momento cree ver un bote en el vaso.', 1));
+            rooms[5].insert(new Thing('Candelabro', 'La llama en su extremo está inmóvil, como si fuera de cera.', 1));
+            rooms[5].insert(new Linking('Puerta verde', 'Esta puerta conduce al patio interior.', '',
+                'Usted atraviesa la puerta sin dificultades.', rooms[3]));
+            rooms[5].insert(new Linking('Libro', 'Es un libro normal.', '',
+                '¡Usted ha atravesado el libro!', rooms[12]));
+            rooms[5].insert(new Guard('Cíclope', 'Parece estar cuidando la puerta.', '¡Arrrggghhhh! ¡Me has matado!' + decodeLine(12), decodeLine(13)));  // keys[12,13]: Puedes pasar..., Maza
+            rooms[5].insert(new Linking('Puerta', 'Es una puerta para gigantes.', decodeLine(14),  // key[14]: Nombus Rostomelaris
+                'Usted se encuentra del otro lado de la puerta.', rooms[6]));
+
+            // Room 6: Pasillo
+            rooms[6].insert(new Thing('Antorcha', 'La llama parece bailar en su propia luz.', 1));
+            rooms[6].insert(new Linking('Puerta', 'Es una puerta para gigantes.', decodeLine(14),  // key[14]: Nombus Rostomelaris
+                'Usted se encuentra del otro lado de la puerta.', rooms[5]));
+            rooms[6].insert(new Linking('Puerta vieja', 'Es la puerta de las habitaciones de una bruja.', '',
+                'Usted ha entrado.', rooms[7]));
+            rooms[6].insert(new Linking('Puerta roja', 'Es la puerta del guerrero.', '',
+                'Usted se encuentra del otro lado de la puerta.', rooms[8]));
+            rooms[6].insert(new Linking('Puerta prohibida', 'Esta puerta está prohibida para los humanos.', decodeLine(15),  // key[15]: Luz
+                'Usted se encuentra del otro lado de la puerta.', rooms[9]));
+            rooms[6].insert(new Linking('Puerta gris', 'Esta puerta conduce a la sala de las infusiones.', '',
+                'Usted se encuentra del otro lado de la puerta.', rooms[14]));
+
+            // Room 7: Alcoba de la bruja
+            rooms[7].insert(new Thing('Polvo mágico', 'Puede hacer invisible a cualquiera.', 1));
+            rooms[7].insert(new Thing('Poción para crecer', 'Tiene un olor muy repugnante.', 5));
+            rooms[7].insert(new Linking('Puerta vieja', 'Da al pasillo.', '', 'Usted ha salido.', rooms[6]));
+            rooms[7].insert(new DangerLink('Escaparate', 'Tiene las puertas llenas de arañazos.', '',
+                decodeLine(16), 'Candelabro', rooms[13]));  // key[16]: Usted cae durante..., gentil con la doncella...
+            rooms[7].insert(new Troll('Bruja', 'Parece tener mil años.', 'Escoba',
+                decodeLine(17),  // key[17]: Escucha bien, hijo...
+                'Tráeme mi escoba y te daré un consejo.'));
+
+            // Room 8: Cuarto del guerrero
+            rooms[8].insert(new Thing('Vendajes', 'Están manchados de sangre.', 3));
+            rooms[8].insert(new Thing('Grabado', 'En el grabado está usted, hablando con una muchacha.', 3));
+            rooms[8].insert(new Linking('Puerta roja', 'Da al pasillo.', '', 'Usted está en el pasillo nuevamente.', rooms[6]));
+            rooms[8].insert(new Hidden('Cama', 'Es tan fuerte que solo con un hacha podría romperla.',
+                decodeLine(18),  // key[18]: Hacha
+                new Linking('Puerta', 'Está en el suelo.', '', 'Usted entra a la armería.', rooms[10])));
+
+            // Room 9: Laboratorio
+            rooms[9].insert(new Thing('Piedra filosofal', 'Usted es el primer humano en ver la quinta esencia.', 10));
+            rooms[9].insert(new Thing('Máquina del tiempo', 'Es muy parecida a una máquina de moler carne.', 3));
+            rooms[9].insert(new Linking('Puerta prohibida', 'Esta puerta está prohibida para los humanos.', decodeLine(15),  // key[15]: Luz
+                'Usted se encuentra en el otro lado de la puerta.', rooms[6]));
+            rooms[9].insert(new Troll('Homúnculo', 'Parece que escapó de algún frasco. Es tan pequeño que usted se arrodilla para verlo.', 'Poción para crecer',
+                decodeLine(20), '¡Quiero crecer!'));  // key[20]: Pocion para crecer
+
+            // Room 10: Sala de Armas
+            rooms[10].insert(new Thing('Espada', 'Es muy brillante.', 5));
+            rooms[10].insert(new Thing('Lanza', 'Está hecha de piedra.', 10));
+            rooms[10].insert(new Thing('Arco', 'Es el arco de Odiseo.', 5));
+            rooms[10].insert(new Thing('Daga', 'Es afilada como la lengua de la serpiente bíblica.', 3));
+            rooms[10].insert(new Thing('Ariete', 'Demasiado grande y pesado.', 30));
+            rooms[10].insert(new Thing('Látigo', 'Parece una culebra.', 2));
+            rooms[10].insert(new Linking('Puerta', 'Está en el techo.', '', 'Usted regresa al cuarto del guerrero.', rooms[8]));
+
+            // Room 11: Baños de la Bestia
+            rooms[11].insert(new Thing('Rosa', 'Es más hermosa que todas las doncellas que usted no ha visto.', 1));
+            rooms[11].insert(new Thing('Espejo', 'Usted se ve a sí mismo entregándole unos polvos al Troll.', 20));
+            rooms[11].insert(new Thing('Inscripción', 'Dice: ¡Mate al Troll! Y no haga sus necesidades en el suelo.', 2));
+            rooms[11].insert(new Linking('Puerta verde', 'Conduce al jardín.', '', 'Usted entra al jardín.', rooms[12]));
+            rooms[11].insert(new Troll('Troll', 'Está mirándose en un espejo. Tiene una figura tan repulsiva que usted aparta la vista.', 'Polvo mágico',
+                decodeLine(22), 'No me mates, por favor. Haz que nadie pueda ver mi fealdad.'));  // key[22]: Polvo magico
+
+            // Room 12: Jardín
+            rooms[12].insert(new Thing('Cedro', 'Le faltan algunas ramas. Al parecer, alguien las cortó para hacerse una cama.', 999));
+            rooms[12].insert(new Thing('Inscripción', 'Es un buen lugar para instalar una tienda de campaña ¿no cree?', 1));
+            rooms[12].insert(new Linking('Puerta verde', 'Conduce a los baños de la Bestia.', '',
+                'Usted sale del jardín.', rooms[11]));
+            rooms[12].insert(new Linking('Puerta azul', 'Debe haber algo hermoso detrás de esta puerta.', '',
+                'Usted sale del jardín.', rooms[13]));
+            rooms[12].insert(new Linking('Puerta amarilla', 'Conduce a la sala de infusiones.', '',
+                'Usted sale del jardín.', rooms[14]));
+            rooms[12].insert(new Linking('Puerta de hierro', 'Conduce a los calabozos.', '', 'Usted entra a los calabozos.', rooms[15]));
+            rooms[12].insert(new Linking('Puerta de madera', 'Conduce al almacén.', '',
+                'Usted sale del jardín.', rooms[22]));
+
+            // Room 13: Alcoba de la doncella
+            rooms[13].insert(new Thing('Cuadro', 'Está pintado de negro, infinitamente negro y contundente.', 10));
+            rooms[13].insert(new Thing('Corazón de unicornio', 'Aún late.', 1));
+            rooms[13].insert(new Linking('Puerta azul', 'Debe haber algo hermoso detrás de esta puerta.', '',
+                'Usted sale al jardín.', rooms[12]));
+            rooms[13].insert(new Linking('Puerta oculta', 'Parece formada por diminutos fragmentos de cristal.', '',
+                'Su imagen regresa al atravesar la puerta.', rooms[4]));
+            rooms[13].insert(new Linking('Escaparate', 'Las puertas son doradas.', '',
+                'Usted sube durante varios minutos hasta llegar al escaparate de la bruja.', rooms[7]));
+            rooms[13].insert(new Troll('Doncella', 'Nunca antes había contemplado tanta hermosura. Usted está como hipnotizado.', decodeLine(24),  // key[24]: Rumpelstinskin
+                decodeLine(25), '¡Qué brusco! Un caballero debe dirigirse a una dama de otra forma.'));  // key[25]: Rosa
+
+            // Room 14: Sala de infusiones
+            rooms[14].insert(new Thing('Taza de café', 'Humea.', 1));
+            rooms[14].insert(new Thing('Cigarro', 'Está encendido.', 1));
+            rooms[14].insert(new Linking('Puerta gris', 'Da al pasillo.', '',
+                'Usted se encuentra del otro lado de la puerta.', rooms[6]));
+            rooms[14].insert(new Linking('Puerta amarilla', 'Conduce al jardín.', '', 'Usted sale al jardín.', rooms[12]));
+            rooms[14].insert(new Guard('Arpía', 'Está desayunando. Usted recuerda a su suegra sin darse cuenta.',
+                decodeLine(26), decodeLine(27)));  // keys[26,27]: La última habitación..., Imnus humiscuol...
+
+            // Room 15: Calabozos
+            rooms[15].insert(new Thing('Paraguas', 'Está cerrado.', 2));
+            rooms[15].insert(new Thing('Talismán de aire', 'Está hecho de cinco vientos amarrados con un cordón negro.', 1));
+            rooms[15].insert(new Linking('Puerta de hierro', 'Conduce al jardín.', '', 'Usted sale al jardín.', rooms[12]));
+            rooms[15].insert(new Troll('Esqueleto', 'Debe tener varios siglos.', 'Taza de café',
+                decodeLine(29), 'Dame algo para calentarme la barriga, por favor.'));  // key[29]: Taza de cafe
+
+            // Room 16: Boca
+            rooms[16].insert(new Linking('Puerta triangular', 'Tiene forma de un triángulo de siete lados.', '',
+                'Usted sale de la boca de la Bestia.', rooms[24]));
+            rooms[16].insert(new OpenLink('Garganta', 'Es roja y carnosa.',
+                'Usted atraviesa por la garganta de la Bestia.', rooms[17]));
+
+            // Room 17: Interior
+            rooms[17].insert(new Thing('Inscripción', 'No continúe si no está protegido.', 10));
+            rooms[17].insert(new Linking('Garganta', 'Es roja y carnosa.', '',
+                'Usted atraviesa por la garganta de la Bestia.', rooms[16]));
+            rooms[17].insert(new DangerLink('Tráquea', 'Luce igual que en los libros de biología que había en su escuela.', '',
+                'Usted atraviesa por la tráquea de la Bestia.', decodeLine(30), rooms[18]));  // key[30]: Talisman de aire
+            rooms[17].insert(new DangerLink('Esófago', 'Parece un túnel.', '',
+                'Usted atraviesa por el esófago de la Bestia.', decodeLine(31), rooms[19]));  // key[31]: Pastel de cerezas
+            rooms[17].insert(new DangerLink('Arteria principal', 'Conduce al corazón seguramente.', '',
+                'Usted atraviesa por la arteria principal de la Bestia.', 'Corazón de unicornio', rooms[20]));
+
+            // Room 18: Pulmones
+            rooms[18].insert(new Linking('Tráquea', 'Luce igual que en los libros de biología que había en su escuela.', '',
+                'Usted atraviesa por la tráquea de la Bestia.', rooms[17]));
+            rooms[18].insert(new Guard('Centro de los pulmones', 'De aquí surge la vida de los pulmones.',
+                decodeLine(35), decodeLine(32)));  // keys[35,32]: message, weapon
+
+            // Room 19: Estómago
+            rooms[19].insert(new Linking('Esófago', 'Parece un túnel.', '',
+                'Usted atraviesa por el esófago de la Bestia.', rooms[17]));
+            rooms[19].insert(new Guard('Centro del estomago', 'De aquí surge la vida del estómago.',
+                '¡Usted ha matado al centro del estómago!', decodeLine(33)));  // key[33]: weapon
+
+            // Room 20: Corazón
+            rooms[20].insert(new Linking('Arteria principal', 'Conduce al corazón seguramente.', '',
+                'Usted atraviesa por la arteria principal de la Bestia.', rooms[17]));
+            rooms[20].insert(new Guard('Centro del corazon', 'De aquí surge la vida del corazón.',
+                decodeLine(37), decodeLine(34)));  // keys[37,34]: message, weapon
+
+            // Room 21: Cerebro
+            rooms[21].insert(new Thing('Inscripción', decodeLine(39), 10));  // key[39]: ¿Mataste al Troll?
+            rooms[21].insert(new Guard('Centro del cerebro', '¡Usa la antorcha!', 'XVBCZXV XBVCZX BVZXC!!!!! ',
+                decodeLine(38)));  // key[38]: weapon
+
+            // Room 22: Almacén
+            rooms[22].insert(new Thing('Hacha', 'Está muy afilada.', 10));
+            rooms[22].insert(new Linking('Puerta de madera', 'Conduce al jardín.', '',
+                'Usted sale del almacén.', rooms[12]));
+            rooms[22].insert(new Linking('Puerta verde', 'Usted presiente que hay algo muy grande detrás de ella.', '',
+                'Usted entra al páramo.', rooms[23]));
+            rooms[22].insert(new Troll('Ratón', 'Tiene puesto un delantal de alquimista.', decodeLine(40),  // key[40]: Piedra filosofal
+                decodeLine(41), 'No tengo tiempo para atenderte. Llevo medio siglo buscando la quinta esencia.'));
+   
+            // Room 23: Páramo
+            rooms[23].insert(new Linking('Puerta verde', 'Conduce al almacén.', '',
+                'Usted sale del páramo.', rooms[22]));
+            rooms[23].insert(new Linking('Puerta de cristal', 'Es muy delgada.', decodeLine(42),  // key[42]: Cuidado con el túnel y la puerta de tela...
+                'Usted sale del páramo.', rooms[24]));
+            rooms[23].insert(new DangerLink('Túnel', 'Parece más acogedor que el túnel del exterior de la fortaleza.', '',
+                'Usted atraviesa el túnel.', decodeLine(43), rooms[23]));  // key[43]: Agua - trap door loops back
+            rooms[23].insert(new OpenLink('Pozo', 'Es muy profundo.',
+                'Usted cae vertiginosamente por el pozo y, antes de que pueda darse cuenta, está en el exterior de la fortaleza.', rooms[0]));
+            rooms[23].insert(new Guard('Lobo', 'Es del tamaño de un ternero. La única forma de pasar por la puerta de cristal es matándolo.', decodeLine(44), 'Latigo'));  // key[44]: confession
+
+            // Room 24: Salón de cristal
+            rooms[24].insert(new Linking('Puerta de cristal', 'Es muy delgada.', decodeLine(42),  // key[42]: Cuidado con el túnel y la puerta de tela...
+                'Usted sale al páramo.', rooms[23]));
+            rooms[24].insert(new Linking('Puerta de tela', 'Es una puerta aparentemente normal, pero de tela. Algo le preocupa sobre esta puerta.', '',
+                'Usted sale del salón de cristal.', rooms[25])); // Leads to jail
+            rooms[24].insert(new RiddleLink('Puerta triangular', 'Tiene forma de un triángulo de siete lados.',
+                '¿Cuál es el nombre del duende?', decodeLine(23),  // key[23]: Rumpelstinskin
+                'Usted entra a la boca de la Bestia.', rooms[16]));
+            rooms[24].insert(new Troll('Bailarina', 'Es muy joven.', 'Máquina del tiempo',
+                decodeLine(47), 'Quiero ser joven para siempre.'));  // key[47]: Maquina del tiempo
+
+            // Room 25: Celda (Prison cell)
+            rooms[25].insert(new Thing('Inscripción', 'Dice que usted pasará en esta celda el resto de sus días.', 41));  // succ(LWeight) = 41
+
+            // Room 26: Puente de mármol (Marble bridge)
+            rooms[26].insert(new Troll('Araña', 'Es un poco mayor que usted, pero ya no puede producir hilo.', 'Hilo de Ariadna',
+                'Busca al Minotauro y mátalo con la espada.', '¡Pssssssss!'));
+            rooms[26].insert(new Thing('Martillo', 'Tiene dos mangos y tres cabezas.', 2));
+            rooms[26].insert(new DangerLink('Puerta secreta', 'Conduce al exterior de la fortaleza.', '',
+                'Usted atraviesa la puerta.', 'Antorcha', rooms[0]));
+            rooms[26].insert(new Hidden('Estatua de Satanás', 'Es infinitamente negra.',
+                'Cuadro', new Linking('Puerta oculta', 'Conduce a la antesala del laberinto.', '',
+                    'Usted atraviesa la puerta.', rooms[27])));
+            rooms[26].insert(new DangerLink2('Puerta', 'Conduce a la antesala del Laberinto.', '',
+                'Usted atraviesa la puerta.', 'Espada', rooms[27]));
+
+            // Room 27: Antesala del Laberinto
+            rooms[27].insert(new Linking('Puerta', 'Conduce al puente.', '', 'Usted atraviesa la puerta.', rooms[26]));
+            rooms[27].insert(new Troll('Crunch', 'Es muy similar a una boca con patas.', 'Pastel de cerezas',
+                'Las secuencia que necesitas es 1, 2, 3, 1, 2, 3, 1', '¡Qué hambre!'));
+            rooms[27].insert(new Hidden('Columna de Cristal', 'Es muy alta.',
+                'Antorcha 3',
+                new Hidden('Puerta de madera', 'Parece muy frágil, tiene dos picaportes y tres bisagras.', 'Martillo',
+                    new Linking('Puerta negra', 'Conduce al Jardín', '',
+                        'Usted entra al Jardín.', rooms[49]))));
+            rooms[27].insert(new OpenLink('Puerta verde', 'Conduce al Laberinto.', 'Usted atraviesa la puerta.', rooms[30]));
+            rooms[27].insert(new Troll('Dédalo', 'Parece haber sido herido por el cuerno de un toro gigante.', 'Vendajes',
+                'Solo el hierro te protegerá contra las flores.', 'Me muero...'));
+
+            // Room 28: Minotauro
+            rooms[28].insert(new OpenLink('Puerta', 'Conduce al Laberinto.', 'Usted atraviesa la puerta.', rooms[46]));
+            rooms[28].insert(new Thing('Antorcha 1', 'Es muy brillante.', 2));
+            rooms[28].insert(new Thing('Antorcha 2', 'Es muy brillante.', 2));
+            rooms[28].insert(new Thing('Antorcha 3', 'Es muy brillante.', 2));
+            rooms[28].insert(new Thing('Antorcha 4', 'Es muy brillante.', 2));
+            rooms[28].insert(new Thing('Antorcha 5', 'Es muy brillante.', 2));
+            rooms[28].insert(new Thing('Antorcha 6', 'Está apagada.', 2));
+            rooms[28].insert(new Thing('Antorcha 7', 'Es muy brillante.', 2));
+            rooms[28].insert(new Guard('Minotauro', 'Está sentado en un enorme trono de rocas.',
+                '¡Me has matado! Coge la antorcha del número divino y rompe la columna de cristal.', 'Espada'));
+
+            // Room 29: Salón de los elegidos
+            rooms[29].insert(new RiddleLink('Puerta dorada', 'Es de oro macizo.',
+                'Invente un alfabeto (el mayor que pueda) con el que no pueda crearse a la Bestia.',
+                'cdfghjklmnopqruvwxyz',
+                '¡Usted ha entrado al Cerebro de la Bestia!', rooms[21]));
+
+            // Rooms 30-48: Labyrinth maze (all "un pasillo del Laberinto")
+            // Room 30 (Pascal room 31)
+            rooms[30].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[31]));
+            rooms[30].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[27]));
+            rooms[30].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[37]));
+
+            // Room 31 (Pascal room 32)
+            rooms[31].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[30]));
+            rooms[31].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[32]));
+            rooms[31].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[43]));
+
+            // Room 32 (Pascal room 33)
+            rooms[32].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[25]));
+            rooms[32].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[31]));
+            rooms[32].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[33]));
+
+            // Room 33 (Pascal room 34)
+            rooms[33].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[34]));
+            rooms[33].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[40]));
+            rooms[33].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[32]));
+
+            // Room 34 (Pascal room 35)
+            rooms[34].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[33]));
+            rooms[34].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[35]));
+            rooms[34].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[45]));
+
+            // Room 35 (Pascal room 36)
+            rooms[35].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[48]));
+            rooms[35].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[34]));
+            rooms[35].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[36]));
+
+            // Room 36 (Pascal room 37)
+            rooms[36].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[28]));
+            rooms[36].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[30]));
+            rooms[36].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[35]));
+
+            // Room 37 (Pascal room 38)
+            rooms[37].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[25]));
+            rooms[37].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[38]));
+            rooms[37].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[30]));
+
+            // Room 38 (Pascal room 39)
+            rooms[38].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[30]));
+            rooms[38].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[37]));
+            rooms[38].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[39]));
+
+            // Room 39 (Pascal room 40)
+            rooms[39].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[30]));
+            rooms[39].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[25]));
+            rooms[39].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[38]));
+
+            // Room 40 (Pascal room 41)
+            rooms[40].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[32]));
+            rooms[40].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[33]));
+            rooms[40].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[41]));
+
+            // Room 41 (Pascal room 42)
+            rooms[41].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[31]));
+            rooms[41].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[42]));
+            rooms[41].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[40]));
+
+            // Room 42 (Pascal room 43)
+            rooms[42].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[25]));
+            rooms[42].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[41]));
+            rooms[42].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[43]));
+
+            // Room 43 (Pascal room 44)
+            rooms[43].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[44]));
+            rooms[43].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[31]));
+            rooms[43].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[30]));
+
+            // Room 44 (Pascal room 45)
+            rooms[44].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[43]));
+            rooms[44].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[31]));
+            rooms[44].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[30]));
+
+            // Room 45 (Pascal room 46)
+            rooms[45].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[46]));
+            rooms[45].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[32]));
+            rooms[45].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[34]));
+
+            // Room 46 (Pascal room 47)
+            rooms[46].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[45]));
+            rooms[46].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[33]));
+            rooms[46].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[47]));
+
+            // Room 47 (Pascal room 48)
+            rooms[47].insert(new OpenLink('Puerta 1', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[30]));
+            rooms[47].insert(new OpenLink('Puerta 2', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[48]));
+            rooms[47].insert(new OpenLink('Puerta 3', 'Es idéntica a las otras dos.', 'Usted atraviesa la puerta.', rooms[46]));
+
+            // Room 48 (Pascal room 49) - Exit from labyrinth
+            rooms[48].insert(new OpenLink('Salida', 'Conduce a la entrada del laberinto.',
+                'Usted regresa a la entrada del Laberinto.', rooms[27]));
+
+            // Room 49 (Pascal room 50) - False Garden
+            rooms[49].insert(new Thing('Inscripción', '¡Cuidado! Este no es el Jardín verdadero.', 1));
+            rooms[49].insert(new Thing('Cedro', 'Le faltan algunas ramas. Al parecer, alguien las cortó para hacerse una cama.', 41));  // succ(LWeight) = 41
+            rooms[49].insert(new OpenLink('Puerta verde', 'Conduce a los baños de la Bestia.',
+                'Usted sale del jardín.', rooms[25]));
+            rooms[49].insert(new OpenLink('Puerta azul', 'Debe haber algo hemoso detrás de esta puerta.',
+                'Usted sale del jardín.', rooms[25]));
+            rooms[49].insert(new OpenLink('Puerta amarilla', 'Conduce a la sala de infusiones.',
+                'Usted sale del jardín.', rooms[25]));
+            rooms[49].insert(new RiddleLink('Puerta de hierro', 'Conduce los calabozos.',
+                '¿Cuántas antorchas iluminan al Minotauro?',
+                'Seis', 'Usted entra al salón de los elegidos.', rooms[29]));
+            rooms[49].insert(new OpenLink('Puerta de madera', 'Conduce al almacén.', 'Usted sale del jardín.', rooms[25]));
+        }
+
+        // ==================== UI FUNCTIONS ====================
+
+        function printLine(text, className = '') {
+            // Skip empty strings
+            if (text === '') return;
+
+            const output = document.getElementById('output');
+            const line = document.createElement('div');
+            line.className = 'output-line' + (className ? ' ' + className : '');
+
+            // Wrap text in a reveal container
+            const textReveal = document.createElement('span');
+            textReveal.className = 'text-reveal';
+            textReveal.textContent = text;
+
+            // Create mask overlay
+            const mask = document.createElement('div');
+            mask.className = 'text-mask';
+
+            // Create scanline
+            const scanline = document.createElement('div');
+            scanline.className = 'text-scanline';
+            scanline.style.left = '0px';
+
+            // Create dot
+            const dot = document.createElement('div');
+            dot.className = 'text-scanline-dot';
+            scanline.appendChild(dot);
+
+            textReveal.appendChild(mask);
+            textReveal.appendChild(scanline);
+            line.appendChild(textReveal);
+            output.appendChild(line);
+
+            // Animate the scanline - keep it fast and skip for very long text
+            const textWidth = textReveal.offsetWidth;
+
+            // Skip animation for very long text to keep things snappy
+            if (text.length > 100) {
+                // Instant reveal for long text
+                textReveal.removeChild(mask);
+                textReveal.removeChild(scanline);
+            } else {
+                // Short, fast animation for shorter text
+                const duration = Math.max(80, Math.min(200, text.length * 3));
+                const startTime = performance.now();
+
+                function animate(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+
+                    // Linear motion for text
+                    const currentX = progress * textWidth;
+                    scanline.style.left = currentX + 'px';
+
+                    // Clip the mask to reveal text progressively
+                    mask.style.clipPath = `inset(0 0 0 ${currentX}px)`;
+
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        // Animation complete, clean up
+                        textReveal.removeChild(mask);
+                        textReveal.removeChild(scanline);
+                    }
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            // Scroll to bottom
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function updateInventory() {
+            // No inventory UI - this function does nothing
+        }
+
+        // ==================== AUTOCOMPLETE SYSTEM ====================
+
+        const autocompleteState = {
+            suggestions: [],
+            currentIndex: -1,
+            originalInput: ''
+        };
+
+        // Define all command verbs
+        const commandVerbs = [
+            'ir', 'atravesar', 'entrar', 'cruzar', 'pasar',
+            'tomar', 'coger', 'recoger', 'agarrar',
+            'dejar', 'soltar', 'tirar',
+            'ver', 'examinar', 'mirar',
+            'abrir', 'romper', 'matar', 'atacar', 'destruir',
+            'dar', 'hablar', 'preguntar', 'preguntarle',
+            'pesar', 'inventario', 'ayuda', 'guardar', 'cargar',
+            'partidas', 'borrar', 'salir', 'quit'
+        ];
+
+        // Multi-word connectors
+        const connectors = ['con', 'a'];
+
+        function getAvailableObjects() {
+            const objects = [];
+
+            // Room objects first
+            if (gameState.player && gameState.player.curr) {
+                gameState.player.curr.items.forEach(item => {
+                    objects.push({ name: item.name, location: 'room' });
+                });
+            }
+
+            // Inventory objects
+            if (gameState.player && gameState.player.bag) {
+                gameState.player.bag.items.forEach(item => {
+                    objects.push({ name: item.name, location: 'inventory' });
+                });
+            }
+
+            return objects;
+        }
+
+        function getSuggestions(input) {
+            if (!input) return [];
+
+            const words = input.toLowerCase().split(' ');
+            const lastWord = words[words.length - 1];
+
+            // Determine what we're autocompleting
+            // If there's only one word and no trailing space, autocomplete verb
+            if (words.length === 1 && !input.endsWith(' ')) {
+                // Autocomplete command verb
+                return commandVerbs
+                    .filter(cmd => cmd.startsWith(lastWord) && cmd !== lastWord)
+                    .map(cmd => cmd);
+            } else {
+                // Check if we need a connector
+                const verb = words[0];
+                const needsConnector = ['abrir', 'romper', 'matar', 'atacar', 'destruir'].includes(verb) ||
+                                     (verb === 'dar' && !input.toLowerCase().includes(' a '));
+
+                if (needsConnector) {
+                    // Check if 'con' or 'a' should be suggested
+                    const hasConnector = input.toLowerCase().includes(' con ') || input.toLowerCase().includes(' a ');
+
+                    if (!hasConnector) {
+                        // Get text after the command
+                        const afterCommand = words.slice(1).join(' ').trim();
+
+                        // If there's something typed after the command and it ends with a space,
+                        // suggest the connector
+                        if (afterCommand !== '' && input.endsWith(' ')) {
+                            const connector = verb === 'dar' ? 'a' : 'con';
+                            return [connector];
+                        } else if (afterCommand !== '') {
+                            // Check if user is typing the connector
+                            // Get everything before the last word
+                            const beforeLastWord = words.slice(1, -1).join(' ').trim();
+                            const lastWord = words[words.length - 1].toLowerCase();
+                            const connector = verb === 'dar' ? 'a' : 'con';
+
+                            // Check if we have an object name (beforeLastWord has content) and last word starts connector
+                            if (beforeLastWord !== '' && connector.startsWith(lastWord) && lastWord !== '' && connector !== lastWord) {
+                                return [connector];
+                            }
+                        }
+                    }
+                }
+
+                // Autocomplete object names
+                let objects = getAvailableObjects();
+
+                // Get what's been typed after the command
+                // If there's a connector, look for text after the connector
+                let afterCommand = words.slice(1).join(' ').trim();
+
+                const connectorIndex = input.toLowerCase().lastIndexOf(' con ');
+                const aIndex = input.toLowerCase().lastIndexOf(' a ');
+
+                if (connectorIndex !== -1) {
+                    // There's ' con ', get text after it
+                    afterCommand = input.substring(connectorIndex + 5).trim(); // +5 for ' con '
+
+                    // For 'abrir' command, don't suggest objects after 'con' (magic words, not objects)
+                    if (verb === 'abrir') {
+                        return [];
+                    }
+                } else if (aIndex !== -1) {
+                    // There's ' a ', get text after it (the recipient for 'dar')
+                    afterCommand = input.substring(aIndex + 3).trim(); // +3 for ' a '
+                    // After 'a', suggest room objects first, then inventory (recipients can be anywhere)
+                } else {
+                    // Before any connector - filter objects based on command semantics
+
+                    // Commands that only work with inventory items (things you must be carrying)
+                    if (['dar', 'dejar', 'soltar', 'tirar', 'pesar'].includes(verb)) {
+                        objects = objects.filter(obj => obj.location === 'inventory');
+                    }
+                    // Commands that only work with room objects (things you must take from the room)
+                    else if (['tomar', 'coger', 'recoger', 'agarrar'].includes(verb)) {
+                        objects = objects.filter(obj => obj.location === 'room');
+                    }
+                    // All other commands work with all objects (room + inventory)
+                    // This includes: ver, examinar, mirar, abrir, romper, matar, atacar, destruir,
+                    // ir, atravesar, entrar, cruzar, pasar, hablar, preguntar, preguntarle
+                }
+
+                // Find objects that match
+                return objects
+                    .filter(obj => {
+                        const objName = obj.name.toLowerCase();
+                        return objName.startsWith(afterCommand.toLowerCase()) || afterCommand === '';
+                    })
+                    .map(obj => obj.name);
+            }
+        }
+
+        function updateAutocompleteDisplay(input) {
+            const value = input.value;
+            autocompleteState.suggestions = getSuggestions(value);
+            autocompleteState.currentIndex = -1;
+            autocompleteState.originalInput = value;
+
+            // Clear any previous suggestion display
+            const existing = input.parentElement.querySelector('.autocomplete-suggestion');
+            if (existing) existing.remove();
+
+            if (autocompleteState.suggestions.length > 0) {
+                showSuggestion(input, autocompleteState.suggestions[0]);
+            }
+        }
+
+        function showSuggestion(input, suggestion) {
+            // Remove existing
+            const existing = input.parentElement.querySelector('.autocomplete-suggestion');
+            if (existing) existing.remove();
+
+            const value = input.value;
+
+            // Calculate what part of the suggestion hasn't been typed yet
+            let completionPart = '';
+
+            const words = value.split(' ');
+
+            // Check if we're completing a verb (single word, no space at end)
+            if (words.length === 1 && !value.endsWith(' ')) {
+                // Completing verb
+                const typed = words[0];
+                if (suggestion.toLowerCase().startsWith(typed.toLowerCase())) {
+                    completionPart = suggestion.substring(typed.length);
+                } else {
+                    return;
+                }
+            } else if (suggestion === 'con' || suggestion === 'a') {
+                // Completing connector
+                if (value.endsWith(' ')) {
+                    // Show full connector with space: invisible="abrir puerta", visible=" con"
+                    completionPart = ' ' + suggestion;
+                } else {
+                    // User is typing the connector (e.g., "abrir puerta principal c")
+                    const lastWord = words[words.length - 1].toLowerCase();
+                    if (suggestion.startsWith(lastWord) && lastWord !== '') {
+                        // Show only the remaining part: invisible="abrir puerta c", visible="on"
+                        completionPart = suggestion.substring(lastWord.length);
+                    } else {
+                        return;
+                    }
+                }
+            } else {
+                // Completing object name (after the verb)
+                const afterCommand = words.slice(1).join(' ').trim();
+
+                if (afterCommand === '') {
+                    // Nothing typed after command, show full suggestion
+                    // If value ends with space, add space before suggestion
+                    completionPart = value.endsWith(' ') ? ' ' + suggestion : suggestion;
+                } else {
+                    // User has typed part of the object name
+                    if (suggestion.toLowerCase().startsWith(afterCommand.toLowerCase())) {
+                        // Show the remaining part of the suggestion
+                        completionPart = suggestion.substring(afterCommand.length);
+                    } else {
+                        return; // No match
+                    }
+                }
+            }
+
+            if (!completionPart) return; // Nothing to show
+
+            // Create suggestion display
+            const suggestionSpan = document.createElement('span');
+            suggestionSpan.className = 'autocomplete-suggestion';
+
+            // Remove trailing space from value to avoid double spacing
+            let textToMeasure = value;
+            if (value.endsWith(' ')) {
+                textToMeasure = value.slice(0, -1);
+            }
+
+            // Just show the completion part
+            suggestionSpan.textContent = completionPart;
+
+            // Measure the width of the typed text to position the completion correctly
+            const measureSpan = document.createElement('span');
+            measureSpan.style.visibility = 'hidden';
+            measureSpan.style.position = 'absolute';
+            measureSpan.style.whiteSpace = 'pre';
+            measureSpan.style.font = window.getComputedStyle(input).font;
+            measureSpan.textContent = textToMeasure;
+            document.body.appendChild(measureSpan);
+            const textWidth = measureSpan.offsetWidth;
+            document.body.removeChild(measureSpan);
+
+            suggestionSpan.style.position = 'absolute';
+            // Position after the typed text
+            suggestionSpan.style.left = (input.offsetLeft + 22 - input.scrollLeft + textWidth) + 'px';
+            suggestionSpan.style.top = (input.offsetTop + 10) + 'px';
+            suggestionSpan.style.pointerEvents = 'none';
+            suggestionSpan.style.color = 'rgba(57, 255, 20, 0.35)';
+            suggestionSpan.style.whiteSpace = 'pre';
+
+            input.parentElement.appendChild(suggestionSpan);
+        }
+
+        function cycleSuggestion(direction) {
+            if (autocompleteState.suggestions.length === 0) return;
+
+            autocompleteState.currentIndex += direction;
+
+            if (autocompleteState.currentIndex < 0) {
+                autocompleteState.currentIndex = autocompleteState.suggestions.length - 1;
+            } else if (autocompleteState.currentIndex >= autocompleteState.suggestions.length) {
+                autocompleteState.currentIndex = 0;
+            }
+
+            const input = document.getElementById('input');
+            const suggestion = autocompleteState.suggestions[autocompleteState.currentIndex];
+            showSuggestion(input, suggestion);
+        }
+
+        function acceptSuggestion() {
+            if (autocompleteState.suggestions.length === 0) return false;
+
+            const input = document.getElementById('input');
+            const value = input.value;
+            const suggestion = autocompleteState.suggestions[
+                autocompleteState.currentIndex === -1 ? 0 : autocompleteState.currentIndex
+            ];
+
+            const words = value.split(' ');
+
+            // Check if we're completing a verb or an object
+            if (words.length === 1 || (words.length === 2 && value.endsWith(' '))) {
+                // Completing verb or first word after verb
+                if (value.endsWith(' ')) {
+                    // After space, append the suggestion
+                    input.value = value + suggestion + ' ';
+                } else {
+                    // Replace the current word
+                    input.value = suggestion + ' ';
+                }
+            } else {
+                // Completing multi-word object name
+                const afterCommand = words.slice(1).join(' ').trim();
+
+                if (afterCommand === '') {
+                    // Nothing typed after verb yet
+                    input.value = words[0] + ' ' + suggestion + ' ';
+                } else if (suggestion.toLowerCase().startsWith(afterCommand.toLowerCase())) {
+                    // Append only the remaining part
+                    input.value = value + suggestion.substring(afterCommand.length) + ' ';
+                } else {
+                    // Replace last word
+                    words[words.length - 1] = suggestion;
+                    input.value = words.join(' ') + ' ';
+                }
+            }
+
+            // Clear autocomplete
+            const existing = input.parentElement.querySelector('.autocomplete-suggestion');
+            if (existing) existing.remove();
+            autocompleteState.suggestions = [];
+            autocompleteState.currentIndex = -1;
+
+            // Update for next part
+            updateAutocompleteDisplay(input);
+
+            return true;
+        }
+
+        // ==================== COMMAND PROCESSING ====================
+
+        // Execute a command (used by both processCommand and load replay)
+        function executeCommand(command) {
+            // Parse command - keep original case for passwords/keys
+            const words = command.split(' ');
+            const verb = words[0].toLowerCase();
+            const rest = words.slice(1).join(' ');
+
+            // Command handling
+            switch(verb) {
+                case 'ayuda':
+                case 'help':
+                    printLine('Comandos disponibles:');
+                    printLine('- ir/atravesar [lugar]: ir a un lugar');
+                    printLine('- tomar/coger [objeto]: tomar un objeto');
+                    printLine('- dejar/soltar [objeto]: dejar un objeto');
+                    printLine('- dejar todo: dejar todos los objetos');
+                    printLine('- mirar: mirar alrededor');
+                    printLine('- ver/examinar [objeto]: examinar un objeto');
+                    printLine('- inventario/i: ver tu inventario');
+                    printLine('- abrir [puerta] con [palabra]: abrir una puerta');
+                    printLine('- romper [objeto] con [arma]: romper algo');
+                    printLine('- matar/atacar [objetivo] con [arma]: atacar algo');
+                    printLine('- dar [objeto] a [quien]: dar un objeto');
+                    printLine('- hablar/preguntar [quien]: hablar con alguien');
+                    printLine('- pesar [objeto]: pesar un objeto');
+                    printLine('- guardar [nombre]: guardar partida');
+                    printLine('- cargar [nombre]: cargar partida');
+                    printLine('- partidas: listar partidas guardadas');
+                    printLine('- borrar [nombre]: borrar partida guardada');
+                    printLine('- salir/quit: abandonar el juego');
+                    break;
+
+                case 'inventario':
+                case 'i':
+                case 'inv':
+                    gameState.player.inventary();
+                    break;
+
+                case 'mirar':
+                    // If object specified, act like "ver", otherwise like "look"
+                    if (rest && rest.trim()) {
+                        gameState.player.see(rest);
+                    } else {
+                        gameState.player.look(true); // Clear history when explicitly looking
+                    }
+                    break;
+
+                case 'look':
+                    gameState.player.look(true); // Clear history when explicitly looking
+                    break;
+
+                case 'ver':
+                case 'examinar':
+                case 'v':
+                    gameState.player.see(rest);
+                    break;
+
+                case 'tomar':
+                case 'coger':
+                case 'recoger':
+                case 'agarrar':
+                    gameState.player.take(rest);
+                    break;
+
+                case 'dejar':
+                case 'soltar':
+                case 'tirar':
+                    if (rest === 'todo') {
+                        gameState.player.leaveAll();
+                    } else {
+                        gameState.player.leave(rest);
+                    }
+                    break;
+
+                case 'ir':
+                case 'atravesar':
+                case 'entrar':
+                case 'cruzar':
+                case 'pasar':
+                    gameState.player.walkT(rest);
+                    break;
+
+                case 'abrir':
+                    const parts = command.split(' con ');
+                    const door = parts[0].replace(/abrir /i, '').trim();
+                    const key = parts[1] ? parts[1].trim() : '';
+                    gameState.player.openD(door, key);
+                    break;
+
+                case 'romper':
+                    const breakParts = command.split(' con ');
+                    const what = breakParts[0].replace(/romper /i, '').trim();
+                    const weapon = breakParts[1] ? breakParts[1].trim() : '';
+                    gameState.player.breakItem(what, weapon);
+                    break;
+
+                case 'matar':
+                case 'atacar':
+                case 'destruir':
+                    const killParts = command.split(' con ');
+                    const target = killParts[0].replace(/^(matar|atacar|destruir) /i, '').trim();
+                    const weap = killParts[1] ? killParts[1].trim() : '';
+                    gameState.player.kill(target, weap);
+                    break;
+
+                case 'dar':
+                    const giveParts = command.split(' a ');
+                    const gift = giveParts[0].replace(/dar /i, '').trim();
+                    const recipient = giveParts[1] ? giveParts[1].trim() : '';
+                    gameState.player.give(gift, recipient);
+                    break;
+
+                case 'hablar':
+                case 'preguntar':
+                case 'preguntarle':
+                    gameState.player.ask(rest);
+                    break;
+
+                case 'pesar':
+                    gameState.player.weigh(rest);
+                    break;
+
+                case 'guardar':
+                case 'save':
+                    if (!rest) {
+                        showSaves();
+                        printLine('');
+                        printLine('Escribe: guardar [nombre] para guardar tu juego', 'system');
+                    } else {
+                        saveGame(rest);
+                    }
+                    break;
+
+                case 'cargar':
+                case 'load':
+                    if (!rest) {
+                        showSaves();
+                        printLine('');
+                        printLine('Escribe: cargar [nombre] para cargar tu juego', 'system');
+                    } else {
+                        loadGame(rest);
+                    }
+                    break;
+
+                case 'partidas':
+                case 'saves':
+                case 'listar':
+                case 'juegos':
+                    showSaves();
+                    break;
+
+                case 'borrar':
+                case 'eliminar':
+                case 'delete':
+                    if (!rest) {
+                        showSaves();
+                        printLine('');
+                        printLine('Escribe: borrar [nombre] para eliminar un juego', 'system');
+                    } else {
+                        deleteSave(rest);
+                    }
+                    break;
+
+                case 'salir':
+                case 'quit':
+                case 'morir':
+                    printLine('Su entierro se efectuará el próximo domingo a las 3:00 am. Está invitado.', 'system');
+                    gameState.player.die('');
+                    gameState.gameOver = true;
+                    break;
+
+                default:
+                    printLine('No entiendo ese comando. Escribe "ayuda" para ver comandos disponibles.', 'error');
+            }
+
+            checkWinCondition();
+        }
+
+        // Process command from user input
+        window.processCommand = function() {
+            if (gameState.gameOver || gameState.gameWon || gameState.player.dead) return;
+
+            const input = document.getElementById('input');
+            const command = input.value.trim();
+            input.value = '';
+
+            if (!command) return;
+
+            printLine('> ' + command, 'prompt');
+
+            executeCommand(command);
+
+            // Track state-changing commands AFTER execution
+            if (shouldSaveCommand(command)) {
+                console.log('[HISTORY] Adding command to history:', command);
+                gameState.commandHistory.push(command);
+                console.log('[HISTORY] Total commands in history:', gameState.commandHistory.length);
+            }
+        }
+
+        // Check win condition
+        function checkWinCondition() {
+            // Win condition: destroy all 4 centers and the Troll
+            const centersToDestroy = ['Centro del cerebro', 'Centro del corazon', 'Centro del estomago', 'Centro de los pulmones'];
+
+            let allCentersDestroyed = true;
+            for (let center of centersToDestroy) {
+                let found = false;
+                for (let room of gameState.rooms) {
+                    if (room.get(center)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) {
+                    allCentersDestroyed = false;
+                    break;
+                }
+            }
+
+            // Check if Troll in room 11 is dead
+            let trollDead = true;
+            const bathRoom = gameState.rooms[11];
+            const troll = bathRoom.get('Troll');
+            if (troll && !troll.dead) {
+                trollDead = false;
+            }
+
+            if (allCentersDestroyed && trollDead) {
+                gameState.gameWon = true;
+                printLine('', '');
+                printLine('¡¡¡VICTORIA!!!', 'success');
+                printLine('Usted ha vencido a la Bestia.', 'success');
+                printLine('Parece ser una persona persistente y eso es un mérito muy grande.');
+                printLine('La persistencia es indispensable para los que luchan por el bien,');
+                printLine('sobre todo porque los que luchan por el mal son muy persistentes también.');
+                printLine('Veremos si en la próxima versión de La Fortaleza tiene igual suerte.');
+                printLine('', '');
+                printLine('                                             Un servidor:', 'system');
+                printLine('                                             M. Cepero', 'system');
+            }
+        }
+
+        // Handle keyboard events for input
+        const inputElement = document.getElementById('input');
+
+        // Handle key input and autocomplete
+        inputElement.addEventListener('input', function(e) {
+            updateAutocompleteDisplay(this);
+        });
+
+        inputElement.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                acceptSuggestion();
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                cycleSuggestion(1);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                cycleSuggestion(-1);
+            } else if (e.key === 'Escape') {
+                // Clear autocomplete
+                const existing = this.parentElement.querySelector('.autocomplete-suggestion');
+                if (existing) existing.remove();
+                autocompleteState.suggestions = [];
+                autocompleteState.currentIndex = -1;
+            }
+        });
+
+        inputElement.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                // Clear autocomplete on enter
+                const existing = this.parentElement.querySelector('.autocomplete-suggestion');
+                if (existing) existing.remove();
+                autocompleteState.suggestions = [];
+                processCommand();
+            }
+        });
+
+        // Fullscreen toggle
+        window.toggleFullscreen = function() {
+            const elem = document.documentElement;
+            const btn = document.getElementById('fullscreen-btn');
+
+            if (!document.fullscreenElement) {
+                // Enter fullscreen
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) { // Safari
+                    elem.webkitRequestFullscreen();
+                } else if (elem.msRequestFullscreen) { // IE11
+                    elem.msRequestFullscreen();
+                }
+                btn.textContent = '⛶'; // Exit fullscreen icon
+            } else {
+                // Exit fullscreen
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) { // Safari
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) { // IE11
+                    document.msExitFullscreen();
+                }
+                btn.textContent = '⛶'; // Fullscreen icon
+            }
+        }
+
+        // Update button when fullscreen changes via ESC key
+        document.addEventListener('fullscreenchange', function() {
+            const btn = document.getElementById('fullscreen-btn');
+            btn.textContent = document.fullscreenElement ? '⛶' : '⛶';
+        });
+
+        // Start game
+        initGame();
+
+        // Set focus to input
+        document.getElementById('input').focus();</script></body></html>

@@ -1,9 +1,18 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-D7CWN7QR83"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-D7CWN7QR83');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza - Aventura de Texto (v1.18)</title>
+    <title>La Fortaleza - Aventura de Texto (v1.19)</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -646,7 +655,7 @@
             'la Antesala del Laberinto': ['images/room_labrynth_entrance.jpg'],
             'la cueva del Minotauro': ['images/room_minotaur.jpg'],
             'el Salón de los elegidos': ['images/room_chosen.jpg'],
-            'un pasillo del Laberinto': ['images/room_labrynth_entrance.jpg', 'images/room_labrynth_node_1.jpg', 'images/room_labrynth_node_2.jpg', 'images/room_labrynth_node_3.jpg', 'images/room_labrynth_node_4.jpg']
+            'un pasillo del Laberinto': ['images/room_labrynth_node_1.jpg', 'images/room_labrynth_node_2.jpg', 'images/room_labrynth_node_3.jpg', 'images/room_labrynth_node_4.jpg']
         };
 
         function getRandomRoomImage(roomName) {
