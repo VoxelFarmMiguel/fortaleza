@@ -12,7 +12,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza - Aventura de Texto (v1.39)</title>
+    <title>La Fortaleza - Aventura de Texto (v1.40)</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -3259,10 +3259,10 @@
 
             renderDropdown('Selecciona Objeto', options, (object) => {
                 if (object === '__custom__') {
-                    // Switch to typing mode for custom save name
-                    toggleTouchMode();
+                    // Show keyboard for custom save name
+                    touchModeState.currentStage = 'keyboard';
                     document.getElementById('input').value = verb + ' ';
-                    document.getElementById('input').focus();
+                    showKeyboard();
                     return;
                 }
                 if (object === null) return;
