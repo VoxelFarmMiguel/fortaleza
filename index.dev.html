@@ -3112,6 +3112,12 @@
         }
 
         function showObjectOptions(verb) {
+            // Safety check: ensure game is initialized
+            if (!gameState || !gameState.player || !gameState.player.here) {
+                renderDropdown('Error', [{ display: 'Juego no inicializado', value: null }], () => {});
+                return;
+            }
+
             const player = gameState.player;
             const room = player.here;
             let options = [];
@@ -3119,45 +3125,59 @@
             // Build options based on verb
             if (verb === 'ir' || verb === 'atravesar') {
                 // Show all links in current room
-                room.items.forEach(item => {
-                    if (item instanceof Linking || item instanceof RiddleLink ||
-                        item instanceof OpenLink || item instanceof DangerLink ||
-                        item instanceof DangerLink2) {
-                        options.push({ display: item.name.toUpperCase(), value: item.name });
-                    }
-                });
+                if (room.items && room.items.forEach) {
+                    room.items.forEach(item => {
+                        if (item instanceof Linking || item instanceof RiddleLink ||
+                            item instanceof OpenLink || item instanceof DangerLink ||
+                            item instanceof DangerLink2) {
+                            options.push({ display: item.name.toUpperCase(), value: item.name });
+                        }
+                    });
+                }
             } else if (verb === 'tomar') {
                 // Show takeable items in room
-                room.items.forEach(item => {
-                    if (item.mass < 999 && !(item instanceof Linking)) {
-                        options.push({ display: item.name.toUpperCase(), value: item.name });
-                    }
-                });
+                if (room.items && room.items.forEach) {
+                    room.items.forEach(item => {
+                        if (item.mass < 999 && !(item instanceof Linking)) {
+                            options.push({ display: item.name.toUpperCase(), value: item.name });
+                        }
+                    });
+                }
             } else if (verb === 'dejar') {
                 // Show inventory items
-                player.bag.items.forEach(item => {
-                    options.push({ display: item.name.toUpperCase(), value: item.name });
-                });
-                // Add "todo" option
-                options.unshift({ display: 'TODO', value: 'todo' });
+                if (player.bag && player.bag.items && player.bag.items.forEach) {
+                    player.bag.items.forEach(item => {
+                        options.push({ display: item.name.toUpperCase(), value: item.name });
+                    });
+                    // Add "todo" option
+                    options.unshift({ display: 'TODO', value: 'todo' });
+                }
             } else if (verb === 'ver' || verb === 'pesar') {
                 // Show all items in room and inventory
-                room.items.forEach(item => {
-                    options.push({ display: item.name.toUpperCase() + ' (aquí)', value: item.name });
-                });
-                player.bag.items.forEach(item => {
-                    options.push({ display: item.name.toUpperCase() + ' (tuyo)', value: item.name });
-                });
+                if (room.items && room.items.forEach) {
+                    room.items.forEach(item => {
+                        options.push({ display: item.name.toUpperCase() + ' (aquí)', value: item.name });
+                    });
+                }
+                if (player.bag && player.bag.items && player.bag.items.forEach) {
+                    player.bag.items.forEach(item => {
+                        options.push({ display: item.name.toUpperCase() + ' (tuyo)', value: item.name });
+                    });
+                }
             } else if (verb === 'abrir' || verb === 'romper' || verb === 'matar' || verb === 'hablar') {
                 // Show all items in room
-                room.items.forEach(item => {
-                    options.push({ display: item.name.toUpperCase(), value: item.name });
-                });
+                if (room.items && room.items.forEach) {
+                    room.items.forEach(item => {
+                        options.push({ display: item.name.toUpperCase(), value: item.name });
+                    });
+                }
             } else if (verb === 'dar') {
                 // Show inventory items
-                player.bag.items.forEach(item => {
-                    options.push({ display: item.name.toUpperCase(), value: item.name });
-                });
+                if (player.bag && player.bag.items && player.bag.items.forEach) {
+                    player.bag.items.forEach(item => {
+                        options.push({ display: item.name.toUpperCase(), value: item.name });
+                    });
+                }
             } else if (verb === 'guardar' || verb === 'cargar' || verb === 'borrar') {
                 // Show saved games
                 const saves = listSaves();
@@ -3206,16 +3226,20 @@
             let options = [];
 
             // Show inventory items that could be weapons/tools
-            player.bag.items.forEach(item => {
-                options.push({ display: item.name.toUpperCase() + ' (tuyo)', value: item.name });
-            });
+            if (player.bag && player.bag.items && player.bag.items.forEach) {
+                player.bag.items.forEach(item => {
+                    options.push({ display: item.name.toUpperCase() + ' (tuyo)', value: item.name });
+                });
+            }
 
             // Also show items in room
-            room.items.forEach(item => {
-                if (item.mass < 999 && !(item instanceof Linking)) {
-                    options.push({ display: item.name.toUpperCase() + ' (aquí)', value: item.name });
-                }
-            });
+            if (room.items && room.items.forEach) {
+                room.items.forEach(item => {
+                    if (item.mass < 999 && !(item instanceof Linking)) {
+                        options.push({ display: item.name.toUpperCase() + ' (aquí)', value: item.name });
+                    }
+                });
+            }
 
             // Add "sin nada" option for trying without tool
             options.push({ display: '(Sin objeto)', value: '' });
@@ -3234,11 +3258,13 @@
             let options = [];
 
             // Show living things in room
-            room.items.forEach(item => {
-                if (item instanceof LivingThing) {
-                    options.push({ display: item.name.toUpperCase(), value: item.name });
-                }
-            });
+            if (room.items && room.items.forEach) {
+                room.items.forEach(item => {
+                    if (item instanceof LivingThing) {
+                        options.push({ display: item.name.toUpperCase(), value: item.name });
+                    }
+                });
+            }
 
             if (options.length === 0) {
                 options.push({ display: '(Nadie aquí)', value: null });
