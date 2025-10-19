@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza v1.14 - Aventura de Texto</title>
+    <title>La Fortaleza v1.15 - Aventura de Texto</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -595,7 +595,7 @@
 
         <!-- NEW: only this part gets curved -->
         <div class="crt-screen">
-            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v1.14</span></div>
+            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v1.15</span></div>
             <div id="output"></div>
             <div id="input-container">
             <input type="text" id="input" placeholder="Escribe tu comando aquí..." autocomplete="off" autofocus>
@@ -1737,7 +1737,7 @@
                 'Hay tantos espejos que no puede reconocer si usted es real o es una imagen de sí mismo.');
 
             rooms[5] = new Room('la Biblioteca',
-                'Hay miles de libros en este lugar. Todos tienen alguna hoja marcada con una servilleta.');
+                'Hay miles de libros en este lugar. Todos tienen alguna hoja marcada con una servilleta. Los pasillos estan numerados usando el viejo alfabeto bestial ABCDEFGHIJKLMNOPQRSTUVWXYZ');
 
             rooms[6] = new Room('Pasillo',
                 'Tiene tres puertas al lado y una al final.');
@@ -2094,6 +2094,7 @@
                 'Usted entra al páramo.', rooms[23]));
             rooms[22].insert(new Troll('Ratón', 'Tiene puesto un delantal de alquimista.', decodeLine(40),  // key[40]: Piedra filosofal
                 decodeLine(41), 'No tengo tiempo para atenderte. Llevo medio siglo buscando la quinta esencia.'));
+            rooms[22].insert(new Thing('Pastel de cerezas', 'Usted no se sorprende al ver este pastel.', 2));
 
             // Room 23: Páramo
             rooms[23].insert(new Linking('Puerta verde', 'Conduce al almacén.', '',
