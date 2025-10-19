@@ -12,7 +12,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza - Aventura de Texto (v1.34)</title>
+    <title>La Fortaleza - Aventura de Texto (v1.35)</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -687,6 +687,27 @@
         .keyboard-enter {
             flex: 1;
             background: rgba(15, 255, 15, 0.2);
+        }
+
+        .keyboard-cancel {
+            flex: 1;
+            background: rgba(255, 50, 50, 0.2);
+            border-color: rgba(255, 50, 50, 0.4);
+            color: rgb(255, 100, 100);
+        }
+
+        .keyboard-cancel:hover {
+            background: rgba(255, 50, 50, 0.3);
+        }
+
+        .dropdown-cancel {
+            background: rgba(255, 50, 50, 0.1);
+            border-color: rgba(255, 50, 50, 0.3);
+            color: rgb(255, 100, 100);
+        }
+
+        .dropdown-cancel:hover {
+            background: rgba(255, 50, 50, 0.2);
         }
 
         .dropdown-option:active {
@@ -3005,6 +3026,11 @@
                 gameState.commandHistory.push(command);
                 console.log('[HISTORY] Total commands in history:', gameState.commandHistory.length);
             }
+
+            // If in touch mode, reset to verb selection after command
+            if (touchModeEnabled) {
+                resetTouchMode();
+            }
         }
 
         // Check win condition
@@ -3156,7 +3182,7 @@
                 } else {
                     showObjectOptions(verb);
                 }
-            });
+            }, false); // No cancel button on first screen
         }
 
         function showObjectOptions(verb) {
@@ -3384,10 +3410,24 @@
             bottomRow.appendChild(enterBtn);
             keyboard.appendChild(bottomRow);
 
+            // Cancel button row
+            const cancelRow = document.createElement('div');
+            cancelRow.className = 'keyboard-row';
+
+            const cancelBtn = document.createElement('button');
+            cancelBtn.className = 'keyboard-key keyboard-cancel';
+            cancelBtn.textContent = '✕ CANCELAR';
+            cancelBtn.onclick = () => {
+                resetTouchMode();
+            };
+
+            cancelRow.appendChild(cancelBtn);
+            keyboard.appendChild(cancelRow);
+
             container.appendChild(keyboard);
         }
 
-        function renderDropdown(title, options, onSelect) {
+        function renderDropdown(title, options, onSelect, showCancel = true) {
             const container = document.getElementById('dropdown-container');
 
             // Clear existing content - replace instead of append
@@ -3414,20 +3454,34 @@
                 optionsContainer.appendChild(btn);
             });
 
+            // Add CANCEL button for secondary screens
+            if (showCancel) {
+                const cancelBtn = document.createElement('button');
+                cancelBtn.className = 'dropdown-option dropdown-cancel';
+                cancelBtn.textContent = '✕ CANCELAR';
+                cancelBtn.onclick = () => {
+                    resetTouchMode();
+                };
+                optionsContainer.appendChild(cancelBtn);
+            }
+
             stage.appendChild(optionsContainer);
             container.appendChild(stage);
         }
 
+        function resetTouchMode() {
+            // Reset state and show verb options
+            touchModeState = { commandParts: [], currentStage: 'verb' };
+            document.getElementById('input').value = '';
+            showVerbOptions();
+        }
+
         function executeTouchModeCommand() {
             const command = touchModeState.commandParts.join(' ');
-            touchModeState = { commandParts: [], currentStage: 'verb' };
-            document.getElementById('dropdown-container').innerHTML = '';
+            document.getElementById('input').value = command;
 
-            // Execute the command
+            // Execute the command (processCommand will handle the reset)
             processCommand();
-
-            // Show verb options again for next command
-            showVerbOptions();
         }
 
         // Fullscreen toggle
