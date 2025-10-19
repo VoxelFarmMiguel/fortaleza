@@ -12,7 +12,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza - Aventura de Texto (v1.40)</title>
+    <title>La Fortaleza - Aventura de Texto (v1.41)</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -711,6 +711,10 @@
         .keyboard-action {
             min-width: 100px;
             background: rgba(15, 255, 15, 0.15);
+        }
+
+        .keyboard-space-letter {
+            min-width: 88px;
         }
 
         .keyboard-action.keyboard-cancel:hover {
@@ -3367,44 +3371,16 @@
             keyboard.className = 'on-screen-keyboard';
 
             // Letter rows (Spanish keyboard layout)
+            // Row 1: Q-P + Backspace (right)
+            // Row 2: A-Ñ + ESPACIO (right)
+            // Row 3: Z-M + Space (in letters) + CANCELAR (right)
             const rows = [
-                ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+                ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '⌫'],
                 ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ñ'],
-                ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
+                ['Z', 'X', 'C', 'V', 'B', 'N', 'M', ' ']
             ];
 
-            // Create right column buttons
-            const backspaceBtn = document.createElement('button');
-            backspaceBtn.className = 'keyboard-key keyboard-action';
-            backspaceBtn.textContent = '⌫';
-            backspaceBtn.onclick = () => {
-                document.getElementById('input').value = document.getElementById('input').value.slice(0, -1);
-            };
-
-            const spaceBtn = document.createElement('button');
-            spaceBtn.className = 'keyboard-key keyboard-action';
-            spaceBtn.textContent = 'ESPACIO';
-            spaceBtn.onclick = () => {
-                document.getElementById('input').value += ' ';
-            };
-
-            const enterBtn = document.createElement('button');
-            enterBtn.className = 'keyboard-key keyboard-action';
-            enterBtn.textContent = 'EJECUTAR';
-            enterBtn.onclick = () => {
-                processCommand();
-            };
-
-            const cancelBtn = document.createElement('button');
-            cancelBtn.className = 'keyboard-key keyboard-action';
-            cancelBtn.textContent = 'CANCELAR';
-            cancelBtn.onclick = () => {
-                resetTouchMode();
-            };
-
-            const actionButtons = [backspaceBtn, spaceBtn, enterBtn, cancelBtn];
-
-            rows.forEach((row, index) => {
+            rows.forEach((row, rowIndex) => {
                 const rowDiv = document.createElement('div');
                 rowDiv.className = 'keyboard-row';
 
@@ -3415,37 +3391,52 @@
                 row.forEach(key => {
                     const btn = document.createElement('button');
                     btn.className = 'keyboard-key';
-                    btn.textContent = key;
-                    btn.onclick = () => {
-                        document.getElementById('input').value += key.toLowerCase();
-                    };
+
+                    if (key === '⌫') {
+                        btn.textContent = key;
+                        btn.onclick = () => {
+                            document.getElementById('input').value = document.getElementById('input').value.slice(0, -1);
+                        };
+                    } else if (key === ' ') {
+                        btn.textContent = '⎵';
+                        btn.className = 'keyboard-key keyboard-space-letter';
+                        btn.onclick = () => {
+                            document.getElementById('input').value += ' ';
+                        };
+                    } else {
+                        btn.textContent = key;
+                        btn.onclick = () => {
+                            document.getElementById('input').value += key.toLowerCase();
+                        };
+                    }
                     lettersDiv.appendChild(btn);
                 });
 
                 rowDiv.appendChild(lettersDiv);
 
-                // Right section: action button for this row
-                if (actionButtons[index]) {
-                    rowDiv.appendChild(actionButtons[index]);
+                // Right section: EJECUTAR and CANCELAR buttons
+                if (rowIndex === 1) {
+                    // Row 2: EJECUTAR button
+                    const ejecutarBtn = document.createElement('button');
+                    ejecutarBtn.className = 'keyboard-key keyboard-action';
+                    ejecutarBtn.textContent = 'EJECUTAR';
+                    ejecutarBtn.onclick = () => {
+                        processCommand();
+                    };
+                    rowDiv.appendChild(ejecutarBtn);
+                } else if (rowIndex === 2) {
+                    // Row 3: CANCELAR button
+                    const cancelBtn = document.createElement('button');
+                    cancelBtn.className = 'keyboard-key keyboard-action keyboard-cancel';
+                    cancelBtn.textContent = 'CANCELAR';
+                    cancelBtn.onclick = () => {
+                        resetTouchMode();
+                    };
+                    rowDiv.appendChild(cancelBtn);
                 }
 
                 keyboard.appendChild(rowDiv);
             });
-
-            // Fourth row for CANCELAR if there are only 3 letter rows
-            if (actionButtons[3]) {
-                const rowDiv = document.createElement('div');
-                rowDiv.className = 'keyboard-row';
-
-                // Empty space on left
-                const spacerDiv = document.createElement('div');
-                spacerDiv.className = 'keyboard-letters';
-                rowDiv.appendChild(spacerDiv);
-
-                // Action button on right
-                rowDiv.appendChild(actionButtons[3]);
-                keyboard.appendChild(rowDiv);
-            }
 
             container.appendChild(keyboard);
         }
