@@ -3113,7 +3113,7 @@
 
         function showObjectOptions(verb) {
             const player = gameState.player;
-            const room = player.here;
+            const room = player.curr;
             let options = [];
 
             // Build options based on verb
@@ -3202,7 +3202,7 @@
 
         function showWithOptions(verb) {
             const player = gameState.player;
-            const room = player.here;
+            const room = player.curr;
             let options = [];
 
             // Show inventory items that could be weapons/tools
@@ -3230,7 +3230,7 @@
         }
 
         function showToOptions() {
-            const room = gameState.player.here;
+            const room = gameState.player.curr;
             let options = [];
 
             // Show living things in room
