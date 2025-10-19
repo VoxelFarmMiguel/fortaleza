@@ -12,7 +12,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza - Aventura de Texto (v1.29)</title>
+    <title>La Fortaleza - Aventura de Texto (v1.30)</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -3192,7 +3192,12 @@
                 document.getElementById('input').value = touchModeState.commandParts.join(' ');
 
                 // Check if command needs additional parameters
-                if (verb === 'abrir' || verb === 'romper' || verb === 'matar') {
+                if (verb === 'abrir') {
+                    // Abrir needs typed password/answer, not object selection
+                    toggleTouchMode();
+                    document.getElementById('input').value = touchModeState.commandParts.join(' ') + ' diciendo ';
+                    document.getElementById('input').focus();
+                } else if (verb === 'romper' || verb === 'matar') {
                     touchModeState.currentStage = 'with';
                     showWithOptions(verb);
                 } else if (verb === 'dar') {
