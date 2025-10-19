@@ -12,7 +12,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza - Aventura de Texto (v1.43)</title>
+    <title>La Fortaleza - Aventura de Texto (v1.44)</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -771,7 +771,7 @@
             <div id="input-container">
             <input type="text" id="input" placeholder="Escribe tu comando aquí..." autocomplete="off" autofocus>
             <button onclick="processCommand()">ENVIAR</button>
-            <button id="touch-mode-btn" onclick="toggleTouchMode()" title="Toggle Touch Mode">📱</button>
+            <button id="touch-mode-btn" onclick="toggleTouchMode()" title="Toggle Touch Mode">👆</button>
             <button id="fullscreen-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen">⛶</button>
             </div>
             <div id="right-sidebar">
@@ -3167,21 +3167,21 @@
         function showVerbOptions() {
             const verbs = [
                 { display: 'IR', value: 'ir' },
-                { display: 'TOMAR', value: 'tomar' },
-                { display: 'DEJAR', value: 'dejar' },
                 { display: 'MIRAR', value: 'mirar' },
                 { display: 'VER', value: 'ver' },
-                { display: 'INVENTARIO', value: 'inventario' },
+                { display: 'HABLAR', value: 'hablar' },
+                { display: 'TOMAR', value: 'tomar' },
+                { display: 'DEJAR', value: 'dejar' },
                 { display: 'ABRIR', value: 'abrir' },
                 { display: 'ROMPER', value: 'romper' },
-                { display: 'MATAR', value: 'matar' },
                 { display: 'DAR', value: 'dar' },
-                { display: 'HABLAR', value: 'hablar' },
+                { display: 'MATAR', value: 'matar' },
+                { display: 'INVENTARIO', value: 'inventario' },
                 { display: 'PESAR', value: 'pesar' },
                 { display: 'GUARDAR', value: 'guardar' },
                 { display: 'CARGAR', value: 'cargar' },
-                { display: 'PARTIDAS', value: 'partidas' },
-                { display: 'BORRAR', value: 'borrar' }
+                { display: 'BORRAR', value: 'borrar' },
+                { display: 'PARTIDAS', value: 'partidas' }
             ];
 
             renderDropdown('Selecciona Acción', verbs, (verb) => {
