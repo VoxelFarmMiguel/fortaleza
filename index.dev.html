@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza v1.12 - Aventura de Texto</title>
+    <title>La Fortaleza v1.13 - Aventura de Texto</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -595,7 +595,7 @@
 
         <!-- NEW: only this part gets curved -->
         <div class="crt-screen">
-            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v1.12</span></div>
+            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v1.13</span></div>
             <div id="output"></div>
             <div id="input-container">
             <input type="text" id="input" placeholder="Escribe tu comando aquí..." autocomplete="off" autofocus>
@@ -888,6 +888,8 @@
                     }
                 }
             }
+            // Sort by timestamp descending (newest first)
+            saves.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
             return saves;
         }
 
