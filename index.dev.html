@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza v1.13 - Aventura de Texto</title>
+    <title>La Fortaleza v1.14 - Aventura de Texto</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -595,7 +595,7 @@
 
         <!-- NEW: only this part gets curved -->
         <div class="crt-screen">
-            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v1.13</span></div>
+            <div id="title">LA FORTALEZA <span style="font-size: 12px; opacity: 0.5;">v1.14</span></div>
             <div id="output"></div>
             <div id="input-container">
             <input type="text" id="input" placeholder="Escribe tu comando aquí..." autocomplete="off" autofocus>
@@ -640,7 +640,13 @@
             'el Estómago de la Bestia': ['images/room_stomach.jpg'],
             'el Corazón de la Bestia': ['images/room_heart.jpg'],
             'el Cerebro de la Bestia': ['images/room_brain.jpg'],
-            'un extenso páramo': ['images/room_moor.jpg']
+            'un extenso páramo': ['images/room_moor.jpg'],
+            'celda pequeña': ['images/room_labrynth_cell.jpg'],
+            'un puente de mármol': ['images/room_marble_bridge.jpg'],
+            'la Antesala del Laberinto': ['images/room_labrynth_entrance.jpg'],
+            'la cueva del Minotauro': ['images/room_minotaur.jpg'],
+            'el Salón de los elegidos': ['images/room_chosen.jpg'],
+            'un pasillo del Laberinto': ['images/room_labrynth_entrance.jpg', 'images/room_labrynth_node_1.jpg', 'images/room_labrynth_node_2.jpg', 'images/room_labrynth_node_3.jpg', 'images/room_labrynth_node_4.jpg']
         };
 
         function getRandomRoomImage(roomName) {
