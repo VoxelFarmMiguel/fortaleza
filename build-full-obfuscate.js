@@ -10,13 +10,26 @@ async function build() {
     // Read the source HTML
     const html = fs.readFileSync('index.dev.html', 'utf8');
 
-    // Extract JavaScript between <script> tags
-    const scriptMatch = html.match(/<script>([\s\S]*?)<\/script>/);
-    if (!scriptMatch) {
+    // Extract JavaScript between <script> tags (get the LAST/largest script tag which is the game code)
+    const scriptMatches = html.match(/<script>([\s\S]*?)<\/script>/g);
+    if (!scriptMatches || scriptMatches.length === 0) {
         console.error('Could not find script tag!');
         process.exit(1);
     }
 
+    // Find the game code script (the largest one)
+    let gameScriptIndex = 0;
+    let maxLength = 0;
+    scriptMatches.forEach((script, index) => {
+        if (script.length > maxLength) {
+            maxLength = script.length;
+            gameScriptIndex = index;
+        }
+    });
+
+    console.log(`Found ${scriptMatches.length} script tags, obfuscating tag #${gameScriptIndex + 1} (${maxLength} chars)`);
+
+    const scriptMatch = scriptMatches[gameScriptIndex].match(/<script>([\s\S]*?)<\/script>/);
     const jsCode = scriptMatch[1];
 
     console.log('Obfuscating JavaScript and encoding strings...');
@@ -54,10 +67,18 @@ async function build() {
 
     const obfuscatedJS = obfuscationResult.getObfuscatedCode();
 
-    // Replace the JavaScript in HTML
+    // Replace only the game JavaScript in HTML (the largest script tag)
+    let scriptCount = 0;
     let productionHTML = html.replace(
-        /<script>[\s\S]*?<\/script>/,
-        `<script>${obfuscatedJS}</script>`
+        /<script>([\s\S]*?)<\/script>/g,
+        (match) => {
+            if (scriptCount === gameScriptIndex) {
+                scriptCount++;
+                return `<script>${obfuscatedJS}</script>`;
+            }
+            scriptCount++;
+            return match;
+        }
     );
 
     console.log('Minifying HTML...');
