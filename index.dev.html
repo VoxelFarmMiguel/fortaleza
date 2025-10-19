@@ -12,7 +12,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza - Aventura de Texto (v1.20)</title>
+    <title>La Fortaleza - Aventura de Texto (v1.21)</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -584,6 +584,88 @@
             background-size: 200px 200px;
         }
 
+        /* Touch Mode Dropdown Styles */
+        #dropdown-container {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            right: 0;
+            margin-bottom: 5px;
+            display: none;
+            flex-direction: column-reverse;
+            gap: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        #dropdown-container.active {
+            display: flex;
+        }
+
+        .dropdown-stage {
+            background: rgba(0, 20, 0, 0.95);
+            border: 2px solid #0f0;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 -4px 12px rgba(15, 255, 15, 0.2);
+        }
+
+        .dropdown-stage-title {
+            color: #0f0;
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .dropdown-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 6px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .dropdown-option {
+            background: rgba(15, 255, 15, 0.1);
+            border: 1px solid rgba(15, 255, 15, 0.3);
+            color: rgb(69, 191, 69);
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-size: 14px;
+            text-align: center;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dropdown-option:hover {
+            background: rgba(15, 255, 15, 0.2);
+            border-color: #0f0;
+            box-shadow: 0 0 8px rgba(15, 255, 15, 0.3);
+        }
+
+        .dropdown-option:active {
+            transform: scale(0.95);
+        }
+
+        /* Touch mode button styling */
+        #touch-mode-btn.active {
+            background: rgba(15, 255, 15, 0.3);
+            box-shadow: 0 0 10px rgba(15, 255, 15, 0.5);
+        }
+
+        /* Disable input in touch mode */
+        #input.touch-mode {
+            background: rgba(0, 0, 0, 0.5);
+            cursor: not-allowed;
+            user-select: none;
+        }
+
     </style>
 </head>
 <body>
@@ -609,7 +691,9 @@
             <div id="input-container">
             <input type="text" id="input" placeholder="Escribe tu comando aquí..." autocomplete="off" autofocus>
             <button onclick="processCommand()">ENVIAR</button>
+            <button id="touch-mode-btn" onclick="toggleTouchMode()" title="Toggle Touch Mode">📱</button>
             <button id="fullscreen-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen">⛶</button>
+            <div id="dropdown-container"></div>
             </div>
             <div id="right-sidebar">
                 <div id="room-image-container">
@@ -2962,6 +3046,249 @@
                 processCommand();
             }
         });
+
+        // ==================== TOUCH MODE ====================
+
+        let touchModeEnabled = false;
+        let touchModeState = {
+            commandParts: [],
+            currentStage: 'verb'
+        };
+
+        window.toggleTouchMode = function() {
+            touchModeEnabled = !touchModeEnabled;
+            const btn = document.getElementById('touch-mode-btn');
+            const input = document.getElementById('input');
+            const dropdown = document.getElementById('dropdown-container');
+
+            if (touchModeEnabled) {
+                btn.classList.add('active');
+                input.classList.add('touch-mode');
+                input.readOnly = true;
+                input.placeholder = 'Modo táctil activado - usa los botones';
+                dropdown.classList.add('active');
+                showVerbOptions();
+            } else {
+                btn.classList.remove('active');
+                input.classList.remove('touch-mode');
+                input.readOnly = false;
+                input.placeholder = 'Escribe tu comando aquí...';
+                dropdown.classList.remove('active');
+                dropdown.innerHTML = '';
+                touchModeState = { commandParts: [], currentStage: 'verb' };
+                input.value = '';
+            }
+        };
+
+        function showVerbOptions() {
+            const verbs = [
+                { display: 'IR / ATRAVESAR', value: 'ir' },
+                { display: 'TOMAR', value: 'tomar' },
+                { display: 'DEJAR', value: 'dejar' },
+                { display: 'MIRAR', value: 'mirar' },
+                { display: 'VER / EXAMINAR', value: 'ver' },
+                { display: 'INVENTARIO', value: 'inventario' },
+                { display: 'ABRIR', value: 'abrir' },
+                { display: 'ROMPER', value: 'romper' },
+                { display: 'MATAR / ATACAR', value: 'matar' },
+                { display: 'DAR', value: 'dar' },
+                { display: 'HABLAR', value: 'hablar' },
+                { display: 'PESAR', value: 'pesar' },
+                { display: 'GUARDAR', value: 'guardar' },
+                { display: 'CARGAR', value: 'cargar' },
+                { display: 'PARTIDAS', value: 'partidas' },
+                { display: 'BORRAR', value: 'borrar' }
+            ];
+
+            renderDropdown('Selecciona Acción', verbs, (verb) => {
+                touchModeState.commandParts = [verb];
+                touchModeState.currentStage = 'object';
+                document.getElementById('input').value = verb;
+
+                // Commands that don't need objects
+                const standalone = ['mirar', 'inventario', 'partidas'];
+                if (standalone.includes(verb)) {
+                    executeTouchModeCommand();
+                } else {
+                    showObjectOptions(verb);
+                }
+            });
+        }
+
+        function showObjectOptions(verb) {
+            const player = gameState.player;
+            const room = player.here;
+            let options = [];
+
+            // Build options based on verb
+            if (verb === 'ir' || verb === 'atravesar') {
+                // Show all links in current room
+                room.items.forEach(item => {
+                    if (item instanceof Linking || item instanceof RiddleLink ||
+                        item instanceof OpenLink || item instanceof DangerLink ||
+                        item instanceof DangerLink2) {
+                        options.push({ display: item.name.toUpperCase(), value: item.name });
+                    }
+                });
+            } else if (verb === 'tomar') {
+                // Show takeable items in room
+                room.items.forEach(item => {
+                    if (item.mass < 999 && !(item instanceof Linking)) {
+                        options.push({ display: item.name.toUpperCase(), value: item.name });
+                    }
+                });
+            } else if (verb === 'dejar') {
+                // Show inventory items
+                player.bag.items.forEach(item => {
+                    options.push({ display: item.name.toUpperCase(), value: item.name });
+                });
+                // Add "todo" option
+                options.unshift({ display: 'TODO', value: 'todo' });
+            } else if (verb === 'ver' || verb === 'pesar') {
+                // Show all items in room and inventory
+                room.items.forEach(item => {
+                    options.push({ display: item.name.toUpperCase() + ' (aquí)', value: item.name });
+                });
+                player.bag.items.forEach(item => {
+                    options.push({ display: item.name.toUpperCase() + ' (tuyo)', value: item.name });
+                });
+            } else if (verb === 'abrir' || verb === 'romper' || verb === 'matar' || verb === 'hablar') {
+                // Show all items in room
+                room.items.forEach(item => {
+                    options.push({ display: item.name.toUpperCase(), value: item.name });
+                });
+            } else if (verb === 'dar') {
+                // Show inventory items
+                player.bag.items.forEach(item => {
+                    options.push({ display: item.name.toUpperCase(), value: item.name });
+                });
+            } else if (verb === 'guardar' || verb === 'cargar' || verb === 'borrar') {
+                // Show saved games
+                const saves = listSaves();
+                saves.forEach(save => {
+                    options.push({ display: save.name.toUpperCase(), value: save.name });
+                });
+                // Add option to type custom name for save
+                if (verb === 'guardar') {
+                    options.push({ display: '+ NUEVO NOMBRE', value: '__custom__' });
+                }
+            }
+
+            if (options.length === 0) {
+                options.push({ display: '(Nada disponible)', value: null });
+            }
+
+            renderDropdown('Selecciona Objeto', options, (object) => {
+                if (object === '__custom__') {
+                    // Switch to typing mode for custom save name
+                    toggleTouchMode();
+                    document.getElementById('input').value = verb + ' ';
+                    document.getElementById('input').focus();
+                    return;
+                }
+                if (object === null) return;
+
+                touchModeState.commandParts.push(object);
+                document.getElementById('input').value = touchModeState.commandParts.join(' ');
+
+                // Check if command needs additional parameters
+                if (verb === 'abrir' || verb === 'romper' || verb === 'matar') {
+                    touchModeState.currentStage = 'with';
+                    showWithOptions(verb);
+                } else if (verb === 'dar') {
+                    touchModeState.currentStage = 'to';
+                    showToOptions();
+                } else {
+                    executeTouchModeCommand();
+                }
+            });
+        }
+
+        function showWithOptions(verb) {
+            const player = gameState.player;
+            let options = [];
+
+            // Show inventory items that could be weapons/tools
+            player.bag.items.forEach(item => {
+                options.push({ display: item.name.toUpperCase(), value: item.name });
+            });
+
+            // Add "sin nada" option for trying without tool
+            options.push({ display: '(Sin objeto)', value: '' });
+
+            renderDropdown('¿Con qué?', options, (tool) => {
+                if (tool) {
+                    touchModeState.commandParts.push('con', tool);
+                }
+                document.getElementById('input').value = touchModeState.commandParts.join(' ');
+                executeTouchModeCommand();
+            });
+        }
+
+        function showToOptions() {
+            const room = gameState.player.here;
+            let options = [];
+
+            // Show living things in room
+            room.items.forEach(item => {
+                if (item instanceof LivingThing) {
+                    options.push({ display: item.name.toUpperCase(), value: item.name });
+                }
+            });
+
+            if (options.length === 0) {
+                options.push({ display: '(Nadie aquí)', value: null });
+            }
+
+            renderDropdown('¿A quién?', options, (recipient) => {
+                if (recipient === null) return;
+                touchModeState.commandParts.push('a', recipient);
+                document.getElementById('input').value = touchModeState.commandParts.join(' ');
+                executeTouchModeCommand();
+            });
+        }
+
+        function renderDropdown(title, options, onSelect) {
+            const container = document.getElementById('dropdown-container');
+
+            const stage = document.createElement('div');
+            stage.className = 'dropdown-stage';
+
+            const titleEl = document.createElement('div');
+            titleEl.className = 'dropdown-stage-title';
+            titleEl.textContent = title;
+            stage.appendChild(titleEl);
+
+            const optionsContainer = document.createElement('div');
+            optionsContainer.className = 'dropdown-options';
+
+            options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'dropdown-option';
+                btn.textContent = option.display;
+                btn.onclick = () => {
+                    // Remove this stage
+                    stage.remove();
+                    onSelect(option.value);
+                };
+                optionsContainer.appendChild(btn);
+            });
+
+            stage.appendChild(optionsContainer);
+            container.appendChild(stage);
+        }
+
+        function executeTouchModeCommand() {
+            const command = touchModeState.commandParts.join(' ');
+            touchModeState = { commandParts: [], currentStage: 'verb' };
+            document.getElementById('dropdown-container').innerHTML = '';
+
+            // Execute the command
+            processCommand();
+
+            // Show verb options again for next command
+            showVerbOptions();
+        }
 
         // Fullscreen toggle
         window.toggleFullscreen = function() {
