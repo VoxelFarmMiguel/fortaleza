@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza v1.11 - Aventura de Texto</title>
+    <title>La Fortaleza v1.12 - Aventura de Texto</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -1883,7 +1883,7 @@
                 'El olor de la carne descompuesta lo golpea. Usted siente ganas de vomitar.', rooms[3]));
             rooms[0].insert(new Hidden('Pared solitaria', 'Usted no puede imaginar con qué motivo fue colocada ahí.',
                 decodeLine(3),  // key[3]: Ariete
-                new DangerLink('Puerta secreta', 'Usted se pregunta a dónde conducirá.', '',
+                new DangerLink('Puerta secreta', 'Usted se pregunta a dónde conducirá, pero la oscuridad no le deja ver.', '',
                     'Usted atraviesa la puerta.', 'Antorcha', rooms[26])));
 
             // Room 1: Salón de recepciones
@@ -2011,7 +2011,7 @@
                 'Usted sale del jardín.', rooms[22]));
 
             // Room 13: Alcoba de la doncella
-            rooms[13].insert(new Thing('Cuadro', 'Está completamente pintado de negro.', 10));
+            rooms[13].insert(new Thing('Cuadro', 'Está pintado de negro, infinitamente negro y contundente.', 10));
             rooms[13].insert(new Thing('Corazón de unicornio', 'Aún late.', 1));
             rooms[13].insert(new Linking('Puerta azul', 'Debe haber algo hermoso detrás de esta puerta.', '',
                 'Usted sale al jardín.', rooms[12]));
@@ -2101,7 +2101,7 @@
             // Room 24: Salón de cristal
             rooms[24].insert(new Linking('Puerta de cristal', 'Es muy delgada.', decodeLine(42),  // key[42]: Cuidado con el túnel y la puerta de tela...
                 'Usted sale al páramo.', rooms[23]));
-            rooms[24].insert(new Linking('Puerta de tela', 'Es una puerta normal, pero de tela.', '',
+            rooms[24].insert(new Linking('Puerta de tela', 'Es una puerta aparentemente normal, pero de tela. Algo le preocupa sobre esta puerta.', '',
                 'Usted sale del salón de cristal.', rooms[25])); // Leads to jail
             rooms[24].insert(new RiddleLink('Puerta triangular', 'Tiene forma de un triángulo de siete lados.',
                 '¿Cuál es el nombre del duende?', decodeLine(23),  // key[23]: Rumpelstinskin
@@ -2113,7 +2113,7 @@
             rooms[25].insert(new Thing('Inscripción', 'Dice que usted pasará en esta celda el resto de sus días.', 41));  // succ(LWeight) = 41
 
             // Room 26: Puente de mármol (Marble bridge)
-            rooms[26].insert(new Troll('Araña', 'Es un poco mayor que usted.', 'Hilo de Ariadna',
+            rooms[26].insert(new Troll('Araña', 'Es un poco mayor que usted, pero ya no puede producir hilo.', 'Hilo de Ariadna',
                 'Busca al Minotauro y mátalo con la espada.', '¡Pssssssss!'));
             rooms[26].insert(new Thing('Martillo', 'Tiene dos mangos y tres cabezas.', 2));
             rooms[26].insert(new DangerLink('Puerta secreta', 'Conduce al exterior de la fortaleza.', '',
@@ -2127,10 +2127,10 @@
             // Room 27: Antesala del Laberinto
             rooms[27].insert(new Linking('Puerta', 'Conduce al puente.', '', 'Usted atraviesa la puerta.', rooms[26]));
             rooms[27].insert(new Troll('Crunch', 'Es muy similar a una boca con patas.', 'Pastel de cerezas',
-                'El 12 te guiará en el Laberinto. Luego solo debes dar un paso.', '¡Qué hambre!'));
+                'Las secuencia que necesitas es 1, 2, 3, 1, 2, 3, 1', '¡Qué hambre!'));
             rooms[27].insert(new Hidden('Columna de Cristal', 'Es muy alta.',
                 'Antorcha 3',
-                new Hidden('Puerta de madera', 'Parece muy frágil.', 'Martillo',
+                new Hidden('Puerta de madera', 'Parece muy frágil, tiene dos picaportes y tres bisagras.', 'Martillo',
                     new Linking('Puerta negra', 'Conduce al Jardín', '',
                         'Usted entra al Jardín.', rooms[49]))));
             rooms[27].insert(new OpenLink('Puerta verde', 'Conduce al Laberinto.', 'Usted atraviesa la puerta.', rooms[30]));
