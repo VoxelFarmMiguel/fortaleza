@@ -25,6 +25,12 @@ function encodeStrings(code) {
     });
 
     // Add decoder function at the start
+    const entriesArray = Array.from(replacements.entries());
+    const decoderEntries = entriesArray.map(([k, v]) => {
+        const base64 = Buffer.from(v).toString('base64');
+        return `"${k}": _d("${base64}")`;
+    }).join(',');
+
     const decoder = `
         const _d = s => {
             try {
@@ -33,9 +39,7 @@ function encodeStrings(code) {
                 return s;
             }
         };
-        const _s = {${Array.from(replacements.entries()).map(([k, v]) =>
-            `"${k}": _d("${Buffer.from(v).toString('base64')}")`
-        ).join(',')}};
+        const _s = {${decoderEntries}};
     `;
 
     // Second pass: replace strings with encoded versions
@@ -56,17 +60,32 @@ async function build() {
     // Read the source HTML
     const html = fs.readFileSync('index.dev.html', 'utf8');
 
-    // Extract JavaScript between <script> tags
-    const scriptMatch = html.match(/<script>([\s\S]*?)<\/script>/);
-    if (!scriptMatch) {
+    // Extract JavaScript between <script> tags (get the LAST/largest script tag which is the game code)
+    const scriptMatches = html.match(/<script>([\s\S]*?)<\/script>/g);
+    if (!scriptMatches || scriptMatches.length === 0) {
         console.error('Could not find script tag!');
         process.exit(1);
     }
 
+    // Find the game code script (the largest one)
+    let gameScriptIndex = 0;
+    let maxLength = 0;
+    scriptMatches.forEach((script, index) => {
+        if (script.length > maxLength) {
+            maxLength = script.length;
+            gameScriptIndex = index;
+        }
+    });
+
+    const scriptMatch = scriptMatches[gameScriptIndex].match(/<script>([\s\S]*?)<\/script>/);
     let jsCode = scriptMatch[1];
 
     console.log('Encoding Spanish text strings...');
     jsCode = encodeStrings(jsCode);
+
+    // Debug: write encoded code to check for syntax errors
+    fs.writeFileSync('debug-encoded.js', jsCode);
+    console.log('Debug: Encoded code written to debug-encoded.js');
 
     console.log('Minifying and obfuscating JavaScript...');
 
@@ -98,10 +117,18 @@ async function build() {
         process.exit(1);
     }
 
-    // Replace the JavaScript in HTML
+    // Replace only the game JavaScript in HTML (the largest script tag)
+    let scriptCount = 0;
     let productionHTML = html.replace(
-        /<script>[\s\S]*?<\/script>/,
-        `<script>${minifiedJS.code}</script>`
+        /<script>([\s\S]*?)<\/script>/g,
+        (match) => {
+            if (scriptCount === gameScriptIndex) {
+                scriptCount++;
+                return `<script>${minifiedJS.code}</script>`;
+            }
+            scriptCount++;
+            return match;
+        }
     );
 
     console.log('Minifying HTML...');
