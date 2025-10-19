@@ -12,7 +12,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza - Aventura de Texto (v1.33)</title>
+    <title>La Fortaleza - Aventura de Texto (v1.34)</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -3317,6 +3317,7 @@
                 } else {
                     // Show keyboard for password entry
                     touchModeState.currentStage = 'keyboard';
+                    touchModeState.commandParts.push('con');
                     document.getElementById('input').value = touchModeState.commandParts.join(' ') + ' ';
                     showKeyboard();
                 }
