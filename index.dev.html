@@ -12,7 +12,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza - Aventura de Texto (v1.35)</title>
+    <title>La Fortaleza - Aventura de Texto (v1.36)</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -623,24 +623,40 @@
 
         .dropdown-options {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 6px;
+        }
+
+        /* Verb buttons - compact single words */
+        .dropdown-options.verb-options {
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        }
+
+        /* Object buttons - wider to fit longer names */
+        .dropdown-options.object-options {
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        }
+
+        /* Default for other cases */
+        .dropdown-options:not(.verb-options):not(.object-options) {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
         }
 
         .dropdown-option {
             background: rgba(15, 255, 15, 0.1);
             border: 1px solid rgba(15, 255, 15, 0.3);
             color: rgb(69, 191, 69);
-            padding: 10px 15px;
+            padding: 6px 10px;
             cursor: pointer;
             border-radius: 4px;
             transition: all 0.2s;
-            font-size: 14px;
+            font-size: 16px;
             text-align: center;
-            min-height: 44px;
+            min-height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .dropdown-option:hover {
@@ -691,23 +707,6 @@
 
         .keyboard-cancel {
             flex: 1;
-            background: rgba(255, 50, 50, 0.2);
-            border-color: rgba(255, 50, 50, 0.4);
-            color: rgb(255, 100, 100);
-        }
-
-        .keyboard-cancel:hover {
-            background: rgba(255, 50, 50, 0.3);
-        }
-
-        .dropdown-cancel {
-            background: rgba(255, 50, 50, 0.1);
-            border-color: rgba(255, 50, 50, 0.3);
-            color: rgb(255, 100, 100);
-        }
-
-        .dropdown-cancel:hover {
-            background: rgba(255, 50, 50, 0.2);
         }
 
         .dropdown-option:active {
@@ -3148,15 +3147,15 @@
 
         function showVerbOptions() {
             const verbs = [
-                { display: 'IR / ATRAVESAR', value: 'ir' },
+                { display: 'IR', value: 'ir' },
                 { display: 'TOMAR', value: 'tomar' },
                 { display: 'DEJAR', value: 'dejar' },
                 { display: 'MIRAR', value: 'mirar' },
-                { display: 'VER / EXAMINAR', value: 'ver' },
+                { display: 'VER', value: 'ver' },
                 { display: 'INVENTARIO', value: 'inventario' },
                 { display: 'ABRIR', value: 'abrir' },
                 { display: 'ROMPER', value: 'romper' },
-                { display: 'MATAR / ATACAR', value: 'matar' },
+                { display: 'MATAR', value: 'matar' },
                 { display: 'DAR', value: 'dar' },
                 { display: 'HABLAR', value: 'hablar' },
                 { display: 'PESAR', value: 'pesar' },
@@ -3182,7 +3181,7 @@
                 } else {
                     showObjectOptions(verb);
                 }
-            }, false); // No cancel button on first screen
+            }, false, 'verb-options'); // No cancel button on first screen, use verb-options class
         }
 
         function showObjectOptions(verb) {
@@ -3275,7 +3274,7 @@
                 } else {
                     executeTouchModeCommand();
                 }
-            });
+            }, true, 'object-options'); // Use object-options class for wider buttons
         }
 
         function showWithOptions(verb) {
@@ -3304,7 +3303,7 @@
                 }
                 document.getElementById('input').value = touchModeState.commandParts.join(' ');
                 executeTouchModeCommand();
-            });
+            }, true, 'object-options');
         }
 
         function showToOptions() {
@@ -3327,7 +3326,7 @@
                 touchModeState.commandParts.push('a', recipient);
                 document.getElementById('input').value = touchModeState.commandParts.join(' ');
                 executeTouchModeCommand();
-            });
+            }, true, 'object-options');
         }
 
         function showAbrirChoice() {
@@ -3427,7 +3426,7 @@
             container.appendChild(keyboard);
         }
 
-        function renderDropdown(title, options, onSelect, showCancel = true) {
+        function renderDropdown(title, options, onSelect, showCancel = true, optionsClass = '') {
             const container = document.getElementById('dropdown-container');
 
             // Clear existing content - replace instead of append
@@ -3442,7 +3441,7 @@
             stage.appendChild(titleEl);
 
             const optionsContainer = document.createElement('div');
-            optionsContainer.className = 'dropdown-options';
+            optionsContainer.className = 'dropdown-options' + (optionsClass ? ' ' + optionsClass : '');
 
             options.forEach(option => {
                 const btn = document.createElement('button');
