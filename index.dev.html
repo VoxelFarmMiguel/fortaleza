@@ -12,7 +12,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza - Aventura de Texto (v1.36)</title>
+    <title>La Fortaleza - Aventura de Texto (v1.37)</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -674,7 +674,14 @@
 
         .keyboard-row {
             display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .keyboard-letters {
+            display: flex;
             gap: 6px;
+            flex: 1;
             justify-content: center;
         }
 
@@ -696,17 +703,9 @@
             box-shadow: 0 0 8px rgba(15, 255, 15, 0.3);
         }
 
-        .keyboard-space {
-            flex: 2;
-        }
-
-        .keyboard-enter {
-            flex: 1;
-            background: rgba(15, 255, 15, 0.2);
-        }
-
-        .keyboard-cancel {
-            flex: 1;
+        .keyboard-action {
+            min-width: 100px;
+            background: rgba(15, 255, 15, 0.15);
         }
 
         .dropdown-option:active {
@@ -3360,68 +3359,82 @@
             const rows = [
                 ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
                 ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ñ'],
-                ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '⌫']
+                ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
             ];
 
-            rows.forEach(row => {
-                const rowDiv = document.createElement('div');
-                rowDiv.className = 'keyboard-row';
-
-                row.forEach(key => {
-                    const btn = document.createElement('button');
-                    btn.className = 'keyboard-key';
-                    btn.textContent = key;
-                    btn.onclick = () => {
-                        const input = document.getElementById('input');
-                        if (key === '⌫') {
-                            // Backspace
-                            input.value = input.value.slice(0, -1);
-                        } else {
-                            // Add letter
-                            input.value += key.toLowerCase();
-                        }
-                    };
-                    rowDiv.appendChild(btn);
-                });
-
-                keyboard.appendChild(rowDiv);
-            });
-
-            // Space and Enter row
-            const bottomRow = document.createElement('div');
-            bottomRow.className = 'keyboard-row';
+            // Create right column buttons
+            const backspaceBtn = document.createElement('button');
+            backspaceBtn.className = 'keyboard-key keyboard-action';
+            backspaceBtn.textContent = '⌫';
+            backspaceBtn.onclick = () => {
+                document.getElementById('input').value = document.getElementById('input').value.slice(0, -1);
+            };
 
             const spaceBtn = document.createElement('button');
-            spaceBtn.className = 'keyboard-key keyboard-space';
+            spaceBtn.className = 'keyboard-key keyboard-action';
             spaceBtn.textContent = 'ESPACIO';
             spaceBtn.onclick = () => {
                 document.getElementById('input').value += ' ';
             };
 
             const enterBtn = document.createElement('button');
-            enterBtn.className = 'keyboard-key keyboard-enter';
+            enterBtn.className = 'keyboard-key keyboard-action';
             enterBtn.textContent = 'EJECUTAR';
             enterBtn.onclick = () => {
                 processCommand();
             };
 
-            bottomRow.appendChild(spaceBtn);
-            bottomRow.appendChild(enterBtn);
-            keyboard.appendChild(bottomRow);
-
-            // Cancel button row
-            const cancelRow = document.createElement('div');
-            cancelRow.className = 'keyboard-row';
-
             const cancelBtn = document.createElement('button');
-            cancelBtn.className = 'keyboard-key keyboard-cancel';
-            cancelBtn.textContent = '✕ CANCELAR';
+            cancelBtn.className = 'keyboard-key keyboard-action';
+            cancelBtn.textContent = 'CANCELAR';
             cancelBtn.onclick = () => {
                 resetTouchMode();
             };
 
-            cancelRow.appendChild(cancelBtn);
-            keyboard.appendChild(cancelRow);
+            const actionButtons = [backspaceBtn, spaceBtn, enterBtn, cancelBtn];
+
+            rows.forEach((row, index) => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'keyboard-row';
+
+                // Left section: letter keys
+                const lettersDiv = document.createElement('div');
+                lettersDiv.className = 'keyboard-letters';
+
+                row.forEach(key => {
+                    const btn = document.createElement('button');
+                    btn.className = 'keyboard-key';
+                    btn.textContent = key;
+                    btn.onclick = () => {
+                        document.getElementById('input').value += key.toLowerCase();
+                    };
+                    lettersDiv.appendChild(btn);
+                });
+
+                rowDiv.appendChild(lettersDiv);
+
+                // Right section: action button for this row
+                if (actionButtons[index]) {
+                    rowDiv.appendChild(actionButtons[index]);
+                }
+
+                keyboard.appendChild(rowDiv);
+            });
+
+            // Fourth row for CANCELAR if there are only 3 letter rows
+            if (actionButtons[3]) {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'keyboard-row';
+
+                // Empty space on left
+                const spacerDiv = document.createElement('div');
+                spacerDiv.className = 'keyboard-letters';
+                rowDiv.appendChild(spacerDiv);
+
+                // Action button on right
+                rowDiv.appendChild(actionButtons[3]);
+                keyboard.appendChild(rowDiv);
+            }
 
             container.appendChild(keyboard);
         }
