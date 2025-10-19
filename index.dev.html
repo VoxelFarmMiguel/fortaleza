@@ -12,7 +12,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza - Aventura de Texto (v1.19)</title>
+    <title>La Fortaleza - Aventura de Texto (v1.20)</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -1620,7 +1620,7 @@
             die(weapon) {
                 if (this.dead) return true;
                 super.die(weapon);
-                printLine('¡Me estoy muriendo!', 'error');
+                printLine('Lamento informarle que usted está muerto.');
                 return true;
             }
         }
@@ -2856,8 +2856,6 @@
 
         // Process command from user input
         window.processCommand = function() {
-            if (gameState.gameOver || gameState.gameWon || gameState.player.dead) return;
-
             const input = document.getElementById('input');
             const command = input.value.trim();
             input.value = '';
@@ -2865,6 +2863,15 @@
             if (!command) return;
 
             printLine('> ' + command, 'prompt');
+
+            // Allow load/list commands even when dead or game over
+            const verb = command.split(' ')[0].toLowerCase();
+            const allowedWhenDead = ['cargar', 'load', 'partidas', 'saves'];
+
+            if ((gameState.gameOver || gameState.gameWon || gameState.player.dead) && !allowedWhenDead.includes(verb)) {
+                printLine('El juego ha terminado. Use "cargar [nombre]" para cargar una partida guardada.');
+                return;
+            }
 
             executeCommand(command);
 
