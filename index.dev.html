@@ -11,8 +11,10 @@
     gtag('config', 'G-D7CWN7QR83');
     </script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza - Aventura de Texto (v1.52)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>La Fortaleza - Aventura de Texto (v1.53)</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -429,14 +431,28 @@
         .system  { text-shadow: 0 0 1px rgb(9,255,0), 0 0 10px rgba(9,255,0,.5); }
 
         /* === Fullscreen page & container === */
-        html, body { height: 100%; margin: 0; }
-        body { padding: 0; }
+        html, body {
+            height: 100%;
+            margin: 0;
+            /* Handle iOS safe areas */
+            height: 100vh;
+            height: -webkit-fill-available;
+        }
+        body {
+            padding: 0;
+            background: #000;
+        }
 
         /* #game-container covers the whole screen */
         #game-container{
         position: fixed; inset: 0;                 /* full viewport */
         max-width: none;                            /* no centering limit */
         padding: 24px;                              /* screen bezel padding */
+        /* Handle iOS safe areas in fullscreen */
+        padding-top: max(24px, env(safe-area-inset-top));
+        padding-bottom: max(24px, env(safe-area-inset-bottom));
+        padding-left: max(24px, env(safe-area-inset-left));
+        padding-right: max(24px, env(safe-area-inset-right));
         display: block;                             /* keep overlays positioned */
         border-radius: 16px;
         }
