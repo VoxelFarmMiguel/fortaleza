@@ -14,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>La Fortaleza - Aventura de Texto (v1.56)</title>
+    <title>La Fortaleza - Aventura de Texto (v1.57)</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -1736,6 +1736,9 @@
                     if (target.die(weapon)) {
                         this.curr.items = this.curr.items.filter(i => i !== target);
                     }
+                } else if (target) {
+                    // Object exists but can't be killed
+                    printLine('No puede hacer eso.');
                 } else if (who) {
                     printLine('"' + who + '" no está aquí.');
                 } else {
@@ -1748,6 +1751,9 @@
                 const target = this.curr.get(who);
                 if (target && (target instanceof Troll || target instanceof Guard)) {
                     target.speak();
+                } else if (target) {
+                    // Object exists but can't be talked to
+                    printLine('No puede hacer eso.');
                 } else if (who) {
                     printLine('"' + who + '" no está aquí.');
                 } else {
