@@ -14,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>La Fortaleza - Aventura de Texto (v1.54)</title>
+    <title>La Fortaleza - Aventura de Texto (v1.55)</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -470,9 +470,9 @@
         backface-visibility: hidden;
         }
 
-        /* When touch mode is active, give dropdown 1/3 of space */
+        /* When touch mode is active, give dropdown slightly more space */
         .crt-screen:has(#dropdown-container.active){
-        grid-template-rows: auto 2fr 1fr auto;      /* title | output (2/3) | dropdown (1/3) | input */
+        grid-template-rows: auto 1.7fr 1.3fr auto;  /* title | output | dropdown (taller) | input */
         }
 
         /* Right sidebar container for image and inventory */
