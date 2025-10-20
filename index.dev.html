@@ -12,7 +12,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Fortaleza - Aventura de Texto (v1.51)</title>
+    <title>La Fortaleza - Aventura de Texto (v1.52)</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
         @font-face {
@@ -555,6 +555,9 @@
         /* override earlier fixed sizes so it grows with the grid */
         max-height: none !important;
         min-height: 0 !important;
+        /* Performance optimizations */
+        contain: layout style paint;
+        will-change: scroll-position;
         }
         #dropdown-container{ grid-column: 1; grid-row: 3; }
         #input-container{ grid-column: 1; grid-row: 4; }
@@ -2470,6 +2473,9 @@
             if (text === '') return;
 
             const output = document.getElementById('output');
+
+            // Use DocumentFragment for better performance
+            const fragment = document.createDocumentFragment();
             const line = document.createElement('div');
             line.className = 'output-line' + (className ? ' ' + className : '');
 
@@ -2495,10 +2501,13 @@
             textReveal.appendChild(mask);
             textReveal.appendChild(scanline);
             line.appendChild(textReveal);
-            output.appendChild(line);
+            fragment.appendChild(line);
+            output.appendChild(fragment);
 
             // Animate the scanline - keep it fast and skip for very long text
-            const textWidth = textReveal.offsetWidth;
+            // Use requestAnimationFrame to avoid forced reflow
+            requestAnimationFrame(() => {
+                const textWidth = textReveal.offsetWidth;
 
             // Skip animation for very long text to keep things snappy
             if (text.length > 100) {
@@ -2533,8 +2542,11 @@
                 requestAnimationFrame(animate);
             }
 
-            // Scroll to bottom
-            output.scrollTop = output.scrollHeight;
+            // Scroll to bottom - also defer to avoid forced reflow
+            requestAnimationFrame(() => {
+                output.scrollTop = output.scrollHeight;
+            });
+            });
         }
 
         function updateInventory() {
